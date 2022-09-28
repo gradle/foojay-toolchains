@@ -3,7 +3,11 @@
  */
 package org.gradle.disco
 
+import org.gradle.jvm.toolchain.JvmImplementation.J9
+import org.gradle.jvm.toolchain.JvmImplementation.VENDOR_SPECIFIC
 import org.gradle.jvm.toolchain.JvmVendorSpec
+import org.gradle.jvm.toolchain.JvmVendorSpec.*
+import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -13,33 +17,59 @@ class DiscoApiTest {
     private val api = DiscoApi()
 
     @Test
-    fun `can resolve arbitrary vendors`() {
-        assertEquals("ZuluPrime", api.resolveVendor(JvmVendorSpec.matching("zuluprime")))
-        assertEquals("ZuluPrime", api.resolveVendor(JvmVendorSpec.matching("zUluprIme")))
+    fun `J9 implementation influences vendor resolution`() {
+        assertEquals("Semeru", api.match(any(), J9)?.name)
+
+        assertEquals("AOJ OpenJ9", api.match(ADOPTOPENJDK, J9)?.name)
+        assertEquals("Semeru", api.match(IBM_SEMERU, J9)?.name)
+
+        assertNull(api.match(ADOPTIUM, J9)?.name)
+        assertNull(api.match(AZUL, J9)?.name)
+        assertNull(api.match(AMAZON, J9)?.name)
+        assertNull(api.match(BELLSOFT, J9)?.name)
+        assertNull(api.match(MICROSOFT, J9)?.name)
+        assertNull(api.match(ORACLE, J9)?.name)
+        assertNull(api.match(SAP, J9)?.name)
+
+        assertNull(api.match(APPLE, J9)?.name)
+        assertNull(api.match(GRAAL_VM, J9)?.name)
+        assertNull(api.match(HEWLETT_PACKARD, J9)?.name)
+        assertNull(api.match(IBM, J9)?.name)
     }
 
     @Test
-    fun `can resolve pre-set vendors`() {
-        assertEquals("Zulu", api.resolveVendor(JvmVendorSpec.AZUL))
-        assertEquals("AOJ", api.resolveVendor(JvmVendorSpec.ADOPTOPENJDK))
-        assertEquals("Temurin", api.resolveVendor(JvmVendorSpec.ADOPTIUM))
-        assertEquals("Corretto", api.resolveVendor(JvmVendorSpec.AMAZON))
-        assertEquals("Liberica", api.resolveVendor(JvmVendorSpec.BELLSOFT))
-        assertEquals("Semeru", api.resolveVendor(JvmVendorSpec.IBM_SEMERU))
-        assertEquals("Microsoft", api.resolveVendor(JvmVendorSpec.MICROSOFT))
-        assertEquals("Oracle", api.resolveVendor(JvmVendorSpec.ORACLE))
-        assertEquals("SAP Machine", api.resolveVendor(JvmVendorSpec.SAP))
+    fun `vendor specific implementation does not influences vendor resolution`() {
+        assertEquals("Temurin", api.match(any(), VENDOR_SPECIFIC)?.name)
 
-        assertNull(api.resolveVendor(JvmVendorSpec.APPLE))
-        assertNull(api.resolveVendor(JvmVendorSpec.GRAAL_VM))
-        assertNull(api.resolveVendor(JvmVendorSpec.HEWLETT_PACKARD))
-        assertNull(api.resolveVendor(JvmVendorSpec.IBM))
+        assertEquals("AOJ", api.match(ADOPTOPENJDK, VENDOR_SPECIFIC)?.name)
+        assertEquals("Semeru", api.match(IBM_SEMERU, VENDOR_SPECIFIC)?.name)
+
+        assertEquals("Temurin", api.match(ADOPTIUM, VENDOR_SPECIFIC)?.name)
+        assertEquals("Zulu", api.match(AZUL, VENDOR_SPECIFIC)?.name)
+        assertEquals("Corretto", api.match(AMAZON, VENDOR_SPECIFIC)?.name)
+        assertEquals("Liberica", api.match(BELLSOFT, VENDOR_SPECIFIC)?.name)
+        assertEquals("Microsoft", api.match(MICROSOFT, VENDOR_SPECIFIC)?.name)
+        assertEquals("Oracle", api.match(ORACLE, VENDOR_SPECIFIC)?.name)
+        assertEquals("SAP Machine", api.match(SAP, VENDOR_SPECIFIC)?.name)
+
+        assertNull(api.match(APPLE, VENDOR_SPECIFIC)?.name)
+        assertNull(api.match(GRAAL_VM, VENDOR_SPECIFIC)?.name)
+        assertNull(api.match(HEWLETT_PACKARD, VENDOR_SPECIFIC)?.name)
+        assertNull(api.match(IBM, VENDOR_SPECIFIC)?.name)
+    }
+
+    @Test
+    fun `can resolve arbitrary vendors`() {
+        assertEquals("ZuluPrime", api.match(vendorSpec("zuluprime"), VENDOR_SPECIFIC)?.name)
+        assertEquals("ZuluPrime", api.match(vendorSpec("zUluprIme"), VENDOR_SPECIFIC)?.name)
     }
 
     @Test
     fun `can match GraalVM`() {
-        assertEquals("Graal VM CE 8", api.resolveVendor(JvmVendorSpec.matching("GraalVMCE8")))
-        assertEquals("Graal VM CE 11", api.resolveVendor(JvmVendorSpec.matching("GraalVMCE11")))
+        assertEquals("Graal VM CE 8", api.match(vendorSpec("GraalVMCE8"), VENDOR_SPECIFIC)?.name)
+        assertEquals("Graal VM CE 11", api.match(vendorSpec("GraalVMCE11"), VENDOR_SPECIFIC)?.name)
     }
+
+    private fun vendorSpec(vendorName: String): JvmVendorSpec = matching(vendorName)
 
 }
