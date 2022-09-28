@@ -39,13 +39,13 @@ fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): Distributio
 }
 
 fun parseDistributions(json: String): List<Distribution> {
-    return Gson().fromJson(json, DistributionResult::class.java).result
+    return Gson().fromJson(json, DistributionsResult::class.java).result
 }
 
 data class Distribution(
     val name: String, val synonyms: List<String>, val versions: List<String>
 )
 
-private data class DistributionResult(
+private data class DistributionsResult(
     val result: List<Distribution>
 )

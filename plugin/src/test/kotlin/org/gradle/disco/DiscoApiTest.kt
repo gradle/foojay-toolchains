@@ -3,13 +3,17 @@
  */
 package org.gradle.disco
 
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmImplementation.J9
 import org.gradle.jvm.toolchain.JvmImplementation.VENDOR_SPECIFIC
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.JvmVendorSpec.*
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
+import org.gradle.platform.Architecture
+import org.gradle.platform.OperatingSystem
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class DiscoApiTest {
@@ -68,6 +72,18 @@ class DiscoApiTest {
     fun `can match GraalVM`() {
         assertEquals("Graal VM CE 8", api.match(vendorSpec("GraalVMCE8"), VENDOR_SPECIFIC)?.name)
         assertEquals("Graal VM CE 11", api.match(vendorSpec("GraalVMCE11"), VENDOR_SPECIFIC)?.name)
+    }
+
+    @Test
+    fun `can pick the right package`() {
+        val p = api.match("Temurin", JavaLanguageVersion.of(11), OperatingSystem.MAC_OS, Architecture.AMD64)
+        assertNotNull(p)
+        assertEquals("tar.gz", p.archive_type)
+        assertEquals("temurin", p.distribution)
+        assertEquals(11, p.major_version)
+        assertEquals("macos", p.operating_system)
+        assertEquals("x64", p.architecture)
+        assertEquals("jdk", p.package_type)
     }
 
     private fun vendorSpec(vendorName: String): JvmVendorSpec = matching(vendorName)

@@ -1,11 +1,12 @@
 package org.gradle.disco
 
 import org.gradle.api.GradleException
-import org.gradle.disco.spec.Distribution
-import org.gradle.disco.spec.match
-import org.gradle.disco.spec.parseDistributions
+import org.gradle.disco.spec.*
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
+import org.gradle.platform.Architecture
+import org.gradle.platform.OperatingSystem
 import java.io.BufferedReader
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -21,8 +22,8 @@ class DiscoApi {
     val SCHEMA = "https"
 
     val ENDPOINT_ROOT = "api.foojay.io/disco/v3.0"
-
     val DISTRIBUTIONS_ENDPOIT = "$ENDPOINT_ROOT/distributions"
+    val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
 
     val distributions = mutableListOf<Distribution>()
 
@@ -44,8 +45,23 @@ class DiscoApi {
         }
     }
 
-    //todo: sort on package type, prefer jdk
-    //todo: sort on archive type, filter out what we don't handle
+    fun match(distributionName: String, version: JavaLanguageVersion, operatingSystem: OperatingSystem, architecture: Architecture): Package? {
+        val con = createConnection(
+            PACKAGES_ENDPOINT,
+            mapOf(
+                "version" to "${version.asInt()}",
+                "distro" to distributionName,
+                "operating_system" to map(operatingSystem),
+                "latest" to "available",
+                "directly_downloadable" to "true",
+            )
+        )
+        val json = readResponse(con)
+        con.disconnect()
+
+        val packages = parsePackages(json)
+        return match(packages, architecture)
+    }
 
     private fun createConnection(endpoint: String, parameters: Map<String, String>): HttpURLConnection {
         val url = URL("$SCHEMA://$endpoint?${toParameterString(parameters)}")
