@@ -8,16 +8,20 @@ import org.gradle.api.initialization.Settings
 import org.gradle.jvm.toolchain.JavaToolchainRequest
 import org.gradle.jvm.toolchain.JavaToolchainResolver
 import org.gradle.jvm.toolchain.JavaToolchainDownload
+import org.gradle.jvm.toolchain.JavaToolchainResolverRegistry
 import java.util.*
+import javax.inject.Inject
 
-abstract class DiscoToolchainsPlugin: Plugin<Settings>, JavaToolchainResolver {
+abstract class DiscoToolchainsPlugin: Plugin<Settings> {
+
+    @get:Inject
+    protected abstract val toolchainResolverRegistry: JavaToolchainResolverRegistry
 
     override fun apply(settings: Settings) {
-        //todo
-    }
+        settings.plugins.apply("jvm-toolchain-management")
 
-    override fun resolve(request: JavaToolchainRequest): Optional<JavaToolchainDownload> {
-        TODO("Not yet implemented")
+        val registry: JavaToolchainResolverRegistry = toolchainResolverRegistry
+        registry.register(DiscoToolchainResolver::class.java)
     }
 
 }
