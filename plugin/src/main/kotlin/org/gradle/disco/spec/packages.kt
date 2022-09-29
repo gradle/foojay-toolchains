@@ -3,6 +3,7 @@ package org.gradle.disco.spec
 import com.google.gson.Gson
 import org.gradle.platform.Architecture
 import org.gradle.platform.OperatingSystem
+import java.net.URI
 
 val architectures32Bit = setOf("x32", "i386", "x86")
 val architectures64Bit = setOf("x64", "x86_64", "amd64", "ia64")
@@ -51,11 +52,12 @@ data class Package(
     val operating_system: String,
     val architecture: String,
     val package_type: String,
-    val links: Links
+    val links: Links,
 )
 
 data class Links(
-    val pkg_download_redirect: String
+    val pkg_download_redirect: URI,
+    val pkg_info_uri: URI?,
 )
 
 private data class PackagesResult(

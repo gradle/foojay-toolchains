@@ -10,6 +10,7 @@ import org.gradle.platform.OperatingSystem
 import java.io.BufferedReader
 import java.io.InputStream
 import java.net.HttpURLConnection
+import java.net.URI
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets.UTF_8
@@ -27,7 +28,19 @@ class DiscoApi {
 
     val distributions = mutableListOf<Distribution>()
 
-    fun match(vendor: JvmVendorSpec, implementation: JvmImplementation): Distribution? {
+    fun toUri(
+        version: JavaLanguageVersion,
+        vendor: JvmVendorSpec,
+        implementation: JvmImplementation,
+        operatingSystem: OperatingSystem,
+        architecture: Architecture
+    ): URI? {
+        val distribution = match(vendor, implementation) ?: return null
+        val downloadPackage = match(distribution.name, version, operatingSystem, architecture) ?: return null
+        return downloadPackage.links.pkg_download_redirect
+    }
+
+    internal fun match(vendor: JvmVendorSpec, implementation: JvmImplementation): Distribution? {
         fetchDistributionsIfMissing()
         return match(distributions, vendor, implementation)
     }
@@ -45,7 +58,7 @@ class DiscoApi {
         }
     }
 
-    fun match(distributionName: String, version: JavaLanguageVersion, operatingSystem: OperatingSystem, architecture: Architecture): Package? {
+    internal fun match(distributionName: String, version: JavaLanguageVersion, operatingSystem: OperatingSystem, architecture: Architecture): Package? {
         val con = createConnection(
             PACKAGES_ENDPOINT,
             mapOf(

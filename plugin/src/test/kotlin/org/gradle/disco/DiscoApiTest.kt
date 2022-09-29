@@ -10,7 +10,9 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.JvmVendorSpec.*
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 import org.gradle.platform.Architecture
+import org.gradle.platform.Architecture.*
 import org.gradle.platform.OperatingSystem
+import org.gradle.platform.OperatingSystem.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -19,6 +21,21 @@ import kotlin.test.assertNull
 class DiscoApiTest {
 
     private val api = DiscoApi()
+
+    @Test
+    fun `download URI provided correctly`() {
+        assertDownloadUri(
+            "https://api.foojay.io/disco/v3.0/ids/d2d9577fa2947da5c443e02633622104/redirect",
+            11, ADOPTIUM, false, MAC_OS, AARCH64
+        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.16.1_1.tar.gz
+
+        assertDownloadUri(
+            "https://api.foojay.io/disco/v3.0/ids/ab6e7111c1a2cd7bf06de9be70ea0304/redirect",
+            16, any(), true, LINUX, AMD64
+        ) // ibm-semeru-open-jdk_x64_linux_16.0.2_7_openj9-0.27.0.tar.gz
+
+        //todo: add more test cases
+    }
 
     @Test
     fun `J9 implementation influences vendor resolution`() {
@@ -76,14 +93,32 @@ class DiscoApiTest {
 
     @Test
     fun `can pick the right package`() {
-        val p = api.match("Temurin", JavaLanguageVersion.of(11), OperatingSystem.MAC_OS, Architecture.AMD64)
+        val p = api.match("Temurin", JavaLanguageVersion.of(11), LINUX, AMD64)
         assertNotNull(p)
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)
         assertEquals(11, p.major_version)
-        assertEquals("macos", p.operating_system)
+        assertEquals("linux", p.operating_system)
         assertEquals("x64", p.architecture)
         assertEquals("jdk", p.package_type)
+    }
+
+    private fun assertDownloadUri(
+        expected: String,
+        javaVersion: Int,
+        vendor: JvmVendorSpec,
+        isJ9: Boolean,
+        os: OperatingSystem,
+        arch: Architecture
+    ) {
+        val uri = api.toUri(
+            JavaLanguageVersion.of(javaVersion),
+            vendor,
+            if (isJ9) J9 else VENDOR_SPECIFIC,
+            os,
+            arch
+        )
+        assertEquals(expected, uri.toString())
     }
 
     private fun vendorSpec(vendorName: String): JvmVendorSpec = matching(vendorName)

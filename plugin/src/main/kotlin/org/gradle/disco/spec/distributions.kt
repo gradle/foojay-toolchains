@@ -26,12 +26,12 @@ fun match(distributions: List<Distribution>, vendor: JvmVendorSpec, implementati
     if (JvmImplementation.J9 == implementation) {
         return distributions.firstOrNull { it.name == j9Aliases[vendor] }
     }
-    return match(distributions, vendor);
+    return match(distributions, vendor)
 }
 
 fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): Distribution? {
     val exactMathByAlias = distributions.firstOrNull { it.name == vendorAliases[vendor] }
-    if (exactMathByAlias != null) return exactMathByAlias;
+    if (exactMathByAlias != null) return exactMathByAlias
 
     return distributions.firstOrNull { distribution ->
         vendor.matches(distribution.name) || distribution.synonyms.find { vendor.matches(it) } != null
