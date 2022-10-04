@@ -31,10 +31,8 @@ class DiscoApiTest {
 
         assertDownloadUri(
             "https://api.foojay.io/disco/v3.0/ids/ab6e7111c1a2cd7bf06de9be70ea0304/redirect",
-            16, any(), true, LINUX, AMD64
+            16, any(), true, LINUX, X86_64
         ) // ibm-semeru-open-jdk_x64_linux_16.0.2_7_openj9-0.27.0.tar.gz
-
-        //todo: add more test cases
     }
 
     @Test
@@ -70,7 +68,7 @@ class DiscoApiTest {
         assertEquals("Corretto", api.match(AMAZON, VENDOR_SPECIFIC)?.name)
         assertEquals("Liberica", api.match(BELLSOFT, VENDOR_SPECIFIC)?.name)
         assertEquals("Microsoft", api.match(MICROSOFT, VENDOR_SPECIFIC)?.name)
-        assertEquals("Oracle", api.match(ORACLE, VENDOR_SPECIFIC)?.name)
+        assertEquals("Oracle OpenJDK", api.match(ORACLE, VENDOR_SPECIFIC)?.name)
         assertEquals("SAP Machine", api.match(SAP, VENDOR_SPECIFIC)?.name)
 
         assertNull(api.match(APPLE, VENDOR_SPECIFIC)?.name)
@@ -93,7 +91,7 @@ class DiscoApiTest {
 
     @Test
     fun `can pick the right package`() {
-        val p = api.match("Temurin", JavaLanguageVersion.of(11), LINUX, AMD64)
+        val p = api.match("Temurin", JavaLanguageVersion.of(11), LINUX, X86_64)
         assertNotNull(p)
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)

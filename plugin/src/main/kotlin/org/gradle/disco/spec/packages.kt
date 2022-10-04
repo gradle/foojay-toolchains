@@ -22,24 +22,22 @@ fun match(packages: List<Package>, architecture: Architecture): Package? {
     return candidates.firstOrNull()
 }
 
-fun map(os: OperatingSystem): String {
-    return when (os) {
+fun map(os: OperatingSystem): String =
+    when (os) {
         OperatingSystem.LINUX -> "linux"
-        OperatingSystem.UNIX -> "linux" //todo: no equivalent type, can we default to "linux"?
+        OperatingSystem.UNIX -> "linux"
         OperatingSystem.WINDOWS -> "windows"
         OperatingSystem.MAC_OS -> "macos"
         OperatingSystem.SOLARIS -> "solaris"
-        OperatingSystem.FREE_BSD -> "linux" //todo: no equivalent type, can we default to "linux"?
+        OperatingSystem.FREE_BSD -> "linux"
     }
-}
 
-private fun matches(p: Package, architecture: Architecture): Boolean {
-    return when (architecture) {
-        Architecture.I386 -> return architectures32Bit.contains(p.architecture)
-        Architecture.AMD64 -> return architectures64Bit.contains(p.architecture)
-        Architecture.AARCH64 -> return architecturesArm64Bit.contains(p.architecture)
+private fun matches(p: Package, architecture: Architecture): Boolean =
+    when (architecture) {
+        Architecture.X86 -> architectures32Bit.contains(p.architecture)
+        Architecture.X86_64 -> architectures64Bit.contains(p.architecture)
+        Architecture.AARCH64 -> architecturesArm64Bit.contains(p.architecture)
     }
-}
 
 private fun hasHandledArchiveType(p: Package): Boolean {
     return handledArchiveTypes.contains(p.archive_type)

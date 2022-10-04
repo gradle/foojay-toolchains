@@ -12,7 +12,7 @@ val vendorAliases = mapOf(
     JvmVendorSpec.AMAZON to "Corretto",
     JvmVendorSpec.BELLSOFT to "Liberica",
     JvmVendorSpec.IBM_SEMERU to "Semeru",
-    JvmVendorSpec.ORACLE to "Oracle",
+    JvmVendorSpec.ORACLE to "Oracle OpenJDK",
     JvmVendorSpec.SAP to "SAP Machine",
 )
 
