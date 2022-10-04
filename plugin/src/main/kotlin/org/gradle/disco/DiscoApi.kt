@@ -14,11 +14,13 @@ import java.net.URI
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets.UTF_8
+import java.util.concurrent.TimeUnit.SECONDS
 
 
 class DiscoApi {
 
-    val TIMEOUT = 5000 //todo: what value to use? add retries, but how many?
+    val CONNECT_TIMEOUT = SECONDS.toMillis(10).toInt()
+    val READ_TIMEOUT = SECONDS.toMillis(20).toInt()
 
     val SCHEMA = "https"
 
@@ -81,8 +83,8 @@ class DiscoApi {
         val con = url.openConnection() as HttpURLConnection
         con.setRequestProperty("Content-Type", "application/json");
         con.requestMethod = "GET"
-        con.connectTimeout = TIMEOUT;
-        con.readTimeout = TIMEOUT;
+        con.connectTimeout = CONNECT_TIMEOUT;
+        con.readTimeout = READ_TIMEOUT;
         return con
     }
 
