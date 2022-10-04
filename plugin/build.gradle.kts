@@ -12,7 +12,12 @@ plugins {
 
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.7.10"
+
+    `maven-publish`
 }
+
+group = "com.gradle.disco"
+version = "0.1"
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -33,6 +38,14 @@ gradlePlugin {
     val greeting by plugins.creating {
         id = "org.gradle.disco-toolchains"
         implementationClass = "org.gradle.disco.DiscoToolchainsPlugin"
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            url = uri(layout.projectDirectory.dir("repo"))
+        }
     }
 }
 
