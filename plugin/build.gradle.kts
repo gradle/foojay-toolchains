@@ -1,10 +1,7 @@
 
 plugins {
-    `java-gradle-plugin`
-
-    id("org.jetbrains.kotlin.jvm") version "1.7.10"
-
-    `maven-publish`
+    `kotlin-dsl`
+    id("com.gradle.plugin-publish") version "1.0.0"
 }
 
 group = "org.gradle.disco"
@@ -16,14 +13,17 @@ repositories {
 
 dependencies {
     implementation("com.google.code.gson:gson:2.9.1")
-
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 }
 
 gradlePlugin {
-    val greeting by plugins.creating {
+    val discoToolchains by plugins.creating {
         id = "org.gradle.disco-toolchains"
         implementationClass = "org.gradle.disco.DiscoToolchainsPlugin"
+        displayName = "Disco API Toolchains Provisioner by Gradle"
+        description = "Toolchains provisioner using the Disco Foojay API for resolving Java runtimes - developed by Gradle"
+        vcsUrl.set("https://github.com/gradle/disco-toolchains")
+        website.set("https://github.com/gradle/disco-toolchains")
+        tags.addAll("gradle", "toolchains")
     }
 }
 
@@ -35,27 +35,25 @@ publishing {
     }
 }
 
-// Add a source set for the functional test suite
-val functionalTestSourceSet = sourceSets.create("functionalTest") {
+testing {
+    suites {
+        val functionalTest by registering(JvmTestSuite::class) {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-test-junit5")
+            }
+        }
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-test-junit5")
+            }
+        }
+    }
 }
 
-configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
-
-// Add a task to run the functional tests
-val functionalTest by tasks.registering(Test::class) {
-    testClassesDirs = functionalTestSourceSet.output.classesDirs
-    classpath = functionalTestSourceSet.runtimeClasspath
-    useJUnitPlatform()
-}
-
-gradlePlugin.testSourceSets(functionalTestSourceSet)
+gradlePlugin.testSourceSets(sourceSets.getAt("functionalTest"))
 
 tasks.named<Task>("check") {
     // Run the functional tests as part of `check`
-    dependsOn(functionalTest)
-}
-
-tasks.named<Test>("test") {
-    // Use JUnit Jupiter for unit tests.
-    useJUnitPlatform()
+    dependsOn(testing.suites.named("functionalTest"))
 }
