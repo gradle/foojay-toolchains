@@ -81,6 +81,7 @@ class DiscoApiTest {
     fun `can resolve arbitrary vendors`() {
         assertEquals("ZuluPrime", api.match(vendorSpec("zuluprime"), VENDOR_SPECIFIC)?.name)
         assertEquals("ZuluPrime", api.match(vendorSpec("zUluprIme"), VENDOR_SPECIFIC)?.name)
+        assertEquals("JetBrains", api.match(vendorSpec("JetBrains"), VENDOR_SPECIFIC)?.name)
     }
 
     @Test
