@@ -1,7 +1,28 @@
 # Disco Toolchains Plugin
 
-The `org.gradle.disco-toolchains` plugin is a [Java toolchain resolver plugin for Gradle](https://docs.gradle.org/current/userguide/toolchain_plugins.html#toolchain_plugins).
-It provides download URLs for JVMs and it's based on the [foojay DiscoAPI](https://github.com/foojayio/discoapi).
+The `org.gradle.disco-toolchains` plugin provides a [repository for downloading JVMs](https://docs.gradle.org/current/userguide/toolchains.html#sub:download_repositories). It is based on the [foojay DiscoAPI](https://github.com/foojayio/discoapi).
+
+# Usage
+
+To make use of the plugin add following to your `settings.gradle.kts` file:
+
+```
+plugins {
+    id("org.gradle.disco-toolchains") version("0.1")
+}
+
+toolchainManagement {
+    jvm {
+        javaRepositories {
+            repository("disco") {
+                resolverClass.set(org.gradle.disco.DiscoToolchainResolver::class.java)
+            }
+        }
+    }
+}
+```
+
+For further information about using Toolchain Download Repositories consult the [Gradle Manual](https://docs.gradle.org/current/userguide/toolchains.html#sub:download_repositories).
 
 # Matching Toolchain Specifications
 
