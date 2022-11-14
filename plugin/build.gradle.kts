@@ -1,7 +1,7 @@
 
 plugins {
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version "1.0.0"
+    id("com.gradle.plugin-publish") version "1.1.0"
 }
 
 group = "org.gradle.disco"
@@ -16,14 +16,14 @@ dependencies {
 }
 
 gradlePlugin {
+    vcsUrl.set("https://github.com/gradle/disco-toolchains")
+    website.set("https://github.com/gradle/disco-toolchains")
     val discoToolchains by plugins.creating {
         id = "org.gradle.disco-toolchains"
         implementationClass = "org.gradle.disco.DiscoToolchainsPlugin"
         displayName = "Disco API Toolchains Provisioner by Gradle"
         description = "Toolchains provisioner using the Disco Foojay API for resolving Java runtimes - developed by Gradle"
-        vcsUrl.set("https://github.com/gradle/disco-toolchains")
-        website.set("https://github.com/gradle/disco-toolchains")
-        tags.addAll("gradle", "toolchains")
+        tags.set(listOf("gradle", "toolchains"))
     }
 }
 

@@ -25,14 +25,19 @@ class DiscoApiTest {
     @Test
     fun `download URI provided correctly`() {
         assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/d2d9577fa2947da5c443e02633622104/redirect",
+            "https://api.foojay.io/disco/v3.0/ids/2b5dc4d917750eba32eb1acf62cec901/redirect",
             11, ADOPTIUM, false, MAC_OS, AARCH64
-        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.16.1_1.tar.gz
+        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.17_8.tar.gz
 
         assertDownloadUri(
             "https://api.foojay.io/disco/v3.0/ids/ab6e7111c1a2cd7bf06de9be70ea0304/redirect",
             16, any(), true, LINUX, X86_64
         ) // ibm-semeru-open-jdk_x64_linux_16.0.2_7_openj9-0.27.0.tar.gz
+
+        assertDownloadUri(
+            "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
+            16, any(), true, MAC_OS, X86_64
+        ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
     }
 
     @Test
