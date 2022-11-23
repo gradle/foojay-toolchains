@@ -1,3 +1,3 @@
 
-rootProject.name = "disco-toolchains"
+rootProject.name = "foojay-toolchains"
 include("foojay-resolver")
