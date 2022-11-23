@@ -1,13 +1,13 @@
-package org.gradle.disco
+package org.gradle.toolchains.foojay
 
 import org.gradle.jvm.toolchain.JavaToolchainDownload
 import org.gradle.jvm.toolchain.JavaToolchainRequest
 import org.gradle.jvm.toolchain.JavaToolchainResolver
 import java.util.*
 
-abstract class DiscoToolchainResolver: JavaToolchainResolver {
+abstract class FoojayToolchainResolver: JavaToolchainResolver {
 
-    private val api: DiscoApi = DiscoApi()
+    private val api: FoojayApi = FoojayApi()
 
     override fun resolve(request: JavaToolchainRequest): Optional<JavaToolchainDownload> {
         val spec = request.javaToolchainSpec

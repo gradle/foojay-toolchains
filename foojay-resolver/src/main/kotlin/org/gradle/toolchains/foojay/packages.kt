@@ -1,4 +1,4 @@
-package org.gradle.disco.spec
+package org.gradle.toolchains.foojay
 
 import com.google.gson.Gson
 import org.gradle.platform.Architecture
@@ -44,13 +44,13 @@ private fun hasHandledArchiveType(p: Package): Boolean {
 }
 
 data class Package(
-    val archive_type: String,
-    val distribution: String,
-    val major_version: Int,
-    val operating_system: String,
-    val architecture: String,
-    val package_type: String,
-    val links: Links,
+        val archive_type: String,
+        val distribution: String,
+        val major_version: Int,
+        val operating_system: String,
+        val architecture: String,
+        val package_type: String,
+        val links: Links,
 )
 
 data class Links(

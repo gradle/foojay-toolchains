@@ -15,7 +15,7 @@ toolchainManagement {
     jvm {
         javaRepositories {
             repository("disco") {
-                resolverClass.set(org.gradle.disco.DiscoToolchainResolver::class.java)
+                resolverClass.set(org.gradle.disco.FoojayToolchainResolver::class.java)
             }
         }
     }

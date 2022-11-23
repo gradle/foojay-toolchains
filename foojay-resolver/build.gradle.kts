@@ -1,10 +1,11 @@
+@file:Suppress("UNUSED_VARIABLE")
 
 plugins {
     `kotlin-dsl`
     id("com.gradle.plugin-publish") version "1.1.0"
 }
 
-group = "org.gradle.disco"
+group = "org.gradle.toolchains"
 version = "0.1"
 
 repositories {
@@ -19,10 +20,10 @@ gradlePlugin {
     vcsUrl.set("https://github.com/gradle/disco-toolchains")
     website.set("https://github.com/gradle/disco-toolchains")
     val discoToolchains by plugins.creating {
-        id = "org.gradle.disco-toolchains"
-        implementationClass = "org.gradle.disco.DiscoToolchainsPlugin"
-        displayName = "Disco API Toolchains Provisioner by Gradle"
-        description = "Toolchains provisioner using the Disco Foojay API for resolving Java runtimes - developed by Gradle"
+        id = "org.gradle.toolchains.foojay-resolver" //todo: other one "foojay-resolver-convention"
+        implementationClass = "org.gradle.toolchains.foojay.FoojayToolchainsPlugin"
+        displayName = "Foojay Disco API Toolchains Resolver"
+        description = "Toolchains resolver using the Foojay Disco API for resolving Java runtimes"
         tags.set(listOf("gradle", "toolchains"))
     }
 }

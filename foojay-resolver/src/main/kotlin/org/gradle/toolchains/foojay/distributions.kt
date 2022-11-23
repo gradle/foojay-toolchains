@@ -1,4 +1,4 @@
-package org.gradle.disco.spec
+package org.gradle.toolchains.foojay
 
 import com.google.gson.Gson
 import org.gradle.jvm.toolchain.JvmImplementation

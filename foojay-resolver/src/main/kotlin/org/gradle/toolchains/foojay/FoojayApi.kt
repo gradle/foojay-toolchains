@@ -1,7 +1,6 @@
-package org.gradle.disco
+package org.gradle.toolchains.foojay
 
 import org.gradle.api.GradleException
-import org.gradle.disco.spec.*
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
@@ -17,7 +16,7 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.util.concurrent.TimeUnit.SECONDS
 
 
-class DiscoApi {
+class FoojayApi {
 
     val CONNECT_TIMEOUT = SECONDS.toMillis(10).toInt()
     val READ_TIMEOUT = SECONDS.toMillis(20).toInt()
@@ -81,10 +80,10 @@ class DiscoApi {
     private fun createConnection(endpoint: String, parameters: Map<String, String>): HttpURLConnection {
         val url = URL("$SCHEMA://$endpoint?${toParameterString(parameters)}")
         val con = url.openConnection() as HttpURLConnection
-        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Content-Type", "application/json")
         con.requestMethod = "GET"
-        con.connectTimeout = CONNECT_TIMEOUT;
-        con.readTimeout = READ_TIMEOUT;
+        con.connectTimeout = CONNECT_TIMEOUT
+        con.readTimeout = READ_TIMEOUT
         return con
     }
 

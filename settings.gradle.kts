@@ -1,3 +1,3 @@
 
 rootProject.name = "disco-toolchains"
-include("plugin")
+include("foojay-resolver")
