@@ -8,6 +8,15 @@ To make use of the plugin add following to your `settings.gradle.kts` file:
 
 ```
 plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version("0.1")
+}
+```
+
+This is a convention plugin meant to simplify configuration.
+What it does is equivalent to applying the base plugin and some extra configuration:
+
+```
+plugins {
     id("org.gradle.disco-toolchains") version("0.1")
 }
 
@@ -21,6 +30,8 @@ toolchainManagement {
     }
 }
 ```
+
+Feel free to use either approach.
 
 For further information about using Toolchain Download Repositories consult the [Gradle Manual](https://docs.gradle.org/current/userguide/toolchains.html#sub:download_repositories).
 
