@@ -19,13 +19,23 @@ dependencies {
 gradlePlugin {
     vcsUrl.set("https://github.com/gradle/disco-toolchains")
     website.set("https://github.com/gradle/disco-toolchains")
+
     val discoToolchains by plugins.creating {
-        id = "org.gradle.toolchains.foojay-resolver" //todo: other one "foojay-resolver-convention"
+        id = "org.gradle.toolchains.foojay-resolver"
         implementationClass = "org.gradle.toolchains.foojay.FoojayToolchainsPlugin"
         displayName = "Foojay Disco API Toolchains Resolver"
         description = "Toolchains resolver using the Foojay Disco API for resolving Java runtimes"
         tags.set(listOf("gradle", "toolchains"))
     }
+
+    val discoToolchainsConvenience by plugins.creating {
+        id = "org.gradle.toolchains.foojay-resolver-convention"
+        implementationClass = "org.gradle.toolchains.foojay.FoojayToolchainsConventionPlugin"
+        displayName = "Foojay Disco API Toolchains Resolver Convention"
+        description = "Toolchains resolver using the Foojay Disco API for resolving Java runtimes. Automatically configures toolchain management."
+        tags.set(listOf("gradle", "toolchains"))
+    }
+
 }
 
 publishing {
