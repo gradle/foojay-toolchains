@@ -90,7 +90,7 @@ class FoojayApiTest {
 
     @Test
     fun `can pick the right package`() {
-        val p = api.match("Temurin", JavaLanguageVersion.of(11), OperatingSystem.LINUX, Architecture.X86_64)
+        val p = api.match("temurin", JavaLanguageVersion.of(11), OperatingSystem.LINUX, Architecture.X86_64)
         assertNotNull(p)
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)

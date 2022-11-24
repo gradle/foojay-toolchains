@@ -43,7 +43,10 @@ fun parseDistributions(json: String): List<Distribution> {
 }
 
 data class Distribution(
-    val name: String, val synonyms: List<String>, val versions: List<String>
+    val name: String,
+    val api_parameter: String,
+    val synonyms: List<String>,
+    val versions: List<String>
 )
 
 private data class DistributionsResult(

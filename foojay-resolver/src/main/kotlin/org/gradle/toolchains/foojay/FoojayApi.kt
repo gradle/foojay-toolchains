@@ -37,7 +37,7 @@ class FoojayApi {
         architecture: Architecture
     ): URI? {
         val distribution = match(vendor, implementation) ?: return null
-        val downloadPackage = match(distribution.name, version, operatingSystem, architecture) ?: return null
+        val downloadPackage = match(distribution.api_parameter, version, operatingSystem, architecture) ?: return null
         return downloadPackage.links.pkg_download_redirect
     }
 
