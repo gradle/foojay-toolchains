@@ -1,6 +1,7 @@
 package org.gradle.toolchains.foojay
 
 import com.google.gson.Gson
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
@@ -22,16 +23,24 @@ val j9Aliases = mapOf(
     any() to "Semeru",
 )
 
-fun match(distributions: List<Distribution>, vendor: JvmVendorSpec, implementation: JvmImplementation): Distribution? {
+fun match(
+        distributions: List<Distribution>,
+        vendor: JvmVendorSpec,
+        implementation: JvmImplementation,
+        version: JavaLanguageVersion
+): Distribution? {
     if (JvmImplementation.J9 == implementation) {
         return distributions.firstOrNull { it.name == j9Aliases[vendor] }
+    }
+    if (JvmVendorSpec.GRAAL_VM == vendor) {
+        return match(distributions, JvmVendorSpec.matching("Graal VM CE " + version.asInt()))
     }
     return match(distributions, vendor)
 }
 
 fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): Distribution? {
-    val exactMathByAlias = distributions.firstOrNull { it.name == vendorAliases[vendor] }
-    if (exactMathByAlias != null) return exactMathByAlias
+    val exactMatchByAlias = distributions.firstOrNull { it.name == vendorAliases[vendor] }
+    if (exactMatchByAlias != null) return exactMatchByAlias
 
     return distributions.firstOrNull { distribution ->
         vendor.matches(distribution.name) || distribution.synonyms.find { vendor.matches(it) } != null

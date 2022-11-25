@@ -36,14 +36,14 @@ class FoojayApi {
         operatingSystem: OperatingSystem,
         architecture: Architecture
     ): URI? {
-        val distribution = match(vendor, implementation) ?: return null
+        val distribution = match(vendor, implementation, version) ?: return null
         val downloadPackage = match(distribution.api_parameter, version, operatingSystem, architecture) ?: return null
         return downloadPackage.links.pkg_download_redirect
     }
 
-    internal fun match(vendor: JvmVendorSpec, implementation: JvmImplementation): Distribution? {
+    internal fun match(vendor: JvmVendorSpec, implementation: JvmImplementation, version: JavaLanguageVersion): Distribution? {
         fetchDistributionsIfMissing()
-        return match(distributions, vendor, implementation)
+        return match(distributions, vendor, implementation, version)
     }
 
     private fun fetchDistributionsIfMissing() {
@@ -63,7 +63,7 @@ class FoojayApi {
         val con = createConnection(
             PACKAGES_ENDPOINT,
             mapOf(
-                "version" to "${version.asInt()}",
+                "jdk_version" to "${version.asInt()}",
                 "distro" to distributionName,
                 "operating_system" to map(operatingSystem),
                 "latest" to "available",
