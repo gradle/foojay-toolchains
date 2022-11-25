@@ -44,28 +44,27 @@ The main thing the plugin does is to match [Gradle's toolchain specifications](h
 There is mostly a 1-to-1 relationship between the DiscoAPI's distributions and Gradle vendors.
 The plugin works with the following mapping:
 
-| Gradle JVM Vendor       | Foojay Distribution |
-|-------------------------|---------------------|
-| \<no vendor specified\> | Temurin             |
-| ADOPTIUM                | Temurin             |
-| ADOPTONEJDK             | AOJ                 |
-| AMAZON                  | Corretto            |
-| APPLE                   | -                   |
-| AZUL                    | Zulu                |
-| BELLSOFT                | Liberica            |
-| GRAAL_VM                | -                   |
-| HEWLETT_PACKARD         | -                   |
-| IBM                     | -                   |
-| IBM_SEMERU              | Semeru              |
-| MICROSOFT               | Microsoft           |
-| ORACLE                  | Oracle OpenJDK      |
-| SAP                     | SAP Machine         |
+| Gradle JVM Vendor       | Foojay Distribution       |
+|-------------------------|---------------------------|
+| \<no vendor specified\> | Temurin                   |
+| ADOPTIUM                | Temurin                   |
+| ADOPTONEJDK             | AOJ                       |
+| AMAZON                  | Corretto                  |
+| APPLE                   | -                         |
+| AZUL                    | Zulu                      |
+| BELLSOFT                | Liberica                  |
+| GRAAL_VM                | Graal VM CE 8/11/16/17/19 |
+| HEWLETT_PACKARD         | -                         |
+| IBM                     | -                         |
+| IBM_SEMERU              | Semeru                    |
+| MICROSOFT               | Microsoft                 |
+| ORACLE                  | Oracle OpenJDK            |
+| SAP                     | SAP Machine               |
 
 To note:
 
 * If no vendor is specified, then the `Temurin` distribution is picked (due to the history of the auto-provisioning feature in Gradle, specifically that AdoptOpenJDK/Adoptium have been the default sources for downloading JVMs).
 * Not all Gradle vendors have an equivalent DiscoAPI distribution, empty cells indicate that no toolchain will be provisioned.
-* GraalVM distributions just don't seem to work in the current version of the DiscoAPI, so this version of the plugin doesn't map to them.
 
 ## Implementations
 
