@@ -7,7 +7,8 @@ plugins {
 }
 
 group = "org.gradle.toolchains"
-version = "0.1"
+val pluginVersion = property("pluginVersion") ?: throw GradleException("`pluginVersion` missing in gradle.properties!")
+version = pluginVersion
 
 repositories {
     mavenCentral()
