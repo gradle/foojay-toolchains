@@ -2,7 +2,7 @@
 
 plugins {
     `kotlin-dsl`
-    `signing`
+    signing
     id("com.gradle.plugin-publish") version "1.1.0"
 }
 
@@ -46,6 +46,13 @@ publishing {
             url = uri(layout.projectDirectory.dir("repo"))
         }
     }
+}
+
+signing {
+    useInMemoryPgpKeys(
+            project.providers.environmentVariable("PGP_SIGNING_KEY").forUseAtConfigurationTime().orNull,
+            project.providers.environmentVariable("PGP_SIGNING_KEY_PASSPHRASE").forUseAtConfigurationTime().orNull
+    )
 }
 
 testing {
