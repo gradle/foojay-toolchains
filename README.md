@@ -24,7 +24,7 @@ toolchainManagement {
     jvm {
         javaRepositories {
             repository("foojay") {
-                resolverClass.set(org.gradle.disco.FoojayToolchainResolver::class.java)
+                resolverClass.set(org.gradle.toolchains.foojay.FoojayToolchainResolver::class.java)
             }
         }
     }
