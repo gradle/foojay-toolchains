@@ -18,7 +18,7 @@ fun match(packages: List<Package>, architecture: Architecture): Package? {
     val candidates = packages
         .filter { p -> matches(p, architecture) }   // we filter out packages not matching the architecture the build is running on
         .filter { p -> hasHandledArchiveType(p) }   // Gradle can handle only certain archive types
-        .sortedBy { p -> p.package_type } // prefer JDKs over JREs
+        .sortedWith(compareBy(Package::package_type, Package::lib_c_type)) // prefer JDKs over JREs & prefer "glibc" over "musl"
     return candidates.firstOrNull()
 }
 
@@ -51,6 +51,7 @@ data class Package(
         val operating_system: String,
         val architecture: String,
         val package_type: String,
+        val lib_c_type: String,
         val links: Links,
 )
 

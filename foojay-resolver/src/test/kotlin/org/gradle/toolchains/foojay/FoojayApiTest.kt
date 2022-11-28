@@ -50,6 +50,11 @@ class FoojayApiTest {
             "https://api.foojay.io/disco/v3.0/ids/871fe4e17cc2d5625fc5ca5f4027affd/redirect",
             16, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64
         ) // graalvm-ce-java16-linux-amd64-21.2.0.tar.gz
+
+        assertDownloadUri(
+                "https://api.foojay.io/disco/v3.0/ids/09fd457b8a0a388f54ccf62049add79e/redirect",
+                16, any(), false, OperatingSystem.LINUX, Architecture.X86_64
+        ) // OpenJDK16U-jdk_x64_linux_hotspot_16.0.2_7.tar.gz
     }
 
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
