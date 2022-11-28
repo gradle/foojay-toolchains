@@ -2,6 +2,7 @@
 
 plugins {
     `kotlin-dsl`
+    `signing`
     id("com.gradle.plugin-publish") version "1.1.0"
 }
 
