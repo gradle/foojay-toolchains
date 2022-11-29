@@ -8,7 +8,7 @@ To make use of the plugin add following to your `settings.gradle.kts` file:
 
 ```
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version("0.1")
+    id("org.gradle.toolchains.foojay-resolver-convention") version("0.2")
 }
 ```
 
@@ -17,7 +17,7 @@ What it does is equivalent to applying the base plugin and some extra configurat
 
 ```
 plugins {
-    id("org.gradle.toolchains.foojay-resolver") version("0.1")
+    id("org.gradle.toolchains.foojay-resolver") version("0.2")
 }
 
 toolchainManagement {
