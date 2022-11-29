@@ -90,9 +90,9 @@ class FoojayApi {
     private fun toParameterString(params: Map<String, String>): String {
         val result = StringBuilder()
         for (param in params) {
-            result.append(URLEncoder.encode(param.key, UTF_8))
+            result.append(URLEncoder.encode(param.key, UTF_8.name()))
             result.append("=")
-            result.append(URLEncoder.encode(param.value, UTF_8))
+            result.append(URLEncoder.encode(param.value, UTF_8.name()))
             result.append("&")
         }
         if (params.isNotEmpty()) result.delete(result.length - 1, result.length)

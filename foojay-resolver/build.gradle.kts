@@ -1,5 +1,8 @@
 @file:Suppress("UNUSED_VARIABLE")
 
+import com.gradle.build.releaseNotesFileName
+import java.io.FileNotFoundException
+
 plugins {
     `kotlin-dsl`
     signing
@@ -12,6 +15,12 @@ version = pluginVersion
 
 repositories {
     mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
 }
 
 dependencies {
@@ -76,4 +85,24 @@ gradlePlugin.testSourceSets(sourceSets.getAt("functionalTest"))
 tasks.named<Task>("check") {
     // Run the functional tests as part of `check`
     dependsOn(testing.suites.named("functionalTest"))
+}
+
+val readReleaseNotes by tasks.registering {
+    description = "Ensure we've got some release notes handy"
+    doLast {
+        val releaseNotesFile = file(releaseNotesFileName(version.toString()))
+        if (!releaseNotesFile.exists()) {
+            throw FileNotFoundException("Couldn't find release notes file $releaseNotesFile.absolutePath")
+        }
+        val releaseNotes = releaseNotesFile.readText().trim()
+        if (releaseNotes.isBlank()) {
+            throw IllegalArgumentException("Release notes file $releaseNotesFile.absolutePath is empty")
+        }
+        gradlePlugin.plugins["discoToolchains"].description = releaseNotes
+        gradlePlugin.plugins["discoToolchainsConvenience"].description = releaseNotes
+    }
+}
+
+tasks.publishPlugins {
+    dependsOn(readReleaseNotes)
 }
