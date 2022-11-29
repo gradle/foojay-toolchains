@@ -1,6 +1,5 @@
 @file:Suppress("UNUSED_VARIABLE")
 
-import com.gradle.build.releaseNotesFileName
 import java.io.FileNotFoundException
 
 plugins {
@@ -90,7 +89,7 @@ tasks.named<Task>("check") {
 val readReleaseNotes by tasks.registering {
     description = "Ensure we've got some release notes handy"
     doLast {
-        val releaseNotesFile = file(releaseNotesFileName(version.toString()))
+        val releaseNotesFile = file("release-notes-$version.txt")
         if (!releaseNotesFile.exists()) {
             throw FileNotFoundException("Couldn't find release notes file $releaseNotesFile.absolutePath")
         }
