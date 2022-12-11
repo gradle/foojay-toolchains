@@ -55,7 +55,7 @@ The plugin works with the following mapping:
 | BELLSOFT                | Liberica                  |
 | GRAAL_VM                | Graal VM CE 8/11/16/17/19 |
 | HEWLETT_PACKARD         | -                         |
-| IBM                     | -                         |
+| IBM                     | Semeru                    |
 | IBM_SEMERU              | Semeru                    |
 | MICROSOFT               | Microsoft                 |
 | ORACLE                  | Oracle OpenJDK            |
@@ -83,7 +83,7 @@ What this criteria does in the plugin is to influence the Vendor-to-Distribution
 | BELLSOFT                | -                   |
 | GRAAL_VM                | -                   |
 | HEWLETT_PACKARD         | -                   |
-| IBM                     | -                   |
+| IBM                     | Semeru              |
 | IBM_SEMERU              | Semeru              |
 | MICROSOFT               | -                   |
 | ORACLE                  | -                   |

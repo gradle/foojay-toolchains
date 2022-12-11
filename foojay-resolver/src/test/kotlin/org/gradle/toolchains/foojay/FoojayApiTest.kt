@@ -63,6 +63,7 @@ class FoojayApiTest {
         assertEquals("Semeru", api.match(any(), J9, of(version))?.name)
 
         assertEquals("AOJ OpenJ9", api.match(ADOPTOPENJDK, J9, of(version))?.name)
+        assertEquals("Semeru", api.match(IBM, J9, of(version))?.name)
         assertEquals("Semeru", api.match(IBM_SEMERU, J9, of(version))?.name)
 
         assertNull(api.match(ADOPTIUM, J9, of(version))?.name)
@@ -76,7 +77,6 @@ class FoojayApiTest {
         assertNull(api.match(APPLE, J9, of(version))?.name)
         assertNull(api.match(GRAAL_VM, J9, of(version))?.name)
         assertNull(api.match(HEWLETT_PACKARD, J9, of(version))?.name)
-        assertNull(api.match(IBM, J9, of(version))?.name)
     }
 
     @ParameterizedTest(name = "vendor specific implementation does not influences vendor resolution (Java {0})")
@@ -85,6 +85,7 @@ class FoojayApiTest {
         assertEquals("Temurin", api.match(any(), VENDOR_SPECIFIC, of(version))?.name)
 
         assertEquals("AOJ", api.match(ADOPTOPENJDK, VENDOR_SPECIFIC, of(version))?.name)
+        assertEquals("Semeru", api.match(IBM, VENDOR_SPECIFIC, of(version))?.name)
         assertEquals("Semeru", api.match(IBM_SEMERU, VENDOR_SPECIFIC, of(version))?.name)
 
         assertEquals("Temurin", api.match(ADOPTIUM, VENDOR_SPECIFIC, of(version))?.name)
@@ -99,7 +100,6 @@ class FoojayApiTest {
 
         assertNull(api.match(APPLE, VENDOR_SPECIFIC, of(version))?.name)
         assertNull(api.match(HEWLETT_PACKARD, VENDOR_SPECIFIC, of(version))?.name)
-        assertNull(api.match(IBM, VENDOR_SPECIFIC, of(version))?.name)
     }
 
     @ParameterizedTest(name = "can resolve arbitrary vendors (Java {0})")
