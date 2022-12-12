@@ -27,24 +27,24 @@ class FoojayApiTest {
         ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.17_8.tar.gz
 
         assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/ab6e7111c1a2cd7bf06de9be70ea0304/redirect",
-            16, any(), true, OperatingSystem.LINUX, Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_linux_16.0.2_7_openj9-0.27.0.tar.gz
-
-        assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
-            16, any(), true, OperatingSystem.MAC_OS, Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
-
-        assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/74bf5fb0d06e512f88356eb8fe45f67f/redirect",
-                8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64
-        ) // graalvm-ce-java8-windows-amd64-21.3.1.zip
-
-        assertDownloadUri(
             "https://api.foojay.io/disco/v3.0/ids/9927d38888344a93f3803dfd0366a6e3/redirect",
             11, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
         ) // graalvm-ce-java11-darwin-aarch64-22.3.0.tar.gz
+
+        assertDownloadUri(
+                "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
+                16, any(), true, OperatingSystem.MAC_OS, Architecture.X86_64
+        ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
+
+        assertDownloadUri(
+                "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
+                16, IBM, true, OperatingSystem.MAC_OS, Architecture.X86_64
+        ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
+
+        assertDownloadUri(
+                "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
+                16, IBM_SEMERU, true, OperatingSystem.MAC_OS, Architecture.X86_64
+        ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
 
         assertDownloadUri(
             "https://api.foojay.io/disco/v3.0/ids/871fe4e17cc2d5625fc5ca5f4027affd/redirect",
@@ -55,6 +55,16 @@ class FoojayApiTest {
                 "https://api.foojay.io/disco/v3.0/ids/09fd457b8a0a388f54ccf62049add79e/redirect",
                 16, any(), false, OperatingSystem.LINUX, Architecture.X86_64
         ) // OpenJDK16U-jdk_x64_linux_hotspot_16.0.2_7.tar.gz
+
+        assertDownloadUri(
+                "https://api.foojay.io/disco/v3.0/ids/ab6e7111c1a2cd7bf06de9be70ea0304/redirect",
+                16, any(), true, OperatingSystem.LINUX, Architecture.X86_64
+        ) // ibm-semeru-open-jdk_x64_linux_16.0.2_7_openj9-0.27.0.tar.gz
+
+        assertDownloadUri(
+                "https://api.foojay.io/disco/v3.0/ids/74bf5fb0d06e512f88356eb8fe45f67f/redirect",
+                8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64
+        ) // graalvm-ce-java8-windows-amd64-21.3.1.zip
     }
 
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
@@ -63,6 +73,7 @@ class FoojayApiTest {
         assertEquals("Semeru", api.match(any(), J9, of(version))?.name)
 
         assertEquals("AOJ OpenJ9", api.match(ADOPTOPENJDK, J9, of(version))?.name)
+        assertEquals("Semeru", api.match(IBM, J9, of(version))?.name)
         assertEquals("Semeru", api.match(IBM_SEMERU, J9, of(version))?.name)
 
         assertNull(api.match(ADOPTIUM, J9, of(version))?.name)
@@ -76,7 +87,6 @@ class FoojayApiTest {
         assertNull(api.match(APPLE, J9, of(version))?.name)
         assertNull(api.match(GRAAL_VM, J9, of(version))?.name)
         assertNull(api.match(HEWLETT_PACKARD, J9, of(version))?.name)
-        assertNull(api.match(IBM, J9, of(version))?.name)
     }
 
     @ParameterizedTest(name = "vendor specific implementation does not influences vendor resolution (Java {0})")
@@ -85,6 +95,7 @@ class FoojayApiTest {
         assertEquals("Temurin", api.match(any(), VENDOR_SPECIFIC, of(version))?.name)
 
         assertEquals("AOJ", api.match(ADOPTOPENJDK, VENDOR_SPECIFIC, of(version))?.name)
+        assertEquals("Semeru", api.match(IBM, VENDOR_SPECIFIC, of(version))?.name)
         assertEquals("Semeru", api.match(IBM_SEMERU, VENDOR_SPECIFIC, of(version))?.name)
 
         assertEquals("Temurin", api.match(ADOPTIUM, VENDOR_SPECIFIC, of(version))?.name)
@@ -99,7 +110,6 @@ class FoojayApiTest {
 
         assertNull(api.match(APPLE, VENDOR_SPECIFIC, of(version))?.name)
         assertNull(api.match(HEWLETT_PACKARD, VENDOR_SPECIFIC, of(version))?.name)
-        assertNull(api.match(IBM, VENDOR_SPECIFIC, of(version))?.name)
     }
 
     @ParameterizedTest(name = "can resolve arbitrary vendors (Java {0})")
