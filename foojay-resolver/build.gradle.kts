@@ -34,7 +34,7 @@ gradlePlugin {
         id = "org.gradle.toolchains.foojay-resolver"
         implementationClass = "org.gradle.toolchains.foojay.FoojayToolchainsPlugin"
         displayName = "Foojay Disco API Toolchains Resolver"
-        description = "Toolchains resolver using the Foojay Disco API for resolving Java runtimes"
+        description = "Toolchains resolver using the Foojay Disco API for resolving Java runtimes."
         tags.set(listOf("gradle", "toolchains"))
     }
 
