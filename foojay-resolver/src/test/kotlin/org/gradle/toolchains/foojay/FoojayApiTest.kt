@@ -22,6 +22,11 @@ class FoojayApiTest {
     @Test
     fun `download URI provided correctly`() {
         assertDownloadUri(
+            "https://api.foojay.io/disco/v3.0/ids/06d328bdf96f725498761110afa5ddaa/redirect",
+            8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64
+        ) // amazon-corretto-8.352.08.1-macosx-aarch64.tar.gz
+
+        assertDownloadUri(
             "https://api.foojay.io/disco/v3.0/ids/2b5dc4d917750eba32eb1acf62cec901/redirect",
             11, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
         ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.17_8.tar.gz
@@ -70,54 +75,54 @@ class FoojayApiTest {
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `J9 implementation influences vendor resolution`(version: Int) {
-        assertEquals("Semeru", api.match(any(), J9, of(version))?.name)
+        assertEquals("Semeru", api.match(any(), J9, of(version)).firstOrNull()?.name)
 
-        assertEquals("AOJ OpenJ9", api.match(ADOPTOPENJDK, J9, of(version))?.name)
-        assertEquals("Semeru", api.match(IBM, J9, of(version))?.name)
-        assertEquals("Semeru", api.match(IBM_SEMERU, J9, of(version))?.name)
+        assertEquals("AOJ OpenJ9", api.match(ADOPTOPENJDK, J9, of(version)).firstOrNull()?.name)
+        assertEquals("Semeru", api.match(IBM, J9, of(version)).firstOrNull()?.name)
+        assertEquals("Semeru", api.match(IBM_SEMERU, J9, of(version)).firstOrNull()?.name)
 
-        assertNull(api.match(ADOPTIUM, J9, of(version))?.name)
-        assertNull(api.match(AZUL, J9, of(version))?.name)
-        assertNull(api.match(AMAZON, J9, of(version))?.name)
-        assertNull(api.match(BELLSOFT, J9, of(version))?.name)
-        assertNull(api.match(MICROSOFT, J9, of(version))?.name)
-        assertNull(api.match(ORACLE, J9, of(version))?.name)
-        assertNull(api.match(SAP, J9, of(version))?.name)
+        assertNull(api.match(ADOPTIUM, J9, of(version)).firstOrNull()?.name)
+        assertNull(api.match(AZUL, J9, of(version)).firstOrNull()?.name)
+        assertNull(api.match(AMAZON, J9, of(version)).firstOrNull()?.name)
+        assertNull(api.match(BELLSOFT, J9, of(version)).firstOrNull()?.name)
+        assertNull(api.match(MICROSOFT, J9, of(version)).firstOrNull()?.name)
+        assertNull(api.match(ORACLE, J9, of(version)).firstOrNull()?.name)
+        assertNull(api.match(SAP, J9, of(version)).firstOrNull()?.name)
 
-        assertNull(api.match(APPLE, J9, of(version))?.name)
-        assertNull(api.match(GRAAL_VM, J9, of(version))?.name)
-        assertNull(api.match(HEWLETT_PACKARD, J9, of(version))?.name)
+        assertNull(api.match(APPLE, J9, of(version)).firstOrNull()?.name)
+        assertNull(api.match(GRAAL_VM, J9, of(version)).firstOrNull()?.name)
+        assertNull(api.match(HEWLETT_PACKARD, J9, of(version)).firstOrNull()?.name)
     }
 
-    @ParameterizedTest(name = "vendor specific implementation does not influences vendor resolution (Java {0})")
+    @ParameterizedTest(name = "vendor specific implementation does not influence vendor resolution (Java {0})")
     @ValueSource(ints = [8, 11, 16])
-    fun `vendor specific implementation does not influences vendor resolution`(version: Int) {
-        assertEquals("Temurin", api.match(any(), VENDOR_SPECIFIC, of(version))?.name)
+    fun `vendor specific implementation does not influence vendor resolution`(version: Int) {
+        assertEquals("Temurin", api.match(any(), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
 
-        assertEquals("AOJ", api.match(ADOPTOPENJDK, VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("Semeru", api.match(IBM, VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("Semeru", api.match(IBM_SEMERU, VENDOR_SPECIFIC, of(version))?.name)
+        assertEquals("AOJ", api.match(ADOPTOPENJDK, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("Semeru", api.match(IBM, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("Semeru", api.match(IBM_SEMERU, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
 
-        assertEquals("Temurin", api.match(ADOPTIUM, VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("Zulu", api.match(AZUL, VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("Corretto", api.match(AMAZON, VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("Liberica", api.match(BELLSOFT, VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("Microsoft", api.match(MICROSOFT, VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("Oracle OpenJDK", api.match(ORACLE, VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("SAP Machine", api.match(SAP, VENDOR_SPECIFIC, of(version))?.name)
+        assertEquals("Temurin", api.match(ADOPTIUM, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("Zulu", api.match(AZUL, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("Corretto", api.match(AMAZON, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("Liberica", api.match(BELLSOFT, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("Microsoft", api.match(MICROSOFT, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("Oracle OpenJDK", api.match(ORACLE, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("SAP Machine", api.match(SAP, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
 
-        assertEquals("Graal VM CE $version", api.match(GRAAL_VM, VENDOR_SPECIFIC, of(version))?.name)
+        assertEquals("Graal VM CE $version", api.match(GRAAL_VM, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
 
-        assertNull(api.match(APPLE, VENDOR_SPECIFIC, of(version))?.name)
-        assertNull(api.match(HEWLETT_PACKARD, VENDOR_SPECIFIC, of(version))?.name)
+        assertNull(api.match(APPLE, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertNull(api.match(HEWLETT_PACKARD, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
     }
 
     @ParameterizedTest(name = "can resolve arbitrary vendors (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `can resolve arbitrary vendors`(version: Int) {
-        assertEquals("ZuluPrime", api.match(vendorSpec("zuluprime"), VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("ZuluPrime", api.match(vendorSpec("zUluprIme"), VENDOR_SPECIFIC, of(version))?.name)
-        assertEquals("JetBrains", api.match(vendorSpec("JetBrains"), VENDOR_SPECIFIC, of(version))?.name)
+        assertEquals("ZuluPrime", api.match(vendorSpec("zuluprime"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("ZuluPrime", api.match(vendorSpec("zUluprIme"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("JetBrains", api.match(vendorSpec("JetBrains"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
     }
 
     @Test

@@ -7,10 +7,10 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 
 val vendorAliases = mapOf(
-    any() to "Temurin",
-    JvmVendorSpec.AZUL to "Zulu",
+    JvmVendorSpec.ADOPTIUM to "Temurin",
     JvmVendorSpec.ADOPTOPENJDK to "AOJ",
     JvmVendorSpec.AMAZON to "Corretto",
+    JvmVendorSpec.AZUL to "Zulu",
     JvmVendorSpec.BELLSOFT to "Liberica",
     JvmVendorSpec.IBM to "Semeru",
     JvmVendorSpec.IBM_SEMERU to "Semeru",
@@ -30,9 +30,9 @@ fun match(
         vendor: JvmVendorSpec,
         implementation: JvmImplementation,
         version: JavaLanguageVersion
-): Distribution? {
+): List<Distribution> {
     if (JvmImplementation.J9 == implementation) {
-        return distributions.firstOrNull { it.name == j9Aliases[vendor] }
+        return distributions.filter { it.name == j9Aliases[vendor] }
     }
     if (JvmVendorSpec.GRAAL_VM == vendor) {
         return match(distributions, JvmVendorSpec.matching("Graal VM CE " + version.asInt()))
@@ -40,11 +40,18 @@ fun match(
     return match(distributions, vendor)
 }
 
-fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): Distribution? {
-    val exactMatchByAlias = distributions.firstOrNull { it.name == vendorAliases[vendor] }
-    if (exactMatchByAlias != null) return exactMatchByAlias
+fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution> {
+    val aliases = vendorAliases
+    if (vendor == any()) {
+        return distributions
+            .filter { it.name in aliases.values }
+            .sortedBy { aliases.values.indexOf(it.name) }
+    }
 
-    return distributions.firstOrNull { distribution ->
+    val exactMatchByAlias = distributions.firstOrNull { it.name == aliases[vendor] }
+    if (exactMatchByAlias != null) return listOf(exactMatchByAlias)
+
+    return distributions.filter { distribution ->
         vendor.matches(distribution.name) || distribution.synonyms.find { vendor.matches(it) } != null
     }
 }
