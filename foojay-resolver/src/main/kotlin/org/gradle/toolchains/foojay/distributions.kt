@@ -30,31 +30,34 @@ fun match(
         vendor: JvmVendorSpec,
         implementation: JvmImplementation,
         version: JavaLanguageVersion
-): List<Distribution> {
-    if (JvmImplementation.J9 == implementation) {
-        return distributions.filter { it.name == j9Aliases[vendor] }
-    }
-    if (JvmVendorSpec.GRAAL_VM == vendor) {
-        return match(distributions, JvmVendorSpec.matching("Graal VM CE " + version.asInt()))
-    }
-    return match(distributions, vendor)
+): List<Distribution> = when {
+    JvmImplementation.J9 == implementation -> distributions.filter { it.name == j9Aliases[vendor] }
+    JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("Graal VM CE " + version.asInt()))
+    else -> match(distributions, vendor)
 }
 
 fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution> {
-    val aliases = vendorAliases
     if (vendor == any()) {
-        return distributions
-            .filter { it.name in aliases.values }
-            .sortedBy { aliases.values.indexOf(it.name) }
+        return findAllDistributionsForKnownVendors(distributions)
     }
 
-    val exactMatchByAlias = distributions.firstOrNull { it.name == aliases[vendor] }
-    if (exactMatchByAlias != null) return listOf(exactMatchByAlias)
+    return findExactMatch(distributions, vendor) ?: findAllMatchingDistributions(distributions, vendor)
+}
 
-    return distributions.filter { distribution ->
+fun findAllDistributionsForKnownVendors(distributions: List<Distribution>): List<Distribution> =
+    distributions
+        .filter { it.name in vendorAliases.values }
+        .sortedBy { vendorAliases.values.indexOf(it.name) }
+
+private fun findExactMatch(distributions: List<Distribution>, vendor: JvmVendorSpec) : List<Distribution>? =
+    distributions.firstOrNull { it.name == vendorAliases[vendor] }?.let {
+        listOf(it)
+    }
+
+private fun findAllMatchingDistributions(distributions: List<Distribution>, vendor: JvmVendorSpec) =
+    distributions.filter { distribution ->
         vendor.matches(distribution.name) || distribution.synonyms.find { vendor.matches(it) } != null
     }
-}
 
 fun parseDistributions(json: String): List<Distribution> {
     return Gson().fromJson(json, DistributionsResult::class.java).result
