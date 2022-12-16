@@ -128,13 +128,9 @@ class FoojayApiTest {
 
     private fun assertMatchesDistributionsContainInOrder(vendor: JvmVendorSpec, implementation: JvmImplementation, version: Int, vararg expectedDistributions: String) {
         val matches = api.match(vendor, implementation, of(version)).map { it.name }
-        assertTrue(
-                matches.containsAll(listOf(*expectedDistributions)),
-                "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
-        )
         assertEquals(
-                matches.first(), expectedDistributions.first(),
-                "Wrong order in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
+            listOf(*expectedDistributions), matches.subList(0, expectedDistributions.size),
+                "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
         )
     }
 
