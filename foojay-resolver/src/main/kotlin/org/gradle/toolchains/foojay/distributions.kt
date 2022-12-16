@@ -36,7 +36,7 @@ fun match(
     else -> match(distributions, vendor)
 }
 
-fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution> {
+private fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution> {
     if (vendor == any()) {
         return findAllDistributionsForKnownVendors(distributions)
     }
@@ -44,7 +44,7 @@ fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distri
     return findExactMatch(distributions, vendor) ?: findAllMatchingDistributions(distributions, vendor)
 }
 
-fun findAllDistributionsForKnownVendors(distributions: List<Distribution>): List<Distribution> =
+private fun findAllDistributionsForKnownVendors(distributions: List<Distribution>): List<Distribution> =
     distributions
         .filter { it.name in vendorAliases.values }
         .sortedBy { vendorAliases.values.indexOf(it.name) }
