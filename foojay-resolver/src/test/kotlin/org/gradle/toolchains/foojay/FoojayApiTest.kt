@@ -1,6 +1,7 @@
 package org.gradle.toolchains.foojay
 
 import org.gradle.jvm.toolchain.JavaLanguageVersion.of
+import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmImplementation.J9
 import org.gradle.jvm.toolchain.JvmImplementation.VENDOR_SPECIFIC
 import org.gradle.jvm.toolchain.JvmVendorSpec
@@ -10,10 +11,7 @@ import org.gradle.platform.Architecture
 import org.gradle.platform.OperatingSystem
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
+import kotlin.test.*
 
 class FoojayApiTest {
 
@@ -75,46 +73,54 @@ class FoojayApiTest {
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `J9 implementation influences vendor resolution`(version: Int) {
-        assertEquals("Semeru", api.match(any(), J9, of(version)).firstOrNull()?.name)
+        assertMatchedDistributions(any(), J9, version, "Semeru", "AOJ OpenJ9")
 
-        assertEquals("AOJ OpenJ9", api.match(ADOPTOPENJDK, J9, of(version)).firstOrNull()?.name)
-        assertEquals("Semeru", api.match(IBM, J9, of(version)).firstOrNull()?.name)
-        assertEquals("Semeru", api.match(IBM_SEMERU, J9, of(version)).firstOrNull()?.name)
+        assertMatchedDistributions(ADOPTOPENJDK, J9, version, "AOJ OpenJ9")
+        assertMatchedDistributions(IBM, J9, version, "Semeru")
+        assertMatchedDistributions(IBM_SEMERU, J9, version, "Semeru")
 
-        assertNull(api.match(ADOPTIUM, J9, of(version)).firstOrNull()?.name)
-        assertNull(api.match(AZUL, J9, of(version)).firstOrNull()?.name)
-        assertNull(api.match(AMAZON, J9, of(version)).firstOrNull()?.name)
-        assertNull(api.match(BELLSOFT, J9, of(version)).firstOrNull()?.name)
-        assertNull(api.match(MICROSOFT, J9, of(version)).firstOrNull()?.name)
-        assertNull(api.match(ORACLE, J9, of(version)).firstOrNull()?.name)
-        assertNull(api.match(SAP, J9, of(version)).firstOrNull()?.name)
+        assertTrue(api.match(ADOPTIUM, J9, of(version)).isEmpty())
+        assertTrue(api.match(AZUL, J9, of(version)).isEmpty())
+        assertTrue(api.match(AMAZON, J9, of(version)).isEmpty())
+        assertTrue(api.match(BELLSOFT, J9, of(version)).isEmpty())
+        assertTrue(api.match(MICROSOFT, J9, of(version)).isEmpty())
+        assertTrue(api.match(ORACLE, J9, of(version)).isEmpty())
+        assertTrue(api.match(SAP, J9, of(version)).isEmpty())
 
-        assertNull(api.match(APPLE, J9, of(version)).firstOrNull()?.name)
-        assertNull(api.match(GRAAL_VM, J9, of(version)).firstOrNull()?.name)
-        assertNull(api.match(HEWLETT_PACKARD, J9, of(version)).firstOrNull()?.name)
+        assertTrue(api.match(APPLE, J9, of(version)).isEmpty())
+        assertTrue(api.match(GRAAL_VM, J9, of(version)).isEmpty())
+        assertTrue(api.match(HEWLETT_PACKARD, J9, of(version)).isEmpty())
     }
 
     @ParameterizedTest(name = "vendor specific implementation does not influence vendor resolution (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `vendor specific implementation does not influence vendor resolution`(version: Int) {
-        assertEquals("Temurin", api.match(any(), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertMatchedDistributions(any(), VENDOR_SPECIFIC, version, "Temurin")
 
-        assertEquals("AOJ", api.match(ADOPTOPENJDK, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("Semeru", api.match(IBM, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("Semeru", api.match(IBM_SEMERU, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertMatchedDistributions(ADOPTOPENJDK, VENDOR_SPECIFIC, version, "AOJ")
+        assertMatchedDistributions(IBM, VENDOR_SPECIFIC, version, "Semeru")
+        assertMatchedDistributions(IBM_SEMERU, VENDOR_SPECIFIC, version, "Semeru")
 
-        assertEquals("Temurin", api.match(ADOPTIUM, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("Zulu", api.match(AZUL, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("Corretto", api.match(AMAZON, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("Liberica", api.match(BELLSOFT, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("Microsoft", api.match(MICROSOFT, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("Oracle OpenJDK", api.match(ORACLE, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("SAP Machine", api.match(SAP, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertMatchedDistributions(ADOPTIUM, VENDOR_SPECIFIC, version, "Temurin")
+        assertMatchedDistributions(AZUL, VENDOR_SPECIFIC, version, "Zulu")
+        assertMatchedDistributions(AMAZON, VENDOR_SPECIFIC, version, "Corretto")
+        assertMatchedDistributions(BELLSOFT, VENDOR_SPECIFIC, version, "Liberica")
+        assertMatchedDistributions(MICROSOFT, VENDOR_SPECIFIC, version, "Microsoft")
+        assertMatchedDistributions(ORACLE, VENDOR_SPECIFIC, version, "Oracle OpenJDK")
+        assertMatchedDistributions(SAP, VENDOR_SPECIFIC, version, "SAP Machine")
 
-        assertEquals("Graal VM CE $version", api.match(GRAAL_VM, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertMatchedDistributions(GRAAL_VM, VENDOR_SPECIFIC, version, "Graal VM CE $version")
 
-        assertNull(api.match(APPLE, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertNull(api.match(HEWLETT_PACKARD, VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertMatchedDistributions(APPLE, VENDOR_SPECIFIC, version)
+        assertMatchedDistributions(HEWLETT_PACKARD, VENDOR_SPECIFIC, version)
+    }
+
+    private fun assertMatchedDistributions(vendor: JvmVendorSpec, implementation: JvmImplementation, version: Int, vararg expectedDistributions: String) {
+        assertEquals(
+                listOf(*expectedDistributions),
+                api.match(vendor, implementation, of(version)).map { it.name },
+                "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
+        )
     }
 
     @ParameterizedTest(name = "can resolve arbitrary vendors (Java {0})")
