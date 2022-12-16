@@ -1,12 +1,9 @@
 package org.gradle.toolchains.foojay
 
 import org.gradle.jvm.toolchain.JavaLanguageVersion
-import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmImplementation.J9
 import org.gradle.jvm.toolchain.JvmImplementation.VENDOR_SPECIFIC
-import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.JvmVendorSpec.*
-import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 import kotlin.test.assertEquals
 import kotlin.test.Test
@@ -78,15 +75,14 @@ class DistributionsMatchingTest {
     }
 
     @Test
-    fun `matches any vendor distribution by alias`() {
+    fun `matches Temurin first when any vendor distribution is requested`() {
         val firstDistributionToMatch = TEMURIN
         val secondDistributionToMatch = SAP
-        val distributionToNotMatch = OPENJ9
-        val distributions = listOf(firstDistributionToMatch, secondDistributionToMatch, distributionToNotMatch)
+        val thirdDistributionToMatch = OPENJ9
+        val distributions = listOf(firstDistributionToMatch, secondDistributionToMatch, thirdDistributionToMatch)
         val actualMatch = match(distributions, any(), VENDOR_SPECIFIC, JavaLanguageVersion.of(17))
-        val expectedMatch = listOf(firstDistributionToMatch, secondDistributionToMatch)
 
-        assertEquals(expectedMatch, actualMatch)
+        assertEquals(TEMURIN, actualMatch.first())
     }
 
 }

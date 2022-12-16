@@ -45,16 +45,15 @@ fun match(
 
 private fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution> {
     if (vendor == any()) {
-        return findAllDistributionsForKnownVendors(distributions)
+        return allDistributionsPrecededByWellKnownOnes(distributions)
     }
 
     return findExactMatch(distributions, vendor) ?: findAllMatchingDistributions(distributions, vendor)
 }
 
-private fun findAllDistributionsForKnownVendors(distributions: List<Distribution>): List<Distribution> =
+private fun allDistributionsPrecededByWellKnownOnes(distributions: List<Distribution>): List<Distribution> =
     distributions
-        .filter { it.name in vendorAliases.values }
-        .sortedBy { vendorAliases.values.indexOf(it.name) }
+        .sortedByDescending { vendorAliases.values.reversed().indexOf(it.name) }
 
 private fun findExactMatch(distributions: List<Distribution>, vendor: JvmVendorSpec) : List<Distribution>? =
     distributions.firstOrNull { it.name == vendorAliases[vendor] }?.let {

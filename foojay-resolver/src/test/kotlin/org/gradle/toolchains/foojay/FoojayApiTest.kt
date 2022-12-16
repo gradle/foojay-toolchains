@@ -11,7 +11,10 @@ import org.gradle.platform.Architecture
 import org.gradle.platform.OperatingSystem
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class FoojayApiTest {
 
@@ -95,7 +98,7 @@ class FoojayApiTest {
     @ParameterizedTest(name = "vendor specific implementation does not influence vendor resolution (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `vendor specific implementation does not influence vendor resolution`(version: Int) {
-        assertMatchedDistributions(any(), VENDOR_SPECIFIC, version, "Temurin")
+        assertMatchesDistributionsContainInOrder(any(), VENDOR_SPECIFIC, version, "Temurin", "AOJ", "Corretto", "Zulu", "Liberica", "Semeru", "Oracle OpenJDK", "SAP Machine")
 
         assertMatchedDistributions(ADOPTOPENJDK, VENDOR_SPECIFIC, version, "AOJ")
         assertMatchedDistributions(IBM, VENDOR_SPECIFIC, version, "Semeru")
@@ -120,6 +123,18 @@ class FoojayApiTest {
                 listOf(*expectedDistributions),
                 api.match(vendor, implementation, of(version)).map { it.name },
                 "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
+        )
+    }
+
+    private fun assertMatchesDistributionsContainInOrder(vendor: JvmVendorSpec, implementation: JvmImplementation, version: Int, vararg expectedDistributions: String) {
+        val matches = api.match(vendor, implementation, of(version)).map { it.name }
+        assertTrue(
+                matches.containsAll(listOf(*expectedDistributions)),
+                "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
+        )
+        assertEquals(
+                matches.first(), expectedDistributions.first(),
+                "Wrong order in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
         )
     }
 
