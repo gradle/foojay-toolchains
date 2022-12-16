@@ -19,10 +19,9 @@ val vendorAliases = mapOf(
 )
 
 val j9Aliases = mapOf(
-    JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9",
     JvmVendorSpec.IBM to "Semeru",
     JvmVendorSpec.IBM_SEMERU to "Semeru",
-    any() to "Semeru",
+    JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9",
 )
 
 fun match(
@@ -31,7 +30,15 @@ fun match(
         implementation: JvmImplementation,
         version: JavaLanguageVersion
 ): List<Distribution> = when {
-    JvmImplementation.J9 == implementation -> distributions.filter { it.name == j9Aliases[vendor] }
+    JvmImplementation.J9 == implementation -> {
+        if (vendor == any()) {
+            distributions
+                    .filter { j9Aliases.values.contains(it.name) }
+                    .sortedBy { j9Aliases.values.indexOf(it.name) }
+        } else {
+            distributions.filter { it.name == j9Aliases[vendor] }
+        }
+    }
     JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("Graal VM CE " + version.asInt()))
     else -> match(distributions, vendor)
 }
