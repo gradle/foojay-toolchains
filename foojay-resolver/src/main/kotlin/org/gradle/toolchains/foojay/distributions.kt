@@ -32,19 +32,19 @@ fun match(
     implementation: JvmImplementation,
     version: JavaLanguageVersion
 ): List<Distribution> = when {
-    JvmImplementation.J9 == implementation -> {
-        if (vendor == any()) {
-            distributions
-                .filter { j9Aliases.values.contains(it.name) }
-                .sortedBy { j9Aliases.values.indexOf(it.name) }
-        } else {
-            distributions.filter { it.name == j9Aliases[vendor] }
-        }
-    }
-
+    JvmImplementation.J9 == implementation -> matchForJ9(distributions, vendor)
     JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("Graal VM CE " + version.asInt()))
     else -> match(distributions, vendor)
 }
+
+private fun matchForJ9(distributions: List<Distribution>, vendor: JvmVendorSpec) =
+    if (vendor == any()) {
+        distributions
+            .filter { j9Aliases.values.contains(it.name) }
+            .sortedBy { j9Aliases.values.indexOf(it.name) }
+    } else {
+        distributions.filter { it.name == j9Aliases[vendor] }
+    }
 
 private fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution> {
     if (vendor == any()) {
