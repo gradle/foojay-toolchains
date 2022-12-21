@@ -14,7 +14,6 @@ import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 class FoojayApiTest {
 
@@ -23,9 +22,9 @@ class FoojayApiTest {
     @Test
     fun `download URI provided correctly`() {
         assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/06d328bdf96f725498761110afa5ddaa/redirect",
+            "https://api.foojay.io/disco/v3.0/ids/c3f7c076bf335d1061c74f7fab42bb89/redirect",
             8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64
-        ) // amazon-corretto-8.352.08.1-macosx-aarch64.tar.gz
+        ) // zulu8.66.0.15-ca-jdk8.0.352-macosx_aarch64.tar.gz
 
         assertDownloadUri(
             "https://api.foojay.io/disco/v3.0/ids/2b5dc4d917750eba32eb1acf62cec901/redirect",
@@ -82,23 +81,28 @@ class FoojayApiTest {
         assertMatchedDistributions(IBM, J9, version, "Semeru")
         assertMatchedDistributions(IBM_SEMERU, J9, version, "Semeru")
 
-        assertTrue(api.match(ADOPTIUM, J9, of(version)).isEmpty())
-        assertTrue(api.match(AZUL, J9, of(version)).isEmpty())
-        assertTrue(api.match(AMAZON, J9, of(version)).isEmpty())
-        assertTrue(api.match(BELLSOFT, J9, of(version)).isEmpty())
-        assertTrue(api.match(MICROSOFT, J9, of(version)).isEmpty())
-        assertTrue(api.match(ORACLE, J9, of(version)).isEmpty())
-        assertTrue(api.match(SAP, J9, of(version)).isEmpty())
-
-        assertTrue(api.match(APPLE, J9, of(version)).isEmpty())
-        assertTrue(api.match(GRAAL_VM, J9, of(version)).isEmpty())
-        assertTrue(api.match(HEWLETT_PACKARD, J9, of(version)).isEmpty())
+        assertMatchedDistributions(ADOPTIUM, J9, version)
+        assertMatchedDistributions(AZUL, J9, version)
+        assertMatchedDistributions(AMAZON, J9, version)
+        assertMatchedDistributions(BELLSOFT, J9, version)
+        assertMatchedDistributions(MICROSOFT, J9, version)
+        assertMatchedDistributions(ORACLE, J9, version)
+        assertMatchedDistributions(SAP, J9, version)
+        assertMatchedDistributions(APPLE, J9, version)
+        assertMatchedDistributions(GRAAL_VM, J9, version)
+        assertMatchedDistributions(HEWLETT_PACKARD, J9, version)
     }
 
     @ParameterizedTest(name = "vendor specific implementation does not influence vendor resolution (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `vendor specific implementation does not influence vendor resolution`(version: Int) {
-        assertMatchesDistributionsContainInOrder(any(), VENDOR_SPECIFIC, version, "Temurin", "AOJ", "Corretto", "Zulu", "Liberica", "Semeru", "Oracle OpenJDK", "SAP Machine")
+        assertMatchedDistributions(any(), VENDOR_SPECIFIC, version,
+                "Temurin", "AOJ",
+                "ZuluPrime", "Zulu", "Trava", "Semeru certified", "Semeru", "SAP Machine", "Red Hat", "Oracle OpenJDK",
+                "Oracle", "OpenLogic", "OJDKBuild", "Microsoft", "Mandrel", "Liberica Native", "Liberica", "Kona",
+                "JetBrains", "Graal VM CE $version", "Gluon GraalVM", "Dragonwell", "Debian", "Corretto", "Bi Sheng",
+                "AOJ OpenJ9"
+        )
 
         assertMatchedDistributions(ADOPTOPENJDK, VENDOR_SPECIFIC, version, "AOJ")
         assertMatchedDistributions(IBM, VENDOR_SPECIFIC, version, "Semeru")
@@ -122,14 +126,6 @@ class FoojayApiTest {
         assertEquals(
                 listOf(*expectedDistributions),
                 api.match(vendor, implementation, of(version)).map { it.name },
-                "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
-        )
-    }
-
-    private fun assertMatchesDistributionsContainInOrder(vendor: JvmVendorSpec, implementation: JvmImplementation, version: Int, vararg expectedDistributions: String) {
-        val matches = api.match(vendor, implementation, of(version)).map { it.name }
-        assertEquals(
-            listOf(*expectedDistributions), matches.subList(0, expectedDistributions.size),
                 "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
         )
     }

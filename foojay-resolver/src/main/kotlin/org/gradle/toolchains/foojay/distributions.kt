@@ -18,7 +18,7 @@ val vendorAliases = mapOf(
     JvmVendorSpec.SAP to "SAP Machine",
 )
 
-val reversedWellKnownDistributionNames = vendorAliases.values.reversed()
+val distributionOrderOfPreference = listOf("Temurin", "AOJ")
 
 val j9Aliases = mapOf(
     JvmVendorSpec.IBM to "Semeru",
@@ -33,8 +33,8 @@ fun match(
     version: JavaLanguageVersion
 ): List<Distribution> = when {
     JvmImplementation.J9 == implementation -> matchForJ9(distributions, vendor)
-    JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("Graal VM CE " + version.asInt()))
-    else -> match(distributions, vendor)
+    JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("Graal VM CE " + version.asInt()), version)
+    else -> match(distributions, vendor, version)
 }
 
 private fun matchForJ9(distributions: List<Distribution>, vendor: JvmVendorSpec) =
@@ -46,24 +46,37 @@ private fun matchForJ9(distributions: List<Distribution>, vendor: JvmVendorSpec)
         distributions.filter { it.name == j9Aliases[vendor] }
     }
 
-private fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution> {
+private fun match(distributions: List<Distribution>, vendor: JvmVendorSpec, version: JavaLanguageVersion): List<Distribution> {
     if (vendor == any()) {
-        return allDistributionsPrecededByWellKnownOnes(distributions)
+        return allDistributionsPrecededByWellKnownOnes(distributions, version)
     }
 
-    return findExactMatch(distributions, vendor) ?: findAllMatchingDistributions(distributions, vendor)
+    return findByMatchingAliases(distributions, vendor) ?: findByMatchingNamesAndSynonyms(distributions, vendor)
 }
 
-private fun allDistributionsPrecededByWellKnownOnes(distributions: List<Distribution>): List<Distribution> =
+private fun allDistributionsPrecededByWellKnownOnes(distributions: List<Distribution>, version: JavaLanguageVersion): List<Distribution> =
     distributions
-        .sortedByDescending { reversedWellKnownDistributionNames.indexOf(it.name) }
+        .filter { distribution ->
+            when {
+                distribution.name.contains("Graal VM CE") -> distribution.name == "Graal VM CE " + version.asInt()
+                else -> true
+            }
+        }
+        .sortedBy {
+            //put our preferences first, preserver Foojay order otherwise
+            val indexOf = distributionOrderOfPreference.indexOf(it.name)
+            when {
+                indexOf < 0 -> distributionOrderOfPreference.size
+                else -> indexOf
+            }
+        }
 
-private fun findExactMatch(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution>? =
+private fun findByMatchingAliases(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution>? =
     distributions.firstOrNull { it.name == vendorAliases[vendor] }?.let {
         listOf(it)
     }
 
-private fun findAllMatchingDistributions(distributions: List<Distribution>, vendor: JvmVendorSpec) =
+private fun findByMatchingNamesAndSynonyms(distributions: List<Distribution>, vendor: JvmVendorSpec) =
     distributions.filter { distribution ->
         vendor.matches(distribution.name) || distribution.synonyms.find { vendor.matches(it) } != null
     }
