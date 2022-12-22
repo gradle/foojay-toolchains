@@ -61,10 +61,9 @@ The plugin works with the following mapping:
 | SAP                     | SAP Machine               |
 
 **To note:**
-If no vendor is specified, distributions are iterated in alphabetical order defined by the Gradle JVM vendor names, and the first one that has a compatible installation package available is selected.
-In most cases the `Temurin` distribution is picked (due to the history of the auto-provisioning feature in Gradle, specifically that AdoptOpenJDK/Adoptium have been the default sources for downloading JVMs).
-However, in some scenarios, e.g. requesting Java 8 on a Silicon Mac, `Temurin` does not provide a compatible build, so the next distribution is checked.
-Furthermore, not all Gradle vendors have an equivalent DiscoAPI distribution, empty cells indicate that no toolchain will be provisioned.
+Not all Gradle vendors have an equivalent DiscoAPI distribution, empty cells indicate that no toolchain will be provisioned.
+If no vendor is specified, distributions are iterated in the order they are provided by the DiscoAPI, and the first one that has a compatible installation package available is selected.
+The exception to the Foojay ordering of distributions is that "Temurin" (ADOPTIUM) and then "AOJ" (ADOPTONEJDK) come first, due to the history of the auto-provisioning feature in Gradle, specifically that AdoptOpenJDK/Adoptium have been the default sources for downloading JVMs.
 
 ## Implementations
 
