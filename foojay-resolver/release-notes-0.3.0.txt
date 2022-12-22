@@ -1,1 +1,0 @@
-- Make sure vendors IBM and IBM_SEMERU are handled identically
