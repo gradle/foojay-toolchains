@@ -46,7 +46,6 @@ The plugin works with the following mapping:
 
 | Gradle JVM Vendor       | Foojay Distribution       |
 |-------------------------|---------------------------|
-| \<no vendor specified\> | Temurin                   |
 | ADOPTIUM                | Temurin                   |
 | ADOPTONEJDK             | AOJ                       |
 | AMAZON                  | Corretto                  |
@@ -61,10 +60,10 @@ The plugin works with the following mapping:
 | ORACLE                  | Oracle OpenJDK            |
 | SAP                     | SAP Machine               |
 
-To note:
-
-* If no vendor is specified, then the `Temurin` distribution is picked (due to the history of the auto-provisioning feature in Gradle, specifically that AdoptOpenJDK/Adoptium have been the default sources for downloading JVMs).
-* Not all Gradle vendors have an equivalent DiscoAPI distribution, empty cells indicate that no toolchain will be provisioned.
+**To note:**
+Not all Gradle vendors have an equivalent DiscoAPI distribution, empty cells indicate that no toolchain will be provisioned.
+If no vendor is specified, distributions are iterated in the order they are provided by the DiscoAPI, and the first one that has a compatible installation package available is selected.
+The exception to the Foojay ordering of distributions is that "Temurin" (ADOPTIUM) and then "AOJ" (ADOPTONEJDK) come first, due to the history of the auto-provisioning feature in Gradle, specifically that AdoptOpenJDK/Adoptium have been the default sources for downloading JVMs.
 
 ## Implementations
 

@@ -36,12 +36,14 @@ class FoojayApi {
         operatingSystem: OperatingSystem,
         architecture: Architecture
     ): URI? {
-        val distribution = match(vendor, implementation, version) ?: return null
-        val downloadPackage = match(distribution.api_parameter, version, operatingSystem, architecture) ?: return null
-        return downloadPackage.links.pkg_download_redirect
+        val distributions = match(vendor, implementation, version)
+        return distributions.asSequence().mapNotNull { distribution ->
+            val downloadPackage = match(distribution.api_parameter, version, operatingSystem, architecture)
+            downloadPackage?.links?.pkg_download_redirect
+        }.firstOrNull()
     }
 
-    internal fun match(vendor: JvmVendorSpec, implementation: JvmImplementation, version: JavaLanguageVersion): Distribution? {
+    internal fun match(vendor: JvmVendorSpec, implementation: JvmImplementation, version: JavaLanguageVersion): List<Distribution> {
         fetchDistributionsIfMissing()
         return match(distributions, vendor, implementation, version)
     }
