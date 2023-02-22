@@ -4,7 +4,6 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
-import kotlin.test.assertTrue
 
 abstract class AbstractFoojayToolchainsPluginFunctionalTest {
 
@@ -28,7 +27,7 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
         """.trimIndent())
     }
 
-    protected fun runTest(settings: String) {
+    protected fun runner(settings: String): GradleRunner {
         settingsFile.writeText(settings)
         buildFile.writeText("""
                 plugins {
@@ -42,16 +41,11 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
                 }
             """.trimIndent())
 
-        // Run the build
-        val runner = GradleRunner.create()
-        runner.forwardOutput()
-        runner.withPluginClasspath()
-        runner.withArguments(listOf("--info", "-g", homeDir.absolutePath, "compileJava"))
-        runner.withProjectDir(projectDir)
-        val result = runner.build()
-
-        // Verify the result
-        assertTrue(result.output.contains("Installed toolchain from https://api.foojay.io/disco/"))
+        return GradleRunner.create()
+            .forwardOutput()
+            .withPluginClasspath()
+            .withArguments(listOf("--info", "-g", homeDir.absolutePath, "compileJava"))
+            .withProjectDir(projectDir)
     }
 
     private fun getDifferentJavaVersion() = when {

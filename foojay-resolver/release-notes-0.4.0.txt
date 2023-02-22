@@ -1,1 +1,0 @@
-- Try distributions one-by-one if no vendor is specified

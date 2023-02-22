@@ -1,6 +1,8 @@
 # Foojay Toolchains Plugin
 
-The `org.gradle.disco-toolchains` plugin provides a [repository for downloading JVMs](https://docs.gradle.org/current/userguide/toolchains.html#sub:download_repositories). It is based on the [foojay DiscoAPI](https://github.com/foojayio/discoapi).
+The `org.gradle.disco-toolchains` plugin provides a [repository for downloading JVMs](https://docs.gradle.org/current/userguide/toolchains.html#sub:download_repositories).
+It is based on the [foojay DiscoAPI](https://github.com/foojayio/discoapi).
+Requires Gradle 7.6 or later to work.
 
 # Usage
 

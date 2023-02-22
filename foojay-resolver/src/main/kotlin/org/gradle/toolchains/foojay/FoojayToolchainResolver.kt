@@ -12,13 +12,14 @@ abstract class FoojayToolchainResolver: JavaToolchainResolver {
     override fun resolve(request: JavaToolchainRequest): Optional<JavaToolchainDownload> {
         val spec = request.javaToolchainSpec
         val platform = request.buildPlatform
-        val uri = api.toUri(
+        val links = api.toLinks(
             spec.languageVersion.get(),
             spec.vendor.get(),
             spec.implementation.get(),
             platform.operatingSystem,
             platform.architecture
         )
+        val uri = api.toUri(links)
         return Optional.ofNullable(uri).map(JavaToolchainDownload::fromUri)
     }
 }

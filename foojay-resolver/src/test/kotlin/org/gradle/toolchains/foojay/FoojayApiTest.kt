@@ -22,19 +22,19 @@ class FoojayApiTest {
     @Test
     fun `download URI provided correctly`() {
         assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/c3f7c076bf335d1061c74f7fab42bb89/redirect",
-            8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64
-        ) // zulu8.66.0.15-ca-jdk8.0.352-macosx_aarch64.tar.gz
+                "https://api.foojay.io/disco/v3.0/ids/b7249cc4ea86971f6f2ec990f241992f/redirect",
+                8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64
+        ) // zulu8.68.0.21-ca-jdk8.0.362-macosx_aarch64.zip
 
         assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/2b5dc4d917750eba32eb1acf62cec901/redirect",
-            11, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
-        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.17_8.tar.gz
+                "https://api.foojay.io/disco/v3.0/ids/7c047fee9eda8fba1fe1925111d3faa2/redirect",
+                11, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
+        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.18_10.tar.gz
 
         assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/9927d38888344a93f3803dfd0366a6e3/redirect",
-            11, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
-        ) // graalvm-ce-java11-darwin-aarch64-22.3.0.tar.gz
+                "https://api.foojay.io/disco/v3.0/ids/7f094bee7c283c8a886273445e950130/redirect",
+                11, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
+        ) // graalvm-ce-java11-darwin-aarch64-22.3.1.tar.gz
 
         assertDownloadUri(
                 "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
@@ -52,8 +52,8 @@ class FoojayApiTest {
         ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
 
         assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/871fe4e17cc2d5625fc5ca5f4027affd/redirect",
-            16, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64
+                "https://api.foojay.io/disco/v3.0/ids/871fe4e17cc2d5625fc5ca5f4027affd/redirect",
+                16, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64
         ) // graalvm-ce-java16-linux-amd64-21.2.0.tar.gz
 
         assertDownloadUri(
@@ -145,7 +145,7 @@ class FoojayApiTest {
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)
         assertEquals(11, p.jdk_version)
-        assertEquals("11.0.17", p.distribution_version)
+        assertEquals("11.0.18", p.distribution_version)
         assertEquals("linux", p.operating_system)
         assertEquals("x64", p.architecture)
         assertEquals("jdk", p.package_type)
@@ -159,14 +159,14 @@ class FoojayApiTest {
             os: OperatingSystem,
             arch: Architecture
     ) {
-        val uri = api.toUri(
+        val links = api.toLinks(
                 of(javaVersion),
-            vendor,
-            if (isJ9) J9 else VENDOR_SPECIFIC,
-            os,
-            arch
+                vendor,
+                if (isJ9) J9 else VENDOR_SPECIFIC,
+                os,
+                arch
         )
-        assertEquals(expected, uri.toString())
+        assertEquals(expected, api.toUri(links).toString(), "Expected URI differs from actual, for details see ${links?.pkg_info_uri}")
     }
 
     private fun vendorSpec(vendorName: String): JvmVendorSpec = matching(vendorName)
