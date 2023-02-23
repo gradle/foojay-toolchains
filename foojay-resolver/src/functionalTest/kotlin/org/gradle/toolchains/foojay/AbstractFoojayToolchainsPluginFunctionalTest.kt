@@ -37,6 +37,7 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
                 java {
                     toolchain {
                         languageVersion.set(JavaLanguageVersion.of(${getDifferentJavaVersion()}))
+                        vendor.set(JvmVendorSpec.AZUL)
                     }
                 }
             """.trimIndent())
