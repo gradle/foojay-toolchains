@@ -8,18 +8,18 @@ Requires Gradle 7.6 or later to work.
 
 To make use of the plugin add following to your `settings.gradle.kts` file:
 
-```
+```kotlin
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
 }
 ```
 
 This is a convention plugin meant to simplify configuration.
 What it does is equivalent to applying the base plugin and some extra configuration:
 
-```
+```kotlin
 plugins {
-    id("org.gradle.toolchains.foojay-resolver") version("0.4.0")
+    id("org.gradle.toolchains.foojay-resolver") version "0.4.0"
 }
 
 toolchainManagement {
