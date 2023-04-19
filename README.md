@@ -6,7 +6,8 @@ Requires Gradle 7.6 or later to work.
 
 # Usage
 
-To make use of the plugin add following to your `settings.gradle.kts` file:
+To make use of the plugin add following to your `settings.gradle[.kts]` file.
+The snippet works for both the Groovy and Kotlin DSL:
 
 ```kotlin
 plugins {
