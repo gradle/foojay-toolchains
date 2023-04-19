@@ -17,6 +17,10 @@ plugins {
 This is a convention plugin meant to simplify configuration.
 What it does is equivalent to applying the base plugin and some extra configuration:
 
+<details open>
+
+<summary>Kotlin DSL</summary>
+
 ```kotlin
 plugins {
     id("org.gradle.toolchains.foojay-resolver") version "0.4.0"
@@ -32,6 +36,30 @@ toolchainManagement {
     }
 }
 ```
+
+</details>
+
+<details>
+
+<summary>Groovy DSL</summary>
+
+```groovy
+plugins {
+    id("org.gradle.toolchains.foojay-resolver") version "0.4.0"
+}
+
+toolchainManagement {
+    jvm {
+        javaRepositories {
+            repository("foojay") {
+                resolverClass = org.gradle.toolchains.foojay.FoojayToolchainResolver
+            }
+        }
+    }
+}
+```
+
+</details>
 
 Feel free to use either approach.
 
