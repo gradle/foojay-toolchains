@@ -7,13 +7,30 @@ Requires Gradle 7.6 or later to work.
 # Usage
 
 To make use of the plugin add following to your `settings.gradle[.kts]` file.
-The snippet works for both the Groovy and Kotlin DSL:
+
+<details open>
+
+<summary>Kotlin DSL</summary>
 
 ```kotlin
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
 }
 ```
+
+</details>
+
+<details>
+
+<summary>Groovy DSL</summary>
+
+```groovy
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
+}
+```
+
+</details>
 
 This is a convention plugin meant to simplify configuration.
 What it does is equivalent to applying the base plugin and some extra configuration:
