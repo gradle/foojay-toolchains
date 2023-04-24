@@ -9,7 +9,7 @@ class FoojayToolchainsConventionPluginFunctionalTest: AbstractFoojayToolchainsPl
     fun `can use convention plugin`() {
         val settings = """
             plugins {
-                id("org.gradle.toolchains.foojay-resolver-convention") version "$pluginVersion"
+                id("org.gradle.toolchains.foojay-resolver-convention")
             }
         """.trimIndent()
 
@@ -22,7 +22,7 @@ class FoojayToolchainsConventionPluginFunctionalTest: AbstractFoojayToolchainsPl
     fun `generates useful error for unsupported Gradle versions`() {
         val settings = """
             plugins {
-                id("org.gradle.toolchains.foojay-resolver-convention") version "$pluginVersion"
+                id("org.gradle.toolchains.foojay-resolver-convention")
             }
         """.trimIndent()
 
