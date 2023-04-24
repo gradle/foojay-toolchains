@@ -13,8 +13,6 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
     @field:TempDir
     protected lateinit var homeDir: File
 
-    protected val pluginVersion = "0.4.0"
-
     private val settingsFile by lazy { projectDir.resolve("settings.gradle.kts") }
     private val propertiesFile by lazy { projectDir.resolve("gradle.properties") }
     private val buildFile by lazy { projectDir.resolve("build.gradle.kts") }

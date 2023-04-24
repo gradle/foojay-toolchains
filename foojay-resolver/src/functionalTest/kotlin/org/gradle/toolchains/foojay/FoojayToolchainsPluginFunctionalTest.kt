@@ -9,7 +9,7 @@ class FoojayToolchainsPluginFunctionalTest: AbstractFoojayToolchainsPluginFuncti
     fun `can use base plugin`() {
         val settings = """
             plugins {
-                id("org.gradle.toolchains.foojay-resolver") version "$pluginVersion"
+                id("org.gradle.toolchains.foojay-resolver")
             }
             
             toolchainManagement {
@@ -32,7 +32,7 @@ class FoojayToolchainsPluginFunctionalTest: AbstractFoojayToolchainsPluginFuncti
     fun `generates useful error for unsupported Gradle versions`() {
         val settings = """
             plugins {
-                id("org.gradle.toolchains.foojay-resolver") version "$pluginVersion"
+                id("org.gradle.toolchains.foojay-resolver")
             }
             
             toolchainManagement {
