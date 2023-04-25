@@ -1,1 +1,0 @@
-- Generate useful error message if used with unsupported Gradle versions
