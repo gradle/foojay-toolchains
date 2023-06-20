@@ -102,7 +102,7 @@ class FoojayApiTest {
                 "Temurin", "AOJ",
                 "ZuluPrime", "Zulu", "Trava", "Semeru certified", "Semeru", "SAP Machine", "Red Hat", "Oracle OpenJDK",
                 "Oracle", "OpenLogic", "OJDKBuild", "Microsoft", "Mandrel", "Liberica Native", "Liberica", "Kona",
-                "JetBrains", "Graal VM CE $version", "Gluon GraalVM", "Dragonwell", "Debian", "Corretto", "Bi Sheng",
+                "JetBrains", "GraalVM CE $version", "Gluon GraalVM", "Dragonwell", "Debian", "Corretto", "Bi Sheng",
                 "AOJ OpenJ9"
         )
 
@@ -119,7 +119,7 @@ class FoojayApiTest {
         assertMatchedDistributions(ORACLE, VENDOR_SPECIFIC, version, "Oracle OpenJDK")
         assertMatchedDistributions(SAP, VENDOR_SPECIFIC, version, "SAP Machine")
 
-        assertMatchedDistributions(GRAAL_VM, VENDOR_SPECIFIC, version, "Graal VM CE $version")
+        assertMatchedDistributions(GRAAL_VM, VENDOR_SPECIFIC, version, "GraalVM CE $version")
 
         assertMatchedDistributions(APPLE, VENDOR_SPECIFIC, version)
         assertMatchedDistributions(HEWLETT_PACKARD, VENDOR_SPECIFIC, version)
