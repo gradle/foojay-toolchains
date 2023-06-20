@@ -6,6 +6,7 @@ import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 
+@Suppress("DEPRECATION")
 val vendorAliases = mapOf(
     JvmVendorSpec.ADOPTIUM to "Temurin",
     JvmVendorSpec.ADOPTOPENJDK to "AOJ",
@@ -20,6 +21,7 @@ val vendorAliases = mapOf(
 
 val distributionOrderOfPreference = listOf("Temurin", "AOJ")
 
+@Suppress("DEPRECATION")
 val j9Aliases = mapOf(
     JvmVendorSpec.IBM to "Semeru",
     JvmVendorSpec.IBM_SEMERU to "Semeru",

@@ -46,6 +46,7 @@ class FoojayApiTest {
                 16, IBM, true, OperatingSystem.MAC_OS, Architecture.X86_64
         ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
 
+        @Suppress("DEPRECATION")
         assertDownloadUri(
                 "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
                 16, IBM_SEMERU, true, OperatingSystem.MAC_OS, Architecture.X86_64
@@ -79,6 +80,7 @@ class FoojayApiTest {
 
         assertMatchedDistributions(ADOPTOPENJDK, J9, version, "AOJ OpenJ9")
         assertMatchedDistributions(IBM, J9, version, "Semeru")
+        @Suppress("DEPRECATION")
         assertMatchedDistributions(IBM_SEMERU, J9, version, "Semeru")
 
         assertMatchedDistributions(ADOPTIUM, J9, version)
@@ -106,6 +108,7 @@ class FoojayApiTest {
 
         assertMatchedDistributions(ADOPTOPENJDK, VENDOR_SPECIFIC, version, "AOJ")
         assertMatchedDistributions(IBM, VENDOR_SPECIFIC, version, "Semeru")
+        @Suppress("DEPRECATION")
         assertMatchedDistributions(IBM_SEMERU, VENDOR_SPECIFIC, version, "Semeru")
 
         assertMatchedDistributions(ADOPTIUM, VENDOR_SPECIFIC, version, "Temurin")
