@@ -85,10 +85,29 @@ fun parseDistributions(json: String): List<Distribution> {
     return Gson().fromJson(json, DistributionsResult::class.java).result
 }
 
+/**
+ * The data class for the result objects as returned by [FoojayApi.DISTRIBUTIONS_ENDPOINT].
+ */
 data class Distribution(
+    /**
+     * The distribution (vendor) name, e.g. "Temurin", "Oracle OpenJDK", "JetBrains", "GraalVM", ...
+     */
     val name: String,
+
+    /**
+     * The name to use as part of the path when requesting distribution-specific details, see
+     * https://github.com/foojayio/discoapi#endpoint-distributions
+     */
     val api_parameter: String,
+
+    /**
+     * A list of alterative names / spellings for the distribution.
+     */
     val synonyms: List<String>,
+
+    /**
+     * The version strings available for this distribution.
+     */
     val versions: List<String>
 )
 
