@@ -24,7 +24,7 @@ class FoojayApi {
     val SCHEMA = "https"
 
     val ENDPOINT_ROOT = "api.foojay.io/disco/v3.0"
-    val DISTRIBUTIONS_ENDPOIT = "$ENDPOINT_ROOT/distributions"
+    val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
     val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
 
     val distributions = mutableListOf<Distribution>()
@@ -53,7 +53,7 @@ class FoojayApi {
     private fun fetchDistributionsIfMissing() {
         if (distributions.isEmpty()) {
             val con = createConnection(
-                DISTRIBUTIONS_ENDPOIT,
+                DISTRIBUTIONS_ENDPOINT,
                 mapOf("include_versions" to "true", "include_synonyms" to "true")
             )
             val json = readResponse(con)
