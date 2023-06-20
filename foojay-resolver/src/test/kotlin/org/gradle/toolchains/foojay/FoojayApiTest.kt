@@ -102,8 +102,8 @@ class FoojayApiTest {
                 "Temurin", "AOJ",
                 "ZuluPrime", "Zulu", "Trava", "Semeru certified", "Semeru", "SAP Machine", "Red Hat", "Oracle OpenJDK",
                 "Oracle", "OpenLogic", "OJDKBuild", "Microsoft", "Mandrel", "Liberica Native", "Liberica", "Kona",
-                "JetBrains", "GraalVM CE $version", "Gluon GraalVM", "Dragonwell", "Debian", "Corretto", "Bi Sheng",
-                "AOJ OpenJ9"
+                "JetBrains", "GraalVM Community", "GraalVM CE $version", "GraalVM", "Gluon GraalVM", "Dragonwell",
+                "Debian", "Corretto", "Bi Sheng", "AOJ OpenJ9"
         )
 
         assertMatchedDistributions(ADOPTOPENJDK, VENDOR_SPECIFIC, version, "AOJ")
