@@ -15,7 +15,7 @@ class FoojayToolchainsConventionPluginFunctionalTest: AbstractFoojayToolchainsPl
 
         val result = runner(settings).build()
 
-        assertTrue(result.output.contains("Installed toolchain from https://api.foojay.io/disco/"))
+        assertTrue("Installed toolchain from https://api.foojay.io/disco/" in result.output)
     }
 
     @Test
@@ -30,7 +30,7 @@ class FoojayToolchainsConventionPluginFunctionalTest: AbstractFoojayToolchainsPl
                 .withGradleVersion("7.5")
                 .buildAndFail()
 
-        assertTrue(result.output.contains("FoojayToolchainsPlugin needs Gradle version 7.6 or higher"))
+        assertTrue("FoojayToolchainsPlugin needs Gradle version 7.6 or higher" in result.output)
     }
 
 }

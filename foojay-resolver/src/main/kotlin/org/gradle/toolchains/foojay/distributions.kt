@@ -42,7 +42,7 @@ fun match(
 private fun matchForJ9(distributions: List<Distribution>, vendor: JvmVendorSpec) =
     if (vendor == any()) {
         distributions
-            .filter { j9Aliases.values.contains(it.name) }
+            .filter { it.name in j9Aliases.values }
             .sortedBy { j9Aliases.values.indexOf(it.name) }
     } else {
         distributions.filter { it.name == j9Aliases[vendor] }

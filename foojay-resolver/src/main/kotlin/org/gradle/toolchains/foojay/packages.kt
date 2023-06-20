@@ -34,13 +34,13 @@ fun map(os: OperatingSystem): String =
 
 private fun matches(p: Package, architecture: Architecture): Boolean =
     when (architecture) {
-        Architecture.X86 -> architectures32Bit.contains(p.architecture)
-        Architecture.X86_64 -> architectures64Bit.contains(p.architecture)
-        Architecture.AARCH64 -> architecturesArm64Bit.contains(p.architecture)
+        Architecture.X86 -> p.architecture in architectures32Bit
+        Architecture.X86_64 -> p.architecture in architectures64Bit
+        Architecture.AARCH64 -> p.architecture in architecturesArm64Bit
     }
 
 private fun hasHandledArchiveType(p: Package): Boolean {
-    return handledArchiveTypes.contains(p.archive_type)
+    return p.archive_type in handledArchiveTypes
 }
 
 data class Package(
