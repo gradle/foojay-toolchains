@@ -72,7 +72,7 @@ private fun allDistributionsPrecededByWellKnownOnes(distributions: List<Distribu
         }
 
 private fun findByMatchingAliases(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution>? =
-    distributions.firstOrNull { it.name == vendorAliases[vendor] }?.let {
+    distributions.find { it.name == vendorAliases[vendor] }?.let {
         listOf(it)
     }
 
