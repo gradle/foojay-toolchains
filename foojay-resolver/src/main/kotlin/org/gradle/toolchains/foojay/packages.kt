@@ -52,12 +52,12 @@ data class Package(
         val architecture: String,
         val package_type: String,
         val lib_c_type: String,
-        val links: Links,
+        val links: Links
 )
 
 data class Links(
     val pkg_download_redirect: URI,
-    val pkg_info_uri: URI?,
+    val pkg_info_uri: URI?
 )
 
 private data class PackagesResult(

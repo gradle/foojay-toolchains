@@ -71,7 +71,7 @@ class FoojayApi {
                 "distro" to distributionName,
                 "operating_system" to map(operatingSystem),
                 "latest" to "available",
-                "directly_downloadable" to "true",
+                "directly_downloadable" to "true"
             )
         )
         val json = readResponse(con)

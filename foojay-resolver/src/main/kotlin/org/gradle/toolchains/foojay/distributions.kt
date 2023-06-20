@@ -15,7 +15,7 @@ val vendorAliases = mapOf(
     JvmVendorSpec.IBM to "Semeru",
     JvmVendorSpec.IBM_SEMERU to "Semeru",
     JvmVendorSpec.ORACLE to "Oracle OpenJDK",
-    JvmVendorSpec.SAP to "SAP Machine",
+    JvmVendorSpec.SAP to "SAP Machine"
 )
 
 val distributionOrderOfPreference = listOf("Temurin", "AOJ")
@@ -23,7 +23,7 @@ val distributionOrderOfPreference = listOf("Temurin", "AOJ")
 val j9Aliases = mapOf(
     JvmVendorSpec.IBM to "Semeru",
     JvmVendorSpec.IBM_SEMERU to "Semeru",
-    JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9",
+    JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9"
 )
 
 fun match(
