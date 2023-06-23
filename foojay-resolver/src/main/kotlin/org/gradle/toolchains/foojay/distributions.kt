@@ -6,6 +6,7 @@ import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 
+@Suppress("DEPRECATION")
 val vendorAliases = mapOf(
     JvmVendorSpec.ADOPTIUM to "Temurin",
     JvmVendorSpec.ADOPTOPENJDK to "AOJ",
@@ -15,15 +16,16 @@ val vendorAliases = mapOf(
     JvmVendorSpec.IBM to "Semeru",
     JvmVendorSpec.IBM_SEMERU to "Semeru",
     JvmVendorSpec.ORACLE to "Oracle OpenJDK",
-    JvmVendorSpec.SAP to "SAP Machine",
+    JvmVendorSpec.SAP to "SAP Machine"
 )
 
 val distributionOrderOfPreference = listOf("Temurin", "AOJ")
 
+@Suppress("DEPRECATION")
 val j9Aliases = mapOf(
     JvmVendorSpec.IBM to "Semeru",
     JvmVendorSpec.IBM_SEMERU to "Semeru",
-    JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9",
+    JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9"
 )
 
 fun match(
@@ -33,14 +35,14 @@ fun match(
     version: JavaLanguageVersion
 ): List<Distribution> = when {
     JvmImplementation.J9 == implementation -> matchForJ9(distributions, vendor)
-    JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("Graal VM CE " + version.asInt()), version)
+    JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("GraalVM CE " + version.asInt()), version)
     else -> match(distributions, vendor, version)
 }
 
 private fun matchForJ9(distributions: List<Distribution>, vendor: JvmVendorSpec) =
     if (vendor == any()) {
         distributions
-            .filter { j9Aliases.values.contains(it.name) }
+            .filter { it.name in j9Aliases.values }
             .sortedBy { j9Aliases.values.indexOf(it.name) }
     } else {
         distributions.filter { it.name == j9Aliases[vendor] }
@@ -58,7 +60,7 @@ private fun allDistributionsPrecededByWellKnownOnes(distributions: List<Distribu
     distributions
         .filter { distribution ->
             when {
-                distribution.name.contains("Graal VM CE") -> distribution.name == "Graal VM CE " + version.asInt()
+                distribution.name.startsWith("GraalVM CE") -> distribution.name == "GraalVM CE " + version.asInt()
                 else -> true
             }
         }
@@ -72,7 +74,7 @@ private fun allDistributionsPrecededByWellKnownOnes(distributions: List<Distribu
         }
 
 private fun findByMatchingAliases(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution>? =
-    distributions.firstOrNull { it.name == vendorAliases[vendor] }?.let {
+    distributions.find { it.name == vendorAliases[vendor] }?.let {
         listOf(it)
     }
 
@@ -85,10 +87,29 @@ fun parseDistributions(json: String): List<Distribution> {
     return Gson().fromJson(json, DistributionsResult::class.java).result
 }
 
+/**
+ * The data class for the result objects as returned by [FoojayApi.DISTRIBUTIONS_ENDPOINT].
+ */
 data class Distribution(
+    /**
+     * The distribution (vendor) name, e.g. "Temurin", "Oracle OpenJDK", "JetBrains", "GraalVM", ...
+     */
     val name: String,
+
+    /**
+     * The name to use as part of the path when requesting distribution-specific details, see
+     * https://github.com/foojayio/discoapi#endpoint-distributions
+     */
     val api_parameter: String,
+
+    /**
+     * A list of alterative names / spellings for the distribution.
+     */
     val synonyms: List<String>,
+
+    /**
+     * The version strings available for this distribution.
+     */
     val versions: List<String>
 )
 

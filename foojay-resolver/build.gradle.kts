@@ -58,8 +58,8 @@ publishing {
 
 signing {
     useInMemoryPgpKeys(
-            project.providers.environmentVariable("PGP_SIGNING_KEY").forUseAtConfigurationTime().orNull,
-            project.providers.environmentVariable("PGP_SIGNING_KEY_PASSPHRASE").forUseAtConfigurationTime().orNull
+            project.providers.environmentVariable("PGP_SIGNING_KEY").orNull,
+            project.providers.environmentVariable("PGP_SIGNING_KEY_PASSPHRASE").orNull
     )
 }
 
