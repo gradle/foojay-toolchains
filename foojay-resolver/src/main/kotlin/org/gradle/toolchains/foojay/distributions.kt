@@ -5,6 +5,7 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
+import java.net.URI
 
 @Suppress("DEPRECATION")
 val vendorAliases = mapOf(
@@ -105,6 +106,26 @@ data class Distribution(
      * https://github.com/foojayio/discoapi#endpoint-distributions
      */
     val api_parameter: String,
+
+    /**
+     * A flag to indicate whether the distribution is still maintained or not.
+     */
+    val maintained: Boolean,
+
+    /**
+     * A flag to indicate whether this is an OpenJDK (re-)distribution.
+     */
+    val build_of_openjdk: Boolean,
+
+    /**
+     * A flag to indicate whether this is a GraalVM (re-)distribution.
+     */
+    val build_of_graalvm: Boolean,
+
+    /**
+     * The URI of the offical homepage of the ditribution.
+     */
+    val official_uri: URI,
 
     /**
      * A list of alterative names / spellings for the distribution.
