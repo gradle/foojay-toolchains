@@ -28,6 +28,10 @@ val j9Aliases = mapOf(
     JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9"
 )
 
+/**
+ * Given a list of [distributions], return those that match the provided [vendor], JVM [implementation], and Java
+ * language [version].
+ */
 fun match(
     distributions: List<Distribution>,
     vendor: JvmVendorSpec,
