@@ -39,7 +39,7 @@ fun match(
     version: JavaLanguageVersion
 ): List<Distribution> = when {
     JvmImplementation.J9 == implementation -> matchForJ9(distributions, vendor)
-    JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("GraalVM CE " + version.asInt()), version)
+    JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("GraalVM CE $version"), version)
     else -> match(distributions, vendor, version)
 }
 
@@ -64,7 +64,7 @@ private fun allDistributionsPrecededByWellKnownOnes(distributions: List<Distribu
     distributions
         .filter { distribution ->
             when {
-                distribution.name.startsWith("GraalVM CE") -> distribution.name == "GraalVM CE " + version.asInt()
+                distribution.name.startsWith("GraalVM CE") -> distribution.name == "GraalVM CE $version"
                 else -> true
             }
         }

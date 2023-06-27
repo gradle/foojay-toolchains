@@ -67,7 +67,7 @@ class FoojayApi {
         val con = createConnection(
             PACKAGES_ENDPOINT,
             mapOf(
-                "jdk_version" to "${version.asInt()}",
+                "jdk_version" to "$version",
                 "distro" to distributionName,
                 "operating_system" to map(operatingSystem),
                 "latest" to "available",
