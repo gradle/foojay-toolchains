@@ -69,7 +69,7 @@ class FoojayApi {
             mapOf(
                 "jdk_version" to "$version",
                 "distro" to distributionName,
-                "operating_system" to map(operatingSystem),
+                "operating_system" to operatingSystem.toApiValue(),
                 "latest" to "available",
                 "directly_downloadable" to "true"
             )
