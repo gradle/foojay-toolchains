@@ -64,12 +64,19 @@ class FoojayApi {
     }
 
     internal fun match(distributionName: String, version: JavaLanguageVersion, operatingSystem: OperatingSystem, architecture: Architecture): Package? {
+        // Old GraalVM releases are special in that the JVM version they target is part of the distribution name instead
+        // of the release version. For these releases "jdk_version" instead of "version" must be used as they key.
+        val versionApiKey = when {
+            distributionName.startsWith("graalvm_ce") -> "jdk_version"
+            else -> "version"
+        }
+
         val con = createConnection(
             PACKAGES_ENDPOINT,
             mapOf(
-                "jdk_version" to "${version.asInt()}",
+                versionApiKey to "$version",
                 "distro" to distributionName,
-                "operating_system" to map(operatingSystem),
+                "operating_system" to operatingSystem.toApiValue(),
                 "latest" to "available",
                 "directly_downloadable" to "true"
             )

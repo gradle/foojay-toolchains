@@ -22,8 +22,8 @@ fun match(packages: List<Package>, architecture: Architecture): Package? {
     return candidates.firstOrNull()
 }
 
-fun map(os: OperatingSystem): String =
-    when (os) {
+fun OperatingSystem.toApiValue(): String =
+    when (this) {
         OperatingSystem.LINUX -> "linux"
         OperatingSystem.UNIX -> "linux"
         OperatingSystem.WINDOWS -> "windows"
