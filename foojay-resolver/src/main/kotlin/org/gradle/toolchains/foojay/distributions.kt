@@ -30,8 +30,8 @@ val j9Aliases = mapOf(
 )
 
 /**
- * Given a list of [distributions], return those that match the provided [vendor], JVM [implementation], and Java
- * language [version].
+ * Given a list of [distributions], return those that match the provided [vendor] and JVM [implementation]. The Java
+ * language [version] is only used to remove wrong GraalVM distributions; no general version filtering is done here.
  */
 fun match(
     distributions: List<Distribution>,
