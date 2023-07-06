@@ -71,6 +71,11 @@ class FoojayApiTest {
                 "https://api.foojay.io/disco/v3.0/ids/74bf5fb0d06e512f88356eb8fe45f67f/redirect",
                 8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64
         ) // graalvm-ce-java8-windows-amd64-21.3.1.zip
+
+        assertDownloadUri(
+            "https://api.foojay.io/disco/v3.0/ids/0254ee795bfd00d22eecc53ec861ea40/redirect",
+            20, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64
+        ) // graalvm-community-jdk-20.0.1_linux-x64_bin.tar.gz
     }
 
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
@@ -119,7 +124,7 @@ class FoojayApiTest {
         assertMatchedDistributions(ORACLE, VENDOR_SPECIFIC, version, "Oracle OpenJDK")
         assertMatchedDistributions(SAP, VENDOR_SPECIFIC, version, "SAP Machine")
 
-        assertMatchedDistributions(GRAAL_VM, VENDOR_SPECIFIC, version, "GraalVM CE $version")
+        assertMatchedDistributions(GRAAL_VM, VENDOR_SPECIFIC, version, "GraalVM Community", "GraalVM CE $version")
 
         assertMatchedDistributions(APPLE, VENDOR_SPECIFIC, version)
         assertMatchedDistributions(HEWLETT_PACKARD, VENDOR_SPECIFIC, version)

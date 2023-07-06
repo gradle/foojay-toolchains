@@ -30,18 +30,39 @@ val j9Aliases = mapOf(
 )
 
 /**
- * Given a list of [distributions], return those that match the provided [vendor], JVM [implementation], and Java
- * language [version].
+ * Given a list of [distributions], return those that match the provided [vendor] and JVM [implementation]. The Java
+ * language [version] is only used to remove wrong GraalVM distributions; no general version filtering is done here.
  */
 fun match(
     distributions: List<Distribution>,
     vendor: JvmVendorSpec,
     implementation: JvmImplementation,
     version: JavaLanguageVersion
-): List<Distribution> = when {
-    JvmImplementation.J9 == implementation -> matchForJ9(distributions, vendor)
-    JvmVendorSpec.GRAAL_VM == vendor -> match(distributions, JvmVendorSpec.matching("GraalVM CE $version"), version)
-    else -> match(distributions, vendor, version)
+): List<Distribution> {
+    if (implementation == JvmImplementation.J9) return matchForJ9(distributions, vendor)
+
+    // Return early if an explicit non-GraalVM distribution is requested.
+    if (vendor != JvmVendorSpec.GRAAL_VM && vendor != any()) return match(distributions, vendor)
+
+    // Remove GraalVM distributions that target the wrong Java language version.
+    val graalVmCeVendor = JvmVendorSpec.matching("GraalVM CE $version")
+    val distributionsWithoutWrongGraalVm = distributions.filter { (name) ->
+        when {
+            // Naming scheme for old GraalVM community releases: The Java language version is part of the name.
+            name.startsWith("GraalVM CE") -> graalVmCeVendor.matches(name)
+
+            else -> true
+        }
+    }
+
+    if (vendor == any()) return allDistributionsPrecededByWellKnownOnes(distributionsWithoutWrongGraalVm)
+
+    // As Gradle has no means to distinguish between Community and Oracle distributions of GraalVM (see
+    // https://github.com/gradle/gradle/issues/25521), disregard Oracle GraalVM distributions for now by only matching
+    // "GraalVM Community" and "GraalVM CE".
+    val graalVmVendor = JvmVendorSpec.matching("GraalVM C")
+
+    return match(distributionsWithoutWrongGraalVm, graalVmVendor)
 }
 
 private fun matchForJ9(distributions: List<Distribution>, vendor: JvmVendorSpec) =
@@ -53,30 +74,18 @@ private fun matchForJ9(distributions: List<Distribution>, vendor: JvmVendorSpec)
         distributions.filter { it.name == j9Aliases[vendor] }
     }
 
-private fun match(distributions: List<Distribution>, vendor: JvmVendorSpec, version: JavaLanguageVersion): List<Distribution> {
-    if (vendor == any()) {
-        return allDistributionsPrecededByWellKnownOnes(distributions, version)
+private fun match(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution> =
+    findByMatchingAliases(distributions, vendor) ?: findByMatchingNamesAndSynonyms(distributions, vendor)
+
+private fun allDistributionsPrecededByWellKnownOnes(distributions: List<Distribution>): List<Distribution> =
+    distributions.sortedBy {
+        // Put our preferences first, preserve Foojay order otherwise.
+        val indexOf = distributionOrderOfPreference.indexOf(it.name)
+        when {
+            indexOf < 0 -> distributionOrderOfPreference.size
+            else -> indexOf
+        }
     }
-
-    return findByMatchingAliases(distributions, vendor) ?: findByMatchingNamesAndSynonyms(distributions, vendor)
-}
-
-private fun allDistributionsPrecededByWellKnownOnes(distributions: List<Distribution>, version: JavaLanguageVersion): List<Distribution> =
-    distributions
-        .filter { distribution ->
-            when {
-                distribution.name.startsWith("GraalVM CE") -> distribution.name == "GraalVM CE $version"
-                else -> true
-            }
-        }
-        .sortedBy {
-            //put our preferences first, preserver Foojay order otherwise
-            val indexOf = distributionOrderOfPreference.indexOf(it.name)
-            when {
-                indexOf < 0 -> distributionOrderOfPreference.size
-                else -> indexOf
-            }
-        }
 
 private fun findByMatchingAliases(distributions: List<Distribution>, vendor: JvmVendorSpec): List<Distribution>? =
     distributions.find { it.name == vendorAliases[vendor] }?.let {
