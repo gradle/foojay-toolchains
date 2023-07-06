@@ -4,6 +4,10 @@ The `org.gradle.disco-toolchains` plugin provides a [repository for downloading 
 It is based on the [foojay DiscoAPI](https://github.com/foojayio/discoapi).
 Requires Gradle 7.6 or later to work.
 
+> **TAKE HEED!** As opposed to most of the Gradle plugins, which are Project plugins 
+> and must be applied in `build.gradle[.kts]` files, this is a **SETTINGS PLUGIN** and 
+> must be applied in `settings.gradle[.kts]` files.
+
 # Usage
 
 To make use of the plugin add following to your `settings.gradle[.kts]` file.
