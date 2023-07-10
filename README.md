@@ -18,7 +18,7 @@ To make use of the plugin add following to your `settings.gradle[.kts]` file.
 
 ```kotlin
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.6.0"
 }
 ```
 
@@ -30,7 +30,7 @@ plugins {
 
 ```groovy
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.6.0"
 }
 ```
 
@@ -45,7 +45,7 @@ What it does is equivalent to applying the base plugin and some extra configurat
 
 ```kotlin
 plugins {
-    id("org.gradle.toolchains.foojay-resolver") version "0.5.0"
+    id("org.gradle.toolchains.foojay-resolver") version "0.6.0"
 }
 
 toolchainManagement {
@@ -67,7 +67,7 @@ toolchainManagement {
 
 ```groovy
 plugins {
-    id("org.gradle.toolchains.foojay-resolver") version "0.5.0"
+    id("org.gradle.toolchains.foojay-resolver") version "0.6.0"
 }
 
 toolchainManagement {
