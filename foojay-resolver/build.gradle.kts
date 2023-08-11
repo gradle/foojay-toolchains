@@ -27,8 +27,8 @@ dependencies {
 }
 
 gradlePlugin {
-    vcsUrl.set("https://github.com/gradle/disco-toolchains")
-    website.set("https://github.com/gradle/disco-toolchains")
+    vcsUrl.set("https://github.com/gradle/foojay-toolchains")
+    website.set("https://github.com/gradle/foojay-toolchains")
 
     val discoToolchains by plugins.creating {
         id = "org.gradle.toolchains.foojay-resolver"
