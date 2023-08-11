@@ -22,12 +22,12 @@ class FoojayApiTest {
     @Test
     fun `download URI provided correctly`() {
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/b9c851159b6158886700cb673b80d144/redirect",
+                "https://api.foojay.io/disco/v3.0/ids/780c65015aee0dcbedef70343132ad63/redirect",
                 8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64
         ) // zulu8.70.0.23-ca-jdk8.0.372-macosx_aarch64.zip
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/92b6aef0c40c28dd9fd38d05b5f74810/redirect",
+                "https://api.foojay.io/disco/v3.0/ids/a6dbb73cf6f03a7f204e009f8b46990c/redirect",
                 11, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
         ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.19_7.tar.gz
 
@@ -73,7 +73,7 @@ class FoojayApiTest {
         ) // graalvm-ce-java8-windows-amd64-21.3.1.zip
 
         assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/0254ee795bfd00d22eecc53ec861ea40/redirect",
+            "https://api.foojay.io/disco/v3.0/ids/db42b019f14ab70aa3e2bf43e3783764/redirect",
             20, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64
         ) // graalvm-community-jdk-20.0.1_linux-x64_bin.tar.gz
     }
@@ -153,7 +153,7 @@ class FoojayApiTest {
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)
         assertEquals(11, p.jdk_version)
-        assertEquals("11.0.19", p.distribution_version)
+        assertEquals("11.0.20", p.distribution_version)
         assertEquals("linux", p.operating_system)
         assertEquals("x64", p.architecture)
         assertEquals("jdk", p.package_type)
