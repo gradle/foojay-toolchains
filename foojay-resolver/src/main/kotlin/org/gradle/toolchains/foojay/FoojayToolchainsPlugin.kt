@@ -3,14 +3,13 @@
  */
 package org.gradle.toolchains.foojay
 
-import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.api.internal.SettingsInternal
 import org.gradle.jvm.toolchain.JavaToolchainResolverRegistry
 import org.gradle.util.GradleVersion
 
 @Suppress("unused")
-abstract class FoojayToolchainsPlugin: Plugin<Settings> {
+abstract class FoojayToolchainsPlugin: AbstractFoojayToolchainPlugin() {
 
     override fun apply(settings: Settings) {
         if (GradleVersion.current().baseVersion < GradleVersion.version("7.6")) {
