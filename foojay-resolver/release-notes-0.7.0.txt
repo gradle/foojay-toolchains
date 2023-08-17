@@ -1,1 +1,1 @@
-- TODO: fill in!
+- Provide meaningful error message when plugin is applied in a build script (instead of the settings script)
