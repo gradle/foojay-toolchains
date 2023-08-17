@@ -1,11 +1,10 @@
 package org.gradle.toolchains.foojay
 
-import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.jvm
 
 @Suppress("unused")
-abstract class FoojayToolchainsConventionPlugin: Plugin<Settings> {
+abstract class FoojayToolchainsConventionPlugin: AbstractFoojayToolchainPlugin() {
 
     override fun apply(settings: Settings) {
         settings.plugins.apply(FoojayToolchainsPlugin::class.java)
@@ -20,4 +19,5 @@ abstract class FoojayToolchainsConventionPlugin: Plugin<Settings> {
             }
         }
     }
+
 }

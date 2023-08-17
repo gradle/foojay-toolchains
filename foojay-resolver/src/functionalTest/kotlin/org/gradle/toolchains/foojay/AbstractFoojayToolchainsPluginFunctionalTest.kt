@@ -25,19 +25,9 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
         """.trimIndent())
     }
 
-    protected fun runner(settings: String): GradleRunner {
+    protected fun runner(settings: String, buildScript: String): GradleRunner {
         settingsFile.writeText(settings)
-        buildFile.writeText("""
-                plugins {
-                    java
-                }
-                
-                java {
-                    toolchain {
-                        languageVersion.set(JavaLanguageVersion.of(${getDifferentJavaVersion()}))
-                    }
-                }
-            """.trimIndent())
+        buildFile.writeText(buildScript.trimIndent())
 
         return GradleRunner.create()
             .forwardOutput()
@@ -46,7 +36,7 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
             .withProjectDir(projectDir)
     }
 
-    private fun getDifferentJavaVersion() = when {
+    protected fun getDifferentJavaVersion() = when {
         System.getProperty("java.version").startsWith("11.") -> "16"
         else -> "11"
     }
