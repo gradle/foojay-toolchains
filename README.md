@@ -17,6 +17,7 @@ To make use of the plugin add following to your `settings.gradle[.kts]` file.
 <summary>Kotlin DSL</summary>
 
 ```kotlin
+// settings.gradle.kts
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
 }
@@ -29,6 +30,7 @@ plugins {
 <summary>Groovy DSL</summary>
 
 ```groovy
+// settings.gradle
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
 }
@@ -44,6 +46,7 @@ What it does is equivalent to applying the base plugin and some extra configurat
 <summary>Kotlin DSL</summary>
 
 ```kotlin
+// settings.gradle.kts
 plugins {
     id("org.gradle.toolchains.foojay-resolver") version "0.7.0"
 }
@@ -66,6 +69,7 @@ toolchainManagement {
 <summary>Groovy DSL</summary>
 
 ```groovy
+// settings.gradle
 plugins {
     id("org.gradle.toolchains.foojay-resolver") version "0.7.0"
 }
