@@ -100,15 +100,9 @@ class FoojayApi {
     }
 
     private fun toParameterString(params: Map<String, String>): String {
-        val result = StringBuilder()
-        for (param in params) {
-            result.append(URLEncoder.encode(param.key, UTF_8.name()))
-            result.append("=")
-            result.append(URLEncoder.encode(param.value, UTF_8.name()))
-            result.append("&")
+        return params.entries.joinToString("&") {
+            "${URLEncoder.encode(it.key, UTF_8.name())}=${URLEncoder.encode(it.value, UTF_8.name())}"
         }
-        if (params.isNotEmpty()) result.delete(result.length - 1, result.length)
-        return result.toString()
     }
 
     private fun readResponse(con: HttpURLConnection): String {
