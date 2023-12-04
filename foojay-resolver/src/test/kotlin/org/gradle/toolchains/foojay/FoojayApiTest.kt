@@ -76,6 +76,11 @@ class FoojayApiTest {
             "https://api.foojay.io/disco/v3.0/ids/db42b019f14ab70aa3e2bf43e3783764/redirect",
             20, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64
         ) // graalvm-community-jdk-20.0.1_linux-x64_bin.tar.gz
+
+        assertDownloadUri(
+            null,
+            22, any(), false, OperatingSystem.LINUX, Architecture.X86_64
+        )
     }
 
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
@@ -160,7 +165,7 @@ class FoojayApiTest {
     }
 
     private fun assertDownloadUri(
-            expected: String,
+            expected: String?,
             javaVersion: Int,
             vendor: JvmVendorSpec,
             isJ9: Boolean,
@@ -174,7 +179,7 @@ class FoojayApiTest {
                 os,
                 arch
         )
-        assertEquals(expected, api.toUri(links).toString(), "Expected URI differs from actual, for details see ${links?.pkg_info_uri}")
+        assertEquals(expected, api.toUri(links)?.toString(), "Expected URI differs from actual, for details see ${links?.pkg_info_uri}")
     }
 
     private fun vendorSpec(vendorName: String): JvmVendorSpec = matching(vendorName)
