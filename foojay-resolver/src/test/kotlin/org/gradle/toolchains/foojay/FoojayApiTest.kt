@@ -22,14 +22,14 @@ class FoojayApiTest {
     @Test
     fun `download URI provided correctly`() {
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/780c65015aee0dcbedef70343132ad63/redirect",
+                "https://api.foojay.io/disco/v3.0/ids/c2457a42e8aa37d56d4564214dff9a85/redirect",
                 8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64
-        ) // zulu8.70.0.23-ca-jdk8.0.372-macosx_aarch64.zip
+        ) // zulu8.74.0.17-ca-fx-jdk8.0.392-macosx_aarch64.tar.gz
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/a6dbb73cf6f03a7f204e009f8b46990c/redirect",
+                "https://api.foojay.io/disco/v3.0/ids/c1c04c96c1f440822ef899f537c2ae16/redirect",
                 11, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
-        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.19_7.tar.gz
+        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.21_9.tar.gz
 
         assertDownloadUri(
                 "https://api.foojay.io/disco/v3.0/ids/7f094bee7c283c8a886273445e950130/redirect",
@@ -153,7 +153,7 @@ class FoojayApiTest {
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)
         assertEquals(11, p.jdk_version)
-        assertEquals("11.0.20", p.distribution_version)
+        assertEquals("11.0.21", p.distribution_version)
         assertEquals("linux", p.operating_system)
         assertEquals("x64", p.architecture)
         assertEquals("jdk", p.package_type)
