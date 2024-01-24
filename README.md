@@ -103,7 +103,7 @@ The plugin works with the following mapping:
 | Gradle JVM Vendor       | Foojay Distribution       |
 |-------------------------|---------------------------|
 | ADOPTIUM                | Temurin                   |
-| ADOPTONEJDK             | AOJ                       |
+| ADOPTOPENJDK            | AOJ                       |
 | AMAZON                  | Corretto                  |
 | APPLE                   | -                         |
 | AZUL                    | Zulu                      |
@@ -119,7 +119,7 @@ The plugin works with the following mapping:
 **To note:**
 Not all Gradle vendors have an equivalent DiscoAPI distribution, empty cells indicate that no toolchain will be provisioned.
 If no vendor is specified, distributions are iterated in the order they are provided by the DiscoAPI, and the first one that has a compatible installation package available is selected.
-The exception to the Foojay ordering of distributions is that "Temurin" (ADOPTIUM) and then "AOJ" (ADOPTONEJDK) come first, due to the history of the auto-provisioning feature in Gradle, specifically that AdoptOpenJDK/Adoptium have been the default sources for downloading JVMs.
+The exception to the Foojay ordering of distributions is that "Temurin" (ADOPTIUM) and then "AOJ" (ADOPTOPENJDK) come first, due to the history of the auto-provisioning feature in Gradle, specifically that AdoptOpenJDK/Adoptium have been the default sources for downloading JVMs.
 
 ## Implementations
 
@@ -131,7 +131,7 @@ What this criteria does in the plugin is to influence the Vendor-to-Distribution
 |-------------------------|---------------------|
 | \<no vendor specified\> | Semeru              |
 | ADOPTIUM                | -                   |
-| ADOPTONEJDK             | AOJ OpenJ9          |
+| ADOPTOPENJDK            | AOJ OpenJ9          |
 | AMAZON                  | -                   |
 | APPLE                   | -                   |
 | AZUL                    | -                   |
