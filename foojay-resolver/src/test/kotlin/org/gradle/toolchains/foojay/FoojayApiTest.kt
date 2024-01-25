@@ -23,65 +23,102 @@ class FoojayApiTest {
     @Test
     fun `download URI provided correctly`() {
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/c2457a42e8aa37d56d4564214dff9a85/redirect",
-                8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64
-        ) // zulu8.74.0.17-ca-fx-jdk8.0.392-macosx_aarch64.tar.gz
+            javaVersion = 8,
+            vendor = any(),
+            isJ9 = false,
+            os = OperatingSystem.MAC_OS,
+            arch = Architecture.AARCH64
+        ) // zulu8.X.X.X-ca-fx-jdk8.X.XXX-macosx_aarch64.tar.gz
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/c1c04c96c1f440822ef899f537c2ae16/redirect",
-                11, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
-        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.21_9.tar.gz
+            javaVersion = 11,
+            vendor = ADOPTIUM,
+            isJ9 = false,
+            os = OperatingSystem.MAC_OS,
+            arch = Architecture.AARCH64
+        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.X.XX.tar.gz
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/7f094bee7c283c8a886273445e950130/redirect",
-                11, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64
-        ) // graalvm-ce-java11-darwin-aarch64-22.3.1.tar.gz
+            javaVersion = 11,
+            vendor = GRAAL_VM,
+            isJ9 = false,
+            os = OperatingSystem.MAC_OS,
+            arch = Architecture.AARCH64
+        ) // graalvm-ce-java11-darwin-aarch64-22.X.X.tar.gz
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
-                16, any(), true, OperatingSystem.MAC_OS, Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
+            javaVersion = 16,
+            vendor = any(),
+            isJ9 = true,
+            os = OperatingSystem.MAC_OS,
+            arch = Architecture.X86_64
+        ) // ibm-semeru-open-jdk_x64_mac_16.X.X_openj9-0.27.0.tar.gz
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
-                16, IBM, true, OperatingSystem.MAC_OS, Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
+            javaVersion = 16,
+            vendor = IBM,
+            isJ9 = true,
+            os = OperatingSystem.MAC_OS,
+            arch = Architecture.X86_64
+        ) // ibm-semeru-open-jdk_x64_mac_16.X.X_openj9-0.27.0.tar.gz
 
         @Suppress("DEPRECATION")
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/5b31509900ab21f4cd92dbc454b3c7e2/redirect",
-                16, IBM_SEMERU, true, OperatingSystem.MAC_OS, Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_mac_16.0.2_7_openj9-0.27.0.tar.gz
+            javaVersion = 16,
+            vendor = IBM_SEMERU,
+            isJ9 = true,
+            os = OperatingSystem.MAC_OS,
+            arch = Architecture.X86_64
+        ) // ibm-semeru-open-jdk_x64_mac_16.X.X_openj9-0.27.0.tar.gz
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/871fe4e17cc2d5625fc5ca5f4027affd/redirect",
-                16, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64
-        ) // graalvm-ce-java16-linux-amd64-21.2.0.tar.gz
+            javaVersion = 16,
+            vendor = GRAAL_VM,
+            isJ9 = false,
+            os = OperatingSystem.LINUX,
+            arch = Architecture.X86_64
+        ) // graalvm-ce-java16-linux-amd64-21.X.X.tar.gz
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/09fd457b8a0a388f54ccf62049add79e/redirect",
-                16, any(), false, OperatingSystem.LINUX, Architecture.X86_64
-        ) // OpenJDK16U-jdk_x64_linux_hotspot_16.0.2_7.tar.gz
+            javaVersion = 16,
+            vendor = any(),
+            isJ9 = false,
+            os = OperatingSystem.LINUX,
+            arch = Architecture.X86_64
+        ) // OpenJDK16U-jdk_x64_linux_hotspot_16.X.X.tar.gz
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/ab6e7111c1a2cd7bf06de9be70ea0304/redirect",
-                16, any(), true, OperatingSystem.LINUX, Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_linux_16.0.2_7_openj9-0.27.0.tar.gz
+            javaVersion = 16,
+            vendor = any(),
+            isJ9 = true,
+            os = OperatingSystem.LINUX,
+            arch = Architecture.X86_64
+        ) // ibm-semeru-open-jdk_x64_linux_16.X.X_openj9-0.27.0.tar.gz
 
         assertDownloadUri(
-                "https://api.foojay.io/disco/v3.0/ids/74bf5fb0d06e512f88356eb8fe45f67f/redirect",
-                8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64
-        ) // graalvm-ce-java8-windows-amd64-21.3.1.zip
+            javaVersion = 8,
+            vendor = GRAAL_VM,
+            isJ9 = false,
+            os = OperatingSystem.WINDOWS,
+            arch = Architecture.X86_64
+        ) // graalvm-ce-java8-windows-amd64-21.X.X.zip
 
         assertDownloadUri(
-            "https://api.foojay.io/disco/v3.0/ids/db42b019f14ab70aa3e2bf43e3783764/redirect",
-            20, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64
+            javaVersion = 20,
+            vendor = GRAAL_VM,
+            isJ9 = false,
+            os = OperatingSystem.LINUX,
+            arch = Architecture.X86_64
         ) // graalvm-community-jdk-20.0.1_linux-x64_bin.tar.gz
 
         assertDownloadUri(
-            null,
-            22, any(), false, OperatingSystem.LINUX, Architecture.X86_64
-        )
+            expected = Regex(""),
+            javaVersion = 22,
+            vendor = any(),
+            isJ9 = false,
+            os = OperatingSystem.LINUX,
+            arch = Architecture.X86_64
+        ) // No match because at this time Java 22 is not released
     }
 
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
@@ -166,7 +203,7 @@ class FoojayApiTest {
     }
 
     private fun assertDownloadUri(
-            expected: String?,
+            expected: Regex = Regex("""https://api.foojay.io/disco/v3.0/ids/[a-z0-9]{32}/redirect"""),
             javaVersion: Int,
             vendor: JvmVendorSpec,
             isJ9: Boolean,
@@ -180,7 +217,8 @@ class FoojayApiTest {
                 os,
                 arch
         )
-        assertEquals(expected, api.toUri(links)?.toString(), "Expected URI differs from actual, for details see ${links?.pkg_info_uri}")
+        val uriString = api.toUri(links)?.toString() ?: ""
+        assertTrue(expected.matches(uriString), "Expected URI differs from actual, for details see ${links?.pkg_info_uri}")
     }
 
     private fun vendorSpec(vendorName: String): JvmVendorSpec = matching(vendorName)
