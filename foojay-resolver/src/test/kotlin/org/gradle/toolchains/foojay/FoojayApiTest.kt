@@ -113,12 +113,12 @@ class FoojayApiTest {
 
         assertDownloadUri(
             expected = Regex(""),
-            javaVersion = 22,
+            javaVersion = 1000,
             vendor = any(),
             isJ9 = false,
             os = OperatingSystem.LINUX,
             arch = Architecture.X86_64
-        ) // No match because at this time Java 22 is not released
+        ) // No match because Java 1000 is not beeing released soon
     }
 
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
