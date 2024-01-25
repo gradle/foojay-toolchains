@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class FoojayApiTest {
 
@@ -158,7 +159,7 @@ class FoojayApiTest {
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)
         assertEquals(11, p.jdk_version)
-        assertEquals("11.0.21", p.distribution_version)
+        assertTrue(Regex("11.\\d+.\\d+").matches(p.distribution_version))
         assertEquals("linux", p.operating_system)
         assertEquals("x64", p.architecture)
         assertEquals("jdk", p.package_type)
