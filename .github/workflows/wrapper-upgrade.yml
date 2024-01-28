@@ -1,0 +1,27 @@
+name: Wrapper Upgrade
+
+on:
+  schedule:
+    - cron:  '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  upgrade_wrapper:
+    runs-on: ubuntu-latest
+    env:
+      WRAPPER_UPGRADE_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Set up Git configuration
+        run: |
+          git config --global user.email "bot-githubaction@gradle.com"
+          git config --global user.name "bot-githubaction"
+          git config --global url."https://unused-username:${WRAPPER_UPGRADE_GIT_TOKEN}@github.com/".insteadOf "https://github.com/"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Upgrade Wrappers
+        run: ./gradlew clean upgradeGradleWrapperAll
