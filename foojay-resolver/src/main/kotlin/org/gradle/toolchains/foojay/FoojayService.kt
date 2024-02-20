@@ -15,14 +15,14 @@ internal interface Service {
         implementation: JvmImplementation,
         operatingSystem: OperatingSystem,
         architecture: Architecture
-    ): URI?
+    ): Result<URI?>
 }
 
 internal class FoojayService(
     private val api: Api
 ) : Service {
 
-    private val distributions = mutableListOf<Distribution>()
+    private val cachedDistributions = mutableListOf<Distribution>()
 
     override fun findMatchingDownloadUri(
         version: JavaLanguageVersion,
@@ -30,38 +30,44 @@ internal class FoojayService(
         implementation: JvmImplementation,
         operatingSystem: OperatingSystem,
         architecture: Architecture
-    ): URI? = findMatchingDistributions(vendor, implementation, version)
-        .asSequence()
-        .mapNotNull { distribution ->
-            val matchingPackage = findMatchingPackage(
-                distribution.api_parameter,
-                version,
-                operatingSystem,
-                architecture
-            )
-            matchingPackage?.links
+    ): Result<URI?> = findMatchingDistributions(vendor, implementation, version)
+        .map {
+            it.asSequence()
+                .mapNotNull { distribution ->
+                    val matchingPackage = findMatchingPackage(
+                        distribution.api_parameter,
+                        version,
+                        operatingSystem,
+                        architecture
+                    )
+                    matchingPackage?.links
+                }
+                .firstOrNull()
+                ?.pkg_download_redirect
         }
-        .firstOrNull()
-        ?.pkg_download_redirect
 
     @VisibleForTesting()
     internal fun findMatchingDistributions(
         vendor: JvmVendorSpec,
         implementation: JvmImplementation,
         version: JavaLanguageVersion
-    ): List<Distribution> {
-        fetchDistributionsIfMissing()
-        return match(distributions, vendor, implementation, version)
+    ): Result<List<Distribution>> {
+        val distributions = fetchDistributionsIfMissing()
+        if (distributions.isFailure) return distributions
+        return Result.success(match(distributions.getOrThrow(), vendor, implementation, version))
     }
 
-    private fun fetchDistributionsIfMissing() {
-        if (distributions.isEmpty()) {
-            val distributionJson = api.fetchDistributions(
+    private fun fetchDistributionsIfMissing(): Result<List<Distribution>> {
+        if (cachedDistributions.isEmpty()) {
+            val distributionResult = api.fetchDistributions(
                 mapOf("include_versions" to "true", "include_synonyms" to "true")
             )
 
-            distributions.addAll(parseDistributions(distributionJson))
+            if (distributionResult.isFailure) return Result.failure(distributionResult.exceptionOrNull()!!)
+            cachedDistributions.addAll(parseDistributions(distributionResult.getOrThrow()))
         }
+
+        return Result.success(cachedDistributions)
     }
 
     @VisibleForTesting
@@ -76,7 +82,7 @@ internal class FoojayService(
             else -> "jdk_version"
         }
 
-        val packagesJson = api.fetchPackages(
+        val packagesResult = api.fetchPackages(
             mapOf(
                 versionApiKey to "$version",
                 "distro" to distributionName,
@@ -86,7 +92,7 @@ internal class FoojayService(
             )
         )
 
-        val packages = parsePackages(packagesJson)
-        return match(packages, architecture)
+        if (packagesResult.isFailure) return null
+        return match(parsePackages(packagesResult.getOrThrow()), architecture)
     }
 }

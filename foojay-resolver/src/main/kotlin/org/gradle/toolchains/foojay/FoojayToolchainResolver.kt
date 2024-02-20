@@ -1,5 +1,6 @@
 package org.gradle.toolchains.foojay
 
+import org.gradle.api.logging.Logging
 import org.gradle.jvm.toolchain.JavaToolchainDownload
 import org.gradle.jvm.toolchain.JavaToolchainRequest
 import org.gradle.jvm.toolchain.JavaToolchainResolver
@@ -19,6 +20,11 @@ abstract class FoojayToolchainResolver : JavaToolchainResolver {
             platform.operatingSystem,
             platform.architecture
         )
-        return Optional.ofNullable(matchingDownloadUri).map(JavaToolchainDownload::fromUri)
+        if (matchingDownloadUri.isFailure) logWarning()
+        return Optional.ofNullable(matchingDownloadUri.getOrThrow()).map(JavaToolchainDownload::fromUri)
+    }
+
+    private fun logWarning() {
+        Logging.getLogger(FoojayToolchainResolver::class.java).warn("Failed to resolve Java toolchain")
     }
 }

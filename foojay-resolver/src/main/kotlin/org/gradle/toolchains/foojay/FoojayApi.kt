@@ -10,8 +10,8 @@ import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 internal interface Api {
-    fun fetchDistributions(params: Map<String, String>): String
-    fun fetchPackages(params: Map<String, String>): String
+    fun fetchDistributions(params: Map<String, String>): Result<String>
+    fun fetchPackages(params: Map<String, String>): Result<String>
 }
 
 internal class FoojayApi : Api {
@@ -23,10 +23,10 @@ internal class FoojayApi : Api {
     private val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
     private val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
 
-    override fun fetchDistributions(params: Map<String, String>): String =
+    override fun fetchDistributions(params: Map<String, String>): Result<String> =
         createConnection(DISTRIBUTIONS_ENDPOINT, params).use { readResponse(this) }
 
-    override fun fetchPackages(params: Map<String, String>): String =
+    override fun fetchPackages(params: Map<String, String>): Result<String> =
         createConnection(PACKAGES_ENDPOINT, params).use { readResponse(this) }
 
     private fun createConnection(endpoint: String, params: Map<String, String>): HttpURLConnection {
@@ -48,12 +48,12 @@ internal class FoojayApi : Api {
         }
     }
 
-    private fun readResponse(con: HttpURLConnection): String {
+    private fun readResponse(con: HttpURLConnection): Result<String> {
         val status = con.responseCode
         if (status != HttpURLConnection.HTTP_OK) {
-            throw GradleException("Requesting vendor list failed: ${readContent(con.errorStream)}")
+            return Result.failure(GradleException("Requesting vendor list failed: ${readContent(con.errorStream)}"))
         }
-        return readContent(con.inputStream)
+        return Result.success(readContent(con.inputStream))
     }
 
     private fun readContent(stream: InputStream): String = stream.bufferedReader().use(BufferedReader::readText)
