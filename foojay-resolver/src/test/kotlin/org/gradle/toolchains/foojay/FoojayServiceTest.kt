@@ -176,7 +176,7 @@ class FoojayServiceTest {
     private fun assertMatchedDistributions(vendor: JvmVendorSpec, implementation: JvmImplementation, version: Int, vararg expectedDistributions: String) {
         assertEquals(
                 listOf(*expectedDistributions),
-                service.findMatchingDistributions(vendor, implementation, of(version)).map { it.name },
+                service.findMatchingDistributions(vendor, implementation, of(version)).getOrThrow().map { it.name },
                 "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
         )
     }
@@ -184,9 +184,9 @@ class FoojayServiceTest {
     @ParameterizedTest(name = "can resolve arbitrary vendors (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `can resolve arbitrary vendors`(version: Int) {
-        assertEquals("ZuluPrime", service.findMatchingDistributions(vendorSpec("zuluprime"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("ZuluPrime", service.findMatchingDistributions(vendorSpec("zUluprIme"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("JetBrains", service.findMatchingDistributions(vendorSpec("JetBrains"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("ZuluPrime", service.findMatchingDistributions(vendorSpec("zuluprime"), VENDOR_SPECIFIC, of(version)).getOrThrow().firstOrNull()?.name)
+        assertEquals("ZuluPrime", service.findMatchingDistributions(vendorSpec("zUluprIme"), VENDOR_SPECIFIC, of(version)).getOrThrow().firstOrNull()?.name)
+        assertEquals("JetBrains", service.findMatchingDistributions(vendorSpec("JetBrains"), VENDOR_SPECIFIC, of(version)).getOrThrow().firstOrNull()?.name)
     }
 
     @Test
@@ -217,7 +217,7 @@ class FoojayServiceTest {
                 os,
                 arch
         )
-        val uriString = matchingUri?.toString() ?: ""
+        val uriString = matchingUri.map { it?.toString() }.getOrNull() ?: ""
         assertTrue(expected.matches(uriString), "Expected URI differs from actual, got $uriString")
     }
 
