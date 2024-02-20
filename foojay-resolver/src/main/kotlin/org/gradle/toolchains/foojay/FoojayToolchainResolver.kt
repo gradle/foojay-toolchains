@@ -21,7 +21,7 @@ abstract class FoojayToolchainResolver : JavaToolchainResolver {
             platform.architecture
         )
         if (matchingDownloadUri.isFailure) logWarning()
-        return Optional.ofNullable(matchingDownloadUri.getOrThrow()).map(JavaToolchainDownload::fromUri)
+        return Optional.ofNullable(matchingDownloadUri.getOrNull()).map(JavaToolchainDownload::fromUri)
     }
 
     private fun logWarning() {
