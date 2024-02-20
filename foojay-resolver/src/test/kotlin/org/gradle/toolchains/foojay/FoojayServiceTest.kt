@@ -16,9 +16,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class FoojayApiTest {
+class FoojayServiceTest {
 
-    private val api = FoojayApi()
+    private val service = FoojayService(FoojayApi())
 
     @Test
     fun `download URI provided correctly`() {
@@ -176,7 +176,7 @@ class FoojayApiTest {
     private fun assertMatchedDistributions(vendor: JvmVendorSpec, implementation: JvmImplementation, version: Int, vararg expectedDistributions: String) {
         assertEquals(
                 listOf(*expectedDistributions),
-                api.match(vendor, implementation, of(version)).map { it.name },
+                service.findMatchingDistributions(vendor, implementation, of(version)).map { it.name },
                 "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
         )
     }
@@ -184,14 +184,14 @@ class FoojayApiTest {
     @ParameterizedTest(name = "can resolve arbitrary vendors (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `can resolve arbitrary vendors`(version: Int) {
-        assertEquals("ZuluPrime", api.match(vendorSpec("zuluprime"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("ZuluPrime", api.match(vendorSpec("zUluprIme"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("JetBrains", api.match(vendorSpec("JetBrains"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("ZuluPrime", service.findMatchingDistributions(vendorSpec("zuluprime"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("ZuluPrime", service.findMatchingDistributions(vendorSpec("zUluprIme"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("JetBrains", service.findMatchingDistributions(vendorSpec("JetBrains"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
     }
 
     @Test
     fun `can pick the right package`() {
-        val p = api.match("temurin", of(11), OperatingSystem.LINUX, Architecture.X86_64)
+        val p = service.findMatchingPackage("temurin", of(11), OperatingSystem.LINUX, Architecture.X86_64)
         assertNotNull(p)
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)
@@ -210,15 +210,15 @@ class FoojayApiTest {
             os: OperatingSystem,
             arch: Architecture
     ) {
-        val links = api.toLinks(
+        val matchingUri = service.findMatchingDownloadUri(
                 of(javaVersion),
                 vendor,
                 if (isJ9) J9 else VENDOR_SPECIFIC,
                 os,
                 arch
         )
-        val uriString = api.toUri(links)?.toString() ?: ""
-        assertTrue(expected.matches(uriString), "Expected URI differs from actual, for details see ${links?.pkg_info_uri}")
+        val uriString = matchingUri?.toString() ?: ""
+        assertTrue(expected.matches(uriString), "Expected URI differs from actual, got $uriString")
     }
 
     private fun vendorSpec(vendorName: String): JvmVendorSpec = matching(vendorName)

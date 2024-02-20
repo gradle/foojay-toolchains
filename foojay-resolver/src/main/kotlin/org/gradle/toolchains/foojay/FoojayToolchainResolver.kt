@@ -3,23 +3,22 @@ package org.gradle.toolchains.foojay
 import org.gradle.jvm.toolchain.JavaToolchainDownload
 import org.gradle.jvm.toolchain.JavaToolchainRequest
 import org.gradle.jvm.toolchain.JavaToolchainResolver
-import java.util.*
+import java.util.Optional
 
-abstract class FoojayToolchainResolver: JavaToolchainResolver {
+abstract class FoojayToolchainResolver : JavaToolchainResolver {
 
-    private val api: FoojayApi = FoojayApi()
+    private val service: FoojayService = FoojayService(FoojayApi())
 
     override fun resolve(request: JavaToolchainRequest): Optional<JavaToolchainDownload> {
         val spec = request.javaToolchainSpec
         val platform = request.buildPlatform
-        val links = api.toLinks(
+        val matchingDownloadUri = service.findMatchingDownloadUri(
             spec.languageVersion.get(),
             spec.vendor.get(),
             spec.implementation.get(),
             platform.operatingSystem,
             platform.architecture
         )
-        val uri = api.toUri(links)
-        return Optional.ofNullable(uri).map(JavaToolchainDownload::fromUri)
+        return Optional.ofNullable(matchingDownloadUri).map(JavaToolchainDownload::fromUri)
     }
 }

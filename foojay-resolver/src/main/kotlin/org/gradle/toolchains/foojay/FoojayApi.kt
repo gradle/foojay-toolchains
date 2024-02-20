@@ -1,96 +1,37 @@
 package org.gradle.toolchains.foojay
 
 import org.gradle.api.GradleException
-import org.gradle.jvm.toolchain.JavaLanguageVersion
-import org.gradle.jvm.toolchain.JvmImplementation
-import org.gradle.jvm.toolchain.JvmVendorSpec
-import org.gradle.platform.Architecture
-import org.gradle.platform.OperatingSystem
 import java.io.BufferedReader
 import java.io.InputStream
 import java.net.HttpURLConnection
-import java.net.URI
 import java.net.URL
 import java.net.URLEncoder
-import java.nio.charset.StandardCharsets.UTF_8
-import java.util.concurrent.TimeUnit.SECONDS
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.TimeUnit
 
+internal interface Api {
+    fun fetchDistributions(params: Map<String, String>): String
+    fun fetchPackages(params: Map<String, String>): String
+}
 
-class FoojayApi {
+internal class FoojayApi : Api {
+    private val CONNECT_TIMEOUT = TimeUnit.SECONDS.toMillis(10).toInt()
+    private val READ_TIMEOUT = TimeUnit.SECONDS.toMillis(20).toInt()
 
-    val CONNECT_TIMEOUT = SECONDS.toMillis(10).toInt()
-    val READ_TIMEOUT = SECONDS.toMillis(20).toInt()
+    private val SCHEMA = "https"
+    private val ENDPOINT_ROOT = "api.foojay.io/disco/v3.0"
+    private val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
+    private val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
 
-    val SCHEMA = "https"
+    override fun fetchDistributions(params: Map<String, String>): String =
+        createConnection(DISTRIBUTIONS_ENDPOINT, params).use { readResponse(this) }
 
-    val ENDPOINT_ROOT = "api.foojay.io/disco/v3.0"
-    val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
-    val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
+    override fun fetchPackages(params: Map<String, String>): String =
+        createConnection(PACKAGES_ENDPOINT, params).use { readResponse(this) }
 
-    val distributions = mutableListOf<Distribution>()
-
-    fun toUri(links: Links?): URI? = links?.pkg_download_redirect
-
-    fun toLinks(
-            version: JavaLanguageVersion,
-            vendor: JvmVendorSpec,
-            implementation: JvmImplementation,
-            operatingSystem: OperatingSystem,
-            architecture: Architecture
-    ): Links? {
-        val distributions = match(vendor, implementation, version)
-        return distributions.asSequence().mapNotNull { distribution ->
-            val downloadPackage = match(distribution.api_parameter, version, operatingSystem, architecture)
-            downloadPackage?.links
-        }.firstOrNull()
-    }
-
-    internal fun match(vendor: JvmVendorSpec, implementation: JvmImplementation, version: JavaLanguageVersion): List<Distribution> {
-        fetchDistributionsIfMissing()
-        return match(distributions, vendor, implementation, version)
-    }
-
-    private fun fetchDistributionsIfMissing() {
-        if (distributions.isEmpty()) {
-            val con = createConnection(
-                DISTRIBUTIONS_ENDPOINT,
-                mapOf("include_versions" to "true", "include_synonyms" to "true")
-            )
-            val json = readResponse(con)
-            con.disconnect()
-
-            distributions.addAll(parseDistributions(json))
-        }
-    }
-
-    internal fun match(distributionName: String, version: JavaLanguageVersion, operatingSystem: OperatingSystem, architecture: Architecture): Package? {
-        val versionApiKey = when {
-            distributionName.startsWith("graalvm_community") -> "version"
-            else -> "jdk_version"
-        }
-
-        val con = createConnection(
-            PACKAGES_ENDPOINT,
-            mapOf(
-                versionApiKey to "$version",
-                "distro" to distributionName,
-                "operating_system" to operatingSystem.toApiValue(),
-                "latest" to "available",
-                "directly_downloadable" to "true"
-            )
-        )
-        val json = readResponse(con)
-        con.disconnect()
-
-        val packages = parsePackages(json)
-        return match(packages, architecture)
-    }
-
-    private fun createConnection(endpoint: String, parameters: Map<String, String>): HttpURLConnection {
-        val url = URL("$SCHEMA://$endpoint?${toParameterString(parameters)}")
+    private fun createConnection(endpoint: String, params: Map<String, String>): HttpURLConnection {
+        val url = URL("$SCHEMA://$endpoint?${toParameterString(params)}")
         val con = url.openConnection() as HttpURLConnection
-        con.setRequestProperty("Content-Type", "application/json")
-        con.requestMethod = "GET"
         con.connectTimeout = CONNECT_TIMEOUT
         con.readTimeout = READ_TIMEOUT
         return con
@@ -98,7 +39,12 @@ class FoojayApi {
 
     private fun toParameterString(params: Map<String, String>): String {
         return params.entries.joinToString("&") {
-            "${URLEncoder.encode(it.key, UTF_8.name())}=${URLEncoder.encode(it.value, UTF_8.name())}"
+            "${URLEncoder.encode(it.key, StandardCharsets.UTF_8.name())}=${
+                URLEncoder.encode(
+                    it.value,
+                    StandardCharsets.UTF_8.name()
+                )
+            }"
         }
     }
 
@@ -110,5 +56,11 @@ class FoojayApi {
         return readContent(con.inputStream)
     }
 
-    private fun readContent(stream: InputStream) = stream.bufferedReader().use(BufferedReader::readText)
+    private fun readContent(stream: InputStream): String = stream.bufferedReader().use(BufferedReader::readText)
+}
+
+private fun <T> HttpURLConnection.use(block: HttpURLConnection.() -> T): T {
+    val result = block()
+    disconnect()
+    return result
 }
