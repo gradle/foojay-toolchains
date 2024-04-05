@@ -1,24 +1,18 @@
-@file:Suppress("UNUSED_VARIABLE")
-
 import java.io.FileNotFoundException
 
 plugins {
     `kotlin-dsl`
     signing
-    id("com.gradle.plugin-publish") version "1.1.0"
+    id("com.gradle.plugin-publish") version "1.2.1"
 }
 
 group = "org.gradle.toolchains"
 val pluginVersion = property("pluginVersion") ?: throw GradleException("`pluginVersion` missing in gradle.properties!")
 version = pluginVersion
 
-repositories {
-    mavenCentral()
-}
-
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion = JavaLanguageVersion.of(8)
     }
 }
 
@@ -27,15 +21,15 @@ dependencies {
 }
 
 gradlePlugin {
-    vcsUrl.set("https://github.com/gradle/foojay-toolchains")
-    website.set("https://github.com/gradle/foojay-toolchains")
+    vcsUrl = "https://github.com/gradle/foojay-toolchains"
+    website = "https://github.com/gradle/foojay-toolchains"
 
     val discoToolchains by plugins.creating {
         id = "org.gradle.toolchains.foojay-resolver"
         implementationClass = "org.gradle.toolchains.foojay.FoojayToolchainsPlugin"
         displayName = "Foojay Disco API Toolchains Resolver"
         description = "Toolchains resolver using the Foojay Disco API for resolving Java runtimes."
-        tags.set(listOf("gradle", "toolchains"))
+        tags = listOf("gradle", "toolchains")
     }
 
     val discoToolchainsConvenience by plugins.creating {
@@ -43,7 +37,7 @@ gradlePlugin {
         implementationClass = "org.gradle.toolchains.foojay.FoojayToolchainsConventionPlugin"
         displayName = "Foojay Disco API Toolchains Resolver Convention"
         description = "Toolchains resolver using the Foojay Disco API for resolving Java runtimes. Automatically configures toolchain management."
-        tags.set(listOf("gradle", "toolchains"))
+        tags = listOf("gradle", "toolchains")
     }
 
 }
@@ -81,7 +75,7 @@ testing {
 
 gradlePlugin.testSourceSets(sourceSets.getAt("functionalTest"))
 
-tasks.named<Task>("check") {
+tasks.check {
     // Run the functional tests as part of `check`
     dependsOn(testing.suites.named("functionalTest"))
 }
