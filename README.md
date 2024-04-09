@@ -97,7 +97,7 @@ The main thing the plugin does is to match [Gradle's toolchain specifications](h
 
 ## Vendors
 
-There is mostly a 1-to-1 relationship between the DiscoAPI's distributions and Gradle vendors.
+There is mostly a 1-to-1 relationship between the DiscoAPI's distributions and [Gradle vendors](https://docs.gradle.org/current/userguide/toolchains.html#sec:vendors).
 The plugin works with the following mapping:
 
 | Gradle JVM Vendor       | Foojay Distribution       |
