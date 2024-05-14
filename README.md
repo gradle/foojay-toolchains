@@ -112,6 +112,7 @@ The plugin works with the following mapping:
 | HEWLETT_PACKARD         | -                         |
 | IBM                     | Semeru                    |
 | IBM_SEMERU              | Semeru                    |
+| JETBRAINS               | JetBrains                 |
 | MICROSOFT               | Microsoft                 |
 | ORACLE                  | Oracle OpenJDK            |
 | SAP                     | SAP Machine               |
@@ -140,6 +141,7 @@ What this criteria does in the plugin is to influence the Vendor-to-Distribution
 | HEWLETT_PACKARD         | -                   |
 | IBM                     | Semeru              |
 | IBM_SEMERU              | Semeru              |
+| JETBRAINS               | -                   |
 | MICROSOFT               | -                   |
 | ORACLE                  | -                   |
 | SAP                     | -                   |
