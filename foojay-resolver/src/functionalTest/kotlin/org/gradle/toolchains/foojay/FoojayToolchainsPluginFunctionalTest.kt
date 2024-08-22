@@ -6,7 +6,7 @@ import kotlin.test.assertTrue
 class FoojayToolchainsPluginFunctionalTest: AbstractFoojayToolchainsPluginFunctionalTest() {
 
     @Test
-    fun `can use base plugin`() {
+    fun `can use base plugin`() { // TODO: this test should run with multiple Gradle versions, not just the one in this project
         val settings = """
             plugins {
                 id("org.gradle.toolchains.foojay-resolver")
@@ -35,8 +35,7 @@ class FoojayToolchainsPluginFunctionalTest: AbstractFoojayToolchainsPluginFuncti
             }
         """
         val result = runner(settings, buildScript).build()
-
-        assertTrue("Installed toolchain from https://api.foojay.io/disco/" in result.output)
+        assertProvisioningSuccessful(result)
     }
 
     @Test
@@ -76,7 +75,7 @@ class FoojayToolchainsPluginFunctionalTest: AbstractFoojayToolchainsPluginFuncti
     }
 
     @Test
-    fun `provides meaningful error when applied as a project plugin`() {
+    fun `provides meaningful error when applied as a project plugin`() { // TODO: this test should run with multiple Gradle versions, not just the one in this project
         val settings = ""
 
         val buildScript = """
