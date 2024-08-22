@@ -10,6 +10,13 @@ import java.net.URI
 val architectures32Bit = setOf("x32", "i386", "x86")
 val architectures64Bit = setOf("x64", "x86_64", "amd64", "ia64")
 val architecturesArm64Bit = setOf("aarch64", "arm64")
+val architecturesPpc64Bit = setOf("ppc64")
+val architecturesPpc64BitLe = setOf("ppc64le")
+val architecturesS390 = setOf("s390x")
+val architecturesSparkV9 = setOf("sparcv9")
+
+// "aarch64,aarch32,arm,arm32,armhf,armel,arm64,mips,mipsel,ppc,ppc64,ppc64le,riscv64,s390x,sparc,sparcv9,x64,x32,i386,i386,i386,x86,x86_64,amd64,ia64"
+
 val handledArchiveTypes = setOf("tar", "tar.gz", "tgz", "zip")
 
 fun parsePackages(json: String): List<Package> {
@@ -32,6 +39,7 @@ fun OperatingSystem.toApiValue(): String =
         OperatingSystem.MAC_OS -> "macos"
         OperatingSystem.SOLARIS -> "solaris"
         OperatingSystem.FREE_BSD -> "linux"
+        OperatingSystem.AIX -> "aix"
     }
 
 private fun matches(p: Package, architecture: Architecture): Boolean =
@@ -39,6 +47,10 @@ private fun matches(p: Package, architecture: Architecture): Boolean =
         Architecture.X86 -> p.architecture in architectures32Bit
         Architecture.X86_64 -> p.architecture in architectures64Bit
         Architecture.AARCH64 -> p.architecture in architecturesArm64Bit
+        Architecture.PPC64 -> p.architecture in architecturesPpc64Bit
+        Architecture.PPC64LE -> p.architecture in architecturesPpc64BitLe
+        Architecture.S390X -> p.architecture in architecturesS390
+        Architecture.SPARC_V9 -> p.architecture in architecturesSparkV9
     }
 
 private fun hasHandledArchiveType(p: Package): Boolean {
