@@ -1,0 +1,5 @@
+style:
+  MaxLineLength:
+    maxLineLength: 180                    # default is 120
+  WildcardImport:
+    active: false

@@ -10,115 +10,45 @@ import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 import org.gradle.platform.Architecture
 import org.gradle.platform.OperatingSystem
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
+@Suppress("UnstableApiUsage")
 class FoojayApiTest {
 
     private val api = FoojayApi()
 
-    @Test
-    fun `download URI provided correctly`() {
-        assertDownloadUri(
-            javaVersion = 8,
-            vendor = any(),
-            isJ9 = false,
-            os = OperatingSystem.MAC_OS,
-            arch = Architecture.AARCH64
-        ) // zulu8.X.X.X-ca-fx-jdk8.X.XXX-macosx_aarch64.tar.gz
+    @ParameterizedTest(name = "javaVersion: {0}, vendor: {1}, isJ9: {2}, os: {3}, arch: {4}")
+    @MethodSource("getData")
+    fun `download URI provided correctly`(
+        javaVersion: Int,
+        vendor: JvmVendorSpec,
+        isJ9: Boolean,
+        os: OperatingSystem,
+        arch: Architecture
+    ) = assertDownloadUri(javaVersion, vendor, isJ9, os, arch)
 
-        assertDownloadUri(
-            javaVersion = 11,
-            vendor = ADOPTIUM,
-            isJ9 = false,
-            os = OperatingSystem.MAC_OS,
-            arch = Architecture.AARCH64
-        ) // OpenJDK11U-jdk_aarch64_mac_hotspot_11.X.XX.tar.gz
-
-        assertDownloadUri(
-            javaVersion = 11,
-            vendor = GRAAL_VM,
-            isJ9 = false,
-            os = OperatingSystem.MAC_OS,
-            arch = Architecture.AARCH64
-        ) // graalvm-ce-java11-darwin-aarch64-22.X.X.tar.gz
-
-        assertDownloadUri(
-            javaVersion = 16,
-            vendor = any(),
-            isJ9 = true,
-            os = OperatingSystem.MAC_OS,
-            arch = Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_mac_16.X.X_openj9-0.27.0.tar.gz
-
-        assertDownloadUri(
-            javaVersion = 16,
-            vendor = IBM,
-            isJ9 = true,
-            os = OperatingSystem.MAC_OS,
-            arch = Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_mac_16.X.X_openj9-0.27.0.tar.gz
-
+    companion object {
         @Suppress("DEPRECATION")
-        assertDownloadUri(
-            javaVersion = 16,
-            vendor = IBM_SEMERU,
-            isJ9 = true,
-            os = OperatingSystem.MAC_OS,
-            arch = Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_mac_16.X.X_openj9-0.27.0.tar.gz
-
-        assertDownloadUri(
-            javaVersion = 16,
-            vendor = GRAAL_VM,
-            isJ9 = false,
-            os = OperatingSystem.LINUX,
-            arch = Architecture.X86_64
-        ) // graalvm-ce-java16-linux-amd64-21.X.X.tar.gz
-
-        assertDownloadUri(
-            javaVersion = 16,
-            vendor = any(),
-            isJ9 = false,
-            os = OperatingSystem.LINUX,
-            arch = Architecture.X86_64
-        ) // OpenJDK16U-jdk_x64_linux_hotspot_16.X.X.tar.gz
-
-        assertDownloadUri(
-            javaVersion = 16,
-            vendor = any(),
-            isJ9 = true,
-            os = OperatingSystem.LINUX,
-            arch = Architecture.X86_64
-        ) // ibm-semeru-open-jdk_x64_linux_16.X.X_openj9-0.27.0.tar.gz
-
-        assertDownloadUri(
-            javaVersion = 8,
-            vendor = GRAAL_VM,
-            isJ9 = false,
-            os = OperatingSystem.WINDOWS,
-            arch = Architecture.X86_64
-        ) // graalvm-ce-java8-windows-amd64-21.X.X.zip
-
-        assertDownloadUri(
-            javaVersion = 20,
-            vendor = GRAAL_VM,
-            isJ9 = false,
-            os = OperatingSystem.LINUX,
-            arch = Architecture.X86_64
-        ) // graalvm-community-jdk-20.0.1_linux-x64_bin.tar.gz
-
-        assertDownloadUri(
-            expected = Regex(""),
-            javaVersion = 1000,
-            vendor = any(),
-            isJ9 = false,
-            os = OperatingSystem.LINUX,
-            arch = Architecture.X86_64
-        ) // No match because Java 1000 is not beeing released soon
+        @JvmStatic
+        fun getData(): List<Arguments> = listOf(
+          Arguments.of(8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+          Arguments.of(11, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+          Arguments.of(11, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+          Arguments.of(16, any(), true, OperatingSystem.MAC_OS, Architecture.X86_64),
+          Arguments.of(16, IBM, true, OperatingSystem.MAC_OS, Architecture.X86_64),
+          Arguments.of(16, IBM_SEMERU, true, OperatingSystem.MAC_OS, Architecture.X86_64),
+          Arguments.of(16, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
+          Arguments.of(16, any(), false, OperatingSystem.LINUX, Architecture.X86_64),
+          Arguments.of(16, any(), true, OperatingSystem.LINUX, Architecture.X86_64),
+          Arguments.of(8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64),
+          Arguments.of(20, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
+        )
     }
 
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
@@ -173,7 +103,12 @@ class FoojayApiTest {
         assertMatchedDistributions(HEWLETT_PACKARD, VENDOR_SPECIFIC, version)
     }
 
-    private fun assertMatchedDistributions(vendor: JvmVendorSpec, implementation: JvmImplementation, version: Int, vararg expectedDistributions: String) {
+    private fun assertMatchedDistributions(
+        vendor: JvmVendorSpec,
+        implementation: JvmImplementation,
+        version: Int,
+        vararg expectedDistributions: String
+    ) {
         assertEquals(
                 listOf(*expectedDistributions),
                 api.match(vendor, implementation, of(version)).map { it.name },
@@ -202,24 +137,62 @@ class FoojayApiTest {
         assertEquals("jdk", p.package_type)
     }
 
+    @Suppress("LongParameterList")
     private fun assertDownloadUri(
-            expected: Regex = Regex("""https://api.foojay.io/disco/v3.0/ids/[a-z0-9]{32}/redirect"""),
             javaVersion: Int,
             vendor: JvmVendorSpec,
             isJ9: Boolean,
             os: OperatingSystem,
             arch: Architecture
     ) {
-        val links = api.toLinks(
-                of(javaVersion),
-                vendor,
-                if (isJ9) J9 else VENDOR_SPECIFIC,
-                os,
-                arch
-        )
-        val uriString = api.toUri(links)?.toString() ?: ""
-        assertTrue(expected.matches(uriString), "Expected URI differs from actual, for details see ${links?.pkg_info_uri}")
+        val actual = api.toPackage(of(javaVersion), vendor, if (isJ9) J9 else VENDOR_SPECIFIC, os, arch)
+        assertNotNull(actual)
+        assertNotNull(actual.links.pkg_download_redirect)
+        assertJavaVersion(javaVersion, actual)
+        assertDistribution(vendor, actual)
+        assertOperatingSystem(os, actual)
+        assertArchitecture(arch, actual)
     }
+
+    private fun assertJavaVersion(javaVersion: Int, actual: Package) {
+        val actualValue = actual.jdk_version
+        assertEquals(javaVersion, actualValue,
+            "Expected Java version ($javaVersion) doesn't match actual one ($actualValue),  ${moreDetailsAt(actual)}"
+        )
+    }
+
+    private fun assertDistribution(vendor: JvmVendorSpec, actual: Package) {
+        var expectedValue = vendor.toString().replace("_", "").lowercase()
+        if (expectedValue == "ibm") {
+            expectedValue = "semeru"
+        }
+        val actualValue = actual.distribution
+        assertTrue(vendor.matches(actualValue) || actualValue.startsWith(expectedValue),
+            "Expected vendor spec ($expectedValue) doesn't match actual distribution (${actualValue}), ${moreDetailsAt(actual)}"
+        )
+    }
+
+    private fun assertOperatingSystem(os: OperatingSystem, actual: Package) {
+        val expectedValue = os.toString().replace("_", "").lowercase()
+        val actualValue = actual.operating_system
+        assertEquals(expectedValue, actualValue,
+            "Expected operating system ($expectedValue) doesn't match actual one ($actualValue),  ${moreDetailsAt(actual)}"
+        )
+    }
+
+    private fun assertArchitecture(arch: Architecture, actual: Package) {
+        val expectedValues = when (arch) {
+            Architecture.X86 -> setOf("x32", "i386", "x86")
+            Architecture.X86_64 -> setOf("x64", "x86_64", "amd64", "ia64")
+            Architecture.AARCH64 -> setOf("aarch64", "arm64")
+        }
+        val actualValue = actual.architecture
+        assertTrue(expectedValues.contains(actualValue),
+            "Expected architecture (${arch}) doesn't match actual one ($actualValue),  ${moreDetailsAt(actual)}"
+        )
+    }
+
+    private fun moreDetailsAt(actual: Package?) = "for more details see ${actual?.links?.pkg_info_uri}"
 
     private fun vendorSpec(vendorName: String): JvmVendorSpec = matching(vendorName)
 

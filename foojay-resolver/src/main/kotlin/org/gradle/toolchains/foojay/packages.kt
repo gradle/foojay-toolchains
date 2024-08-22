@@ -1,3 +1,5 @@
+@file:Suppress("ConstructorParameterNaming")
+
 package org.gradle.toolchains.foojay
 
 import com.google.gson.Gson
