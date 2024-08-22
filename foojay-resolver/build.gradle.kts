@@ -4,6 +4,7 @@ plugins {
     `kotlin-dsl`
     signing
     id("com.gradle.plugin-publish") version "1.2.1"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
 group = "org.gradle.toolchains"
@@ -14,6 +15,12 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(8)
     }
+}
+
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = true
+    config.setFrom(project.rootProject.file("gradle/detekt.yml"))
 }
 
 dependencies {
