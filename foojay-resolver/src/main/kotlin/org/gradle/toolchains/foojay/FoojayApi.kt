@@ -31,17 +31,16 @@ class FoojayApi {
 
     fun toUri(links: Links?): URI? = links?.pkg_download_redirect
 
-    fun toLinks(
+    fun toPackage(
             version: JavaLanguageVersion,
             vendor: JvmVendorSpec,
             implementation: JvmImplementation,
             operatingSystem: OperatingSystem,
             architecture: Architecture
-    ): Links? {
+    ): Package? {
         val distributions = match(vendor, implementation, version)
         return distributions.asSequence().mapNotNull { distribution ->
-            val downloadPackage = match(distribution.api_parameter, version, operatingSystem, architecture)
-            downloadPackage?.links
+            match(distribution.api_parameter, version, operatingSystem, architecture)
         }.firstOrNull()
     }
 
