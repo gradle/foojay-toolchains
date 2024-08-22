@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 package org.gradle.toolchains.foojay
 
 import com.google.gson.Gson
@@ -33,6 +35,7 @@ val j9Aliases = mapOf(
  * Given a list of [distributions], return those that match the provided [vendor] and JVM [implementation]. The Java
  * language [version] is only used to remove wrong GraalVM distributions; no general version filtering is done here.
  */
+@Suppress("ReturnCount")
 fun match(
     distributions: List<Distribution>,
     vendor: JvmVendorSpec,
@@ -104,6 +107,7 @@ fun parseDistributions(json: String): List<Distribution> {
 /**
  * The data class for the result objects as returned by [FoojayApi.DISTRIBUTIONS_ENDPOINT].
  */
+@Suppress("ConstructorParameterNaming")
 data class Distribution(
     /**
      * The distribution (vendor) name, e.g. "Temurin", "Oracle OpenJDK", "JetBrains", "GraalVM", ...

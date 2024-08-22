@@ -16,16 +16,19 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.util.concurrent.TimeUnit.SECONDS
 
 
+@Suppress("UnstableApiUsage")
 class FoojayApi {
 
-    val CONNECT_TIMEOUT = SECONDS.toMillis(10).toInt()
-    val READ_TIMEOUT = SECONDS.toMillis(20).toInt()
+    companion object {
+        val CONNECT_TIMEOUT = SECONDS.toMillis(10).toInt()
+        val READ_TIMEOUT = SECONDS.toMillis(20).toInt()
 
-    val SCHEMA = "https"
+        const val SCHEMA = "https"
 
-    val ENDPOINT_ROOT = "api.foojay.io/disco/v3.0"
-    val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
-    val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
+        private const val ENDPOINT_ROOT = "api.foojay.io/disco/v3.0"
+        const val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
+        const val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
+    }
 
     val distributions = mutableListOf<Distribution>()
 

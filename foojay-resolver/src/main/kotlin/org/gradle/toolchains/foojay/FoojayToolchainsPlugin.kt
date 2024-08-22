@@ -11,6 +11,7 @@ import org.gradle.util.GradleVersion
 @Suppress("unused")
 abstract class FoojayToolchainsPlugin: AbstractFoojayToolchainPlugin() {
 
+    @Suppress("TooGenericExceptionThrown")
     override fun apply(settings: Settings) {
         if (GradleVersion.current().baseVersion < GradleVersion.version("7.6")) {
             throw RuntimeException("${FoojayToolchainsPlugin::class.simpleName} needs Gradle version 7.6 or higher")

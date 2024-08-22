@@ -18,6 +18,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
+@Suppress("UnstableApiUsage")
 class FoojayApiTest {
 
     private val api = FoojayApi()
@@ -136,6 +137,7 @@ class FoojayApiTest {
         assertEquals("jdk", p.package_type)
     }
 
+    @Suppress("LongParameterList")
     private fun assertDownloadUri(
             javaVersion: Int,
             vendor: JvmVendorSpec,
