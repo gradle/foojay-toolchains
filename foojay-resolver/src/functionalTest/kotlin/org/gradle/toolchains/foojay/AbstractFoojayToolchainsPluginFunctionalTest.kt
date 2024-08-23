@@ -59,4 +59,15 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
         val successfulTasks = buildResult.tasks(TaskOutcome.SUCCESS)
         assertTrue(":compileJava" in successfulTasks.map { it.path })
     }
+
+    protected companion object {
+        @JvmStatic
+        @Suppress("MagicNumber")
+        fun getGradleTestVersions(): List<String> {
+            val versions = GradleTestVersions.getVersions()
+            val latestVersions = versions.take(3)
+            val oldestVersion = versions.takeLast(1)
+            return latestVersions + oldestVersion // compromise, testing takes too long with all versions
+        }
+    }
 }
