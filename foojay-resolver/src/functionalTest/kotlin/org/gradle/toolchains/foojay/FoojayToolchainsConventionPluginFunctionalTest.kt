@@ -1,5 +1,7 @@
 package org.gradle.toolchains.foojay
 
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
