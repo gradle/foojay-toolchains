@@ -48,6 +48,10 @@ class FoojayApiTest {
           Arguments.of(16, any(), true, OperatingSystem.LINUX, Architecture.X86_64),
           Arguments.of(8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64),
           Arguments.of(20, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
+          Arguments.of(22, any(), false, OperatingSystem.AIX, Architecture.PPC64),
+          Arguments.of(22, any(), false, OperatingSystem.LINUX, Architecture.PPC64LE),
+          Arguments.of(22, any(), false, OperatingSystem.LINUX, Architecture.S390X),
+          Arguments.of(11, any(), false, OperatingSystem.SOLARIS, Architecture.SPARC_V9),
         )
     }
 
@@ -165,8 +169,15 @@ class FoojayApiTest {
         var expectedValue = vendor.toString().replace("_", "").lowercase()
         if (expectedValue == "ibm") {
             expectedValue = "semeru"
+        } else if (expectedValue == "graalvm community") {
+            expectedValue = "graalvm_ce"
         }
-        val actualValue = actual.distribution
+
+        var actualValue = actual.distribution
+        if (actualValue == "graalvm_community") {
+            actualValue = "graalvm_ce"
+        }
+
         assertTrue(vendor.matches(actualValue) || actualValue.startsWith(expectedValue),
             "Expected vendor spec ($expectedValue) doesn't match actual distribution (${actualValue}), ${moreDetailsAt(actual)}"
         )
@@ -182,9 +193,13 @@ class FoojayApiTest {
 
     private fun assertArchitecture(arch: Architecture, actual: Package) {
         val expectedValues = when (arch) {
-            Architecture.X86 -> setOf("x32", "i386", "x86")
-            Architecture.X86_64 -> setOf("x64", "x86_64", "amd64", "ia64")
-            Architecture.AARCH64 -> setOf("aarch64", "arm64")
+            Architecture.X86 -> architectures32Bit
+            Architecture.X86_64 -> architectures64Bit
+            Architecture.AARCH64 -> architecturesArm64Bit
+            Architecture.PPC64 -> architecturesPpc64Bit
+            Architecture.PPC64LE -> architecturesPpc64BitLe
+            Architecture.S390X -> architecturesS390
+            Architecture.SPARC_V9 -> architecturesSparkV9
         }
         val actualValue = actual.architecture
         assertTrue(expectedValues.contains(actualValue),

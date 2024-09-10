@@ -3,3 +3,9 @@ style:
     maxLineLength: 180                    # default is 120
   WildcardImport:
     active: false
+  UnnecessaryAbstractClass:
+    active: false
+
+naming:
+  FunctionNaming:
+    functionPattern: '[a-z][a-zA-Z0-9]*|`.*`'
