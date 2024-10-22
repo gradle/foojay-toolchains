@@ -1,9 +1,12 @@
 package org.gradle.toolchains.foojay
 
+import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
+import kotlin.test.assertTrue
 
 abstract class AbstractFoojayToolchainsPluginFunctionalTest {
 
@@ -16,6 +19,7 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
     private val settingsFile by lazy { projectDir.resolve("settings.gradle.kts") }
     private val propertiesFile by lazy { projectDir.resolve("gradle.properties") }
     private val buildFile by lazy { projectDir.resolve("build.gradle.kts") }
+    private val sourceFolder by lazy { projectDir.resolve("src/main/java/") }
 
     @BeforeEach
     internal fun setUp() {
@@ -29,6 +33,16 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
         settingsFile.writeText(settings)
         buildFile.writeText(buildScript.trimIndent())
 
+        sourceFolder.mkdirs()
+        val sourceFile = File(sourceFolder, "Java.java")
+        sourceFile.writeText("""
+            public class Java {
+                public static void main(String[] args) {
+                    System.out.println();
+                }
+            }
+        """.trimIndent())
+
         return GradleRunner.create()
             .forwardOutput()
             .withPluginClasspath()
@@ -39,5 +53,21 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
     protected fun getDifferentJavaVersion() = when {
         System.getProperty("java.version").startsWith("11.") -> "16"
         else -> "11"
+    }
+
+    protected fun assertProvisioningSuccessful(buildResult: BuildResult) {
+        val successfulTasks = buildResult.tasks(TaskOutcome.SUCCESS)
+        assertTrue(":compileJava" in successfulTasks.map { it.path })
+    }
+
+    protected companion object {
+        @JvmStatic
+        @Suppress("MagicNumber")
+        fun getGradleTestVersions(): List<String> {
+            val versions = GradleTestVersions.getVersions()
+            val latestVersions = versions.take(3)
+            val oldestVersion = versions.takeLast(1)
+            return latestVersions + oldestVersion // compromise, testing takes too long with all versions
+        }
     }
 }

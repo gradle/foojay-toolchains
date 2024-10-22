@@ -1,3 +1,5 @@
+@file:Suppress("UnusedPrivateProperty", "UnstableApiUsage")
+
 import java.io.FileNotFoundException
 
 plugins {
@@ -19,8 +21,10 @@ java {
 
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
-    allRules = true
     config.setFrom(project.rootProject.file("gradle/detekt.yml"))
+
+    // also check the project build file
+    source.from(project.buildFile)
 }
 
 dependencies {
@@ -95,9 +99,7 @@ val readReleaseNotes by tasks.registering {
             throw FileNotFoundException("Couldn't find release notes file $releaseNotesFile.absolutePath")
         }
         val releaseNotes = releaseNotesFile.readText().trim()
-        if (releaseNotes.isBlank()) {
-            throw IllegalArgumentException("Release notes file $releaseNotesFile.absolutePath is empty")
-        }
+        require(releaseNotes.isBlank()) { "Release notes file $releaseNotesFile.absolutePath is empty" }
         gradlePlugin.plugins["discoToolchains"].description = releaseNotes
         gradlePlugin.plugins["discoToolchainsConvenience"].description = releaseNotes
     }
@@ -105,4 +107,8 @@ val readReleaseNotes by tasks.registering {
 
 tasks.publishPlugins {
     dependsOn(readReleaseNotes)
+}
+
+tasks.check {
+    dependsOn(tasks.named("detektTest"), tasks.named("detektFunctionalTest"))
 }
