@@ -63,3 +63,15 @@
 ## [0.1] - 2022-11-28
 
 Toolchains resolver using the Foojay Disco API for resolving Java runtimes. Automatically configures toolchain management.
+
+
+
+[Unreleased]: https://github.com/gradle/foojay-toolchains/compare/foojay-toolchains-plugin-0.8.0...HEAD
+[0.8.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.8.0
+[0.7.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.7.0
+[0.6.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.6.0
+[0.5.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.5.0
+[0.4.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.4.0
+[0.3.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.3.0
+[0.2]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchain-plugin-0.2
+[0.1]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchain-plugin-0.1
