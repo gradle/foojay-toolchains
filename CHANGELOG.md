@@ -54,7 +54,7 @@
 
 - Make sure vendors IBM and IBM_SEMERU are handled identically
 
-## [0.2.0] - 2022-11-29
+## [0.2] - 2022-11-29
 
 ### Added
 
