@@ -21,4 +21,4 @@ jobs:
       uses: gradle/actions/dependency-submission@v3
 
     - name: Perform dependency review
-      uses: actions/dependency-review-action@v3
+      uses: actions/dependency-review-action@v4
