@@ -48,10 +48,6 @@ class FoojayApiTest {
           Arguments.of(16, any(), true, OperatingSystem.LINUX, Architecture.X86_64),
           Arguments.of(8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64),
           Arguments.of(20, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
-          Arguments.of(22, any(), false, OperatingSystem.AIX, Architecture.PPC64),
-          Arguments.of(22, any(), false, OperatingSystem.LINUX, Architecture.PPC64LE),
-          Arguments.of(22, any(), false, OperatingSystem.LINUX, Architecture.S390X),
-          Arguments.of(11, any(), false, OperatingSystem.SOLARIS, Architecture.SPARC_V9),
         )
     }
 
@@ -196,10 +192,6 @@ class FoojayApiTest {
             Architecture.X86 -> architectures32Bit
             Architecture.X86_64 -> architectures64Bit
             Architecture.AARCH64 -> architecturesArm64Bit
-            Architecture.PPC64 -> architecturesPpc64Bit
-            Architecture.PPC64LE -> architecturesPpc64BitLe
-            Architecture.S390X -> architecturesS390
-            Architecture.SPARC_V9 -> architecturesSparkV9
         }
         val actualValue = actual.architecture
         assertTrue(expectedValues.contains(actualValue),
