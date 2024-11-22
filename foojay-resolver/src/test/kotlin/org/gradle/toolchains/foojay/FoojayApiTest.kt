@@ -137,6 +137,14 @@ class FoojayApiTest {
         assertEquals("jdk", p.package_type)
     }
 
+    @Test
+    fun `macos arm is mapped to x64 when arm isn't available`() {
+        val p = api.match("Zulu", of(7), OperatingSystem.MAC_OS, Architecture.AARCH64)
+        assertNotNull(p)
+        assertEquals(7, p.jdk_version)
+        assertEquals("x64", p.architecture)
+    }
+
     @Suppress("LongParameterList")
     private fun assertDownloadUri(
             javaVersion: Int,
@@ -151,7 +159,9 @@ class FoojayApiTest {
         assertJavaVersion(javaVersion, actual)
         assertDistribution(vendor, actual)
         assertOperatingSystem(os, actual)
-        assertArchitecture(arch, actual)
+        if (!(os == OperatingSystem.MAC_OS && arch == Architecture.AARCH64)) {
+            assertArchitecture(arch, actual)
+        }
     }
 
     private fun assertJavaVersion(javaVersion: Int, actual: Package) {
