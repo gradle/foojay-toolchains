@@ -20,7 +20,6 @@ abstract class FoojayToolchainResolver: JavaToolchainResolver {
             platform.architecture
         )?.links
         val uri = api.toUri(links)
-
         return Optional.ofNullable(uri).map(JavaToolchainDownload::fromUri)
     }
 }
