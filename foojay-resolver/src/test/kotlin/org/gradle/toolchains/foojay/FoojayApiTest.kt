@@ -37,17 +37,25 @@ class FoojayApiTest {
         @Suppress("DEPRECATION")
         @JvmStatic
         fun getData(): List<Arguments> = listOf(
+          Arguments.of(8, any(), false, OperatingSystem.MAC_OS, Architecture.X86_64),
           Arguments.of(8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64),
-          Arguments.of(11, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
-          Arguments.of(11, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
-          Arguments.of(16, any(), true, OperatingSystem.MAC_OS, Architecture.X86_64),
-          Arguments.of(16, IBM, true, OperatingSystem.MAC_OS, Architecture.X86_64),
-          Arguments.of(16, IBM_SEMERU, true, OperatingSystem.MAC_OS, Architecture.X86_64),
-          Arguments.of(16, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
-          Arguments.of(16, any(), false, OperatingSystem.LINUX, Architecture.X86_64),
-          Arguments.of(16, any(), true, OperatingSystem.LINUX, Architecture.X86_64),
+          Arguments.of(17, any(), false, OperatingSystem.MAC_OS, Architecture.X86_64),
+          Arguments.of(17, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+          Arguments.of(17, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+          Arguments.of(17, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+          Arguments.of(21, any(), true, OperatingSystem.MAC_OS, Architecture.X86_64),
+          Arguments.of(21, IBM, true, OperatingSystem.MAC_OS, Architecture.X86_64),
+          Arguments.of(21, IBM_SEMERU, true, OperatingSystem.MAC_OS, Architecture.X86_64),
+
+          Arguments.of(17, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
+          Arguments.of(17, any(), false, OperatingSystem.LINUX, Architecture.X86_64),
+          Arguments.of(17, any(), true, OperatingSystem.LINUX, Architecture.X86_64),
+          Arguments.of(21, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
+
+          Arguments.of(8, any(), false, OperatingSystem.WINDOWS, Architecture.X86_64),
           Arguments.of(8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64),
-          Arguments.of(20, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
+          Arguments.of(17, any(), false, OperatingSystem.WINDOWS, Architecture.X86_64),
+          Arguments.of(17, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64),
         )
     }
 
@@ -137,6 +145,17 @@ class FoojayApiTest {
         assertEquals("jdk", p.package_type)
     }
 
+    @Test
+    fun `macos arm is mapped to x64 when arm isn't available`() {
+        // RISC architecture is preferred when available
+        val p1 = assertDownloadUri(17, AZUL, false, OperatingSystem.MAC_OS, Architecture.AARCH64)
+        assertEquals("aarch64", p1.architecture)
+
+        // X86 architecture is provided when RISC is not available
+        val p2 = assertDownloadUri(7, AZUL, false, OperatingSystem.MAC_OS, Architecture.AARCH64)
+        assertEquals("x64", p2.architecture)
+    }
+
     @Suppress("LongParameterList")
     private fun assertDownloadUri(
             javaVersion: Int,
@@ -144,14 +163,15 @@ class FoojayApiTest {
             isJ9: Boolean,
             os: OperatingSystem,
             arch: Architecture
-    ) {
+    ): Package {
         val actual = api.toPackage(of(javaVersion), vendor, if (isJ9) J9 else VENDOR_SPECIFIC, os, arch)
         assertNotNull(actual)
         assertNotNull(actual.links.pkg_download_redirect)
         assertJavaVersion(javaVersion, actual)
         assertDistribution(vendor, actual)
         assertOperatingSystem(os, actual)
-        assertArchitecture(arch, actual)
+        assertArchitecture(os, arch, actual)
+        return actual
     }
 
     private fun assertJavaVersion(javaVersion: Int, actual: Package) {
@@ -163,16 +183,13 @@ class FoojayApiTest {
 
     private fun assertDistribution(vendor: JvmVendorSpec, actual: Package) {
         var expectedValue = vendor.toString().replace("_", "").lowercase()
-        if (expectedValue == "ibm") {
-            expectedValue = "semeru"
-        } else if (expectedValue == "graalvm community") {
-            expectedValue = "graalvm_ce"
+        expectedValue = when (expectedValue) {
+            "ibm" -> "semeru"
+            "azul zulu" -> "zulu"
+            else -> expectedValue
         }
 
-        var actualValue = actual.distribution
-        if (actualValue == "graalvm_community") {
-            actualValue = "graalvm_ce"
-        }
+        val actualValue = actual.distribution
 
         assertTrue(vendor.matches(actualValue) || actualValue.startsWith(expectedValue),
             "Expected vendor spec ($expectedValue) doesn't match actual distribution (${actualValue}), ${moreDetailsAt(actual)}"
@@ -187,11 +204,13 @@ class FoojayApiTest {
         )
     }
 
-    private fun assertArchitecture(arch: Architecture, actual: Package) {
+    private fun assertArchitecture(os: OperatingSystem, arch: Architecture, actual: Package) {
         val expectedValues = when (arch) {
             Architecture.X86 -> architectures32Bit
             Architecture.X86_64 -> architectures64Bit
-            Architecture.AARCH64 -> architecturesArm64Bit
+            Architecture.AARCH64 ->
+                if (os == OperatingSystem.MAC_OS) architecturesArm64Bit + architectures64Bit
+                else architecturesArm64Bit
         }
         val actualValue = actual.architecture
         assertTrue(expectedValues.contains(actualValue),
