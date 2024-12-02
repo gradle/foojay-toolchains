@@ -14,6 +14,12 @@
 
 ### Security
 
+## [0.9.0] - 2024-11-26
+
+### Added
+
+- Provide an x86-64 based Java version when ARM64 is requested from macOS and none is available
+
 ## [0.8.0] - 2024-01-12
 
 ### Changed
@@ -67,6 +73,7 @@ Toolchains resolver using the Foojay Disco API for resolving Java runtimes. Auto
 
 
 [Unreleased]: https://github.com/gradle/foojay-toolchains/compare/foojay-toolchains-plugin-0.8.0...HEAD
+[0.9.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.9.0
 [0.8.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.8.0
 [0.7.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.7.0
 [0.6.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.6.0

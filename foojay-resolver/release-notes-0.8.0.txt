@@ -1,2 +1,0 @@
-- Fix issues related to Java version parameter
-- Bump Gson dependency version
