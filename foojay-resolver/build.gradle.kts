@@ -96,10 +96,10 @@ val readReleaseNotes by tasks.registering {
     doLast {
         val releaseNotesFile = file("release-notes-$version.txt")
         if (!releaseNotesFile.exists()) {
-            throw FileNotFoundException("Couldn't find release notes file $releaseNotesFile.absolutePath")
+            throw FileNotFoundException("Couldn't find release notes file ${releaseNotesFile.absolutePath}")
         }
         val releaseNotes = releaseNotesFile.readText().trim()
-        require(releaseNotes.isBlank()) { "Release notes file $releaseNotesFile.absolutePath is empty" }
+        require(!releaseNotes.isBlank()) { "Release notes file ${releaseNotesFile.absolutePath} is empty" }
         gradlePlugin.plugins["discoToolchains"].description = releaseNotes
         gradlePlugin.plugins["discoToolchainsConvenience"].description = releaseNotes
     }
