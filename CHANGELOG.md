@@ -72,7 +72,7 @@ Toolchains resolver using the Foojay Disco API for resolving Java runtimes. Auto
 
 
 
-[Unreleased]: https://github.com/gradle/foojay-toolchains/compare/foojay-toolchains-plugin-0.8.0...HEAD
+[Unreleased]: https://github.com/gradle/foojay-toolchains/compare/foojay-toolchains-plugin-0.9.0...HEAD
 [0.9.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.9.0
 [0.8.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.8.0
 [0.7.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.7.0
