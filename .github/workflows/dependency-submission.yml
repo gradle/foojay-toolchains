@@ -1,13 +1,14 @@
-name: Dependency Submission
+name: Generate and save dependency graph
 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
+  pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   dependency-submission:
@@ -20,5 +21,7 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: 21
-    - name: Generate and submit dependency graph
+    - name: Generate and save dependency graph
       uses: gradle/actions/dependency-submission@v4
+      with:
+        dependency-graph: generate-and-upload
