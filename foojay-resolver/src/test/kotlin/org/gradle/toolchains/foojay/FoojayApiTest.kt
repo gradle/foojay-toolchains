@@ -31,7 +31,7 @@ class FoojayApiTest {
         isJ9: Boolean,
         os: OperatingSystem,
         arch: Architecture
-    ) = assertDownloadUri(javaVersion, vendor, isJ9, os, arch)
+    ) = assertDownloadUri(javaVersion, vendor, isJ9, false, os, arch)
 
     companion object {
         @Suppress("DEPRECATION")
@@ -119,7 +119,7 @@ class FoojayApiTest {
     ) {
         assertEquals(
                 listOf(*expectedDistributions),
-                api.match(vendor, implementation, of(version)).map { it.name },
+                api.match(vendor, implementation, of(version), false).map { it.name },
                 "Mismatch in matching distributions for vendor: $vendor, implementation: $implementation, version: $version"
         )
     }
@@ -127,9 +127,9 @@ class FoojayApiTest {
     @ParameterizedTest(name = "can resolve arbitrary vendors (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `can resolve arbitrary vendors`(version: Int) {
-        assertEquals("ZuluPrime", api.match(vendorSpec("zuluprime"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("ZuluPrime", api.match(vendorSpec("zUluprIme"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
-        assertEquals("JetBrains", api.match(vendorSpec("JetBrains"), VENDOR_SPECIFIC, of(version)).firstOrNull()?.name)
+        assertEquals("ZuluPrime", api.match(vendorSpec("zuluprime"), VENDOR_SPECIFIC, of(version), false).firstOrNull()?.name)
+        assertEquals("ZuluPrime", api.match(vendorSpec("zUluprIme"), VENDOR_SPECIFIC, of(version), false).firstOrNull()?.name)
+        assertEquals("JetBrains", api.match(vendorSpec("JetBrains"), VENDOR_SPECIFIC, of(version), false).firstOrNull()?.name)
     }
 
     @Test
@@ -148,12 +148,22 @@ class FoojayApiTest {
     @Test
     fun `macos arm is mapped to x64 when arm isn't available`() {
         // RISC architecture is preferred when available
-        val p1 = assertDownloadUri(17, AZUL, false, OperatingSystem.MAC_OS, Architecture.AARCH64)
+        val p1 = assertDownloadUri(17, AZUL, false, false,OperatingSystem.MAC_OS, Architecture.AARCH64)
         assertEquals("aarch64", p1.architecture)
 
         // X86 architecture is provided when RISC is not available
-        val p2 = assertDownloadUri(7, AZUL, false, OperatingSystem.MAC_OS, Architecture.AARCH64)
+        val p2 = assertDownloadUri(7, AZUL, false, false, OperatingSystem.MAC_OS, Architecture.AARCH64)
         assertEquals("x64", p2.architecture)
+    }
+
+    @Test
+    fun `can pick a native image capable package`() {
+        assertDownloadUri(21, any(), false, true, OperatingSystem.MAC_OS, Architecture.AARCH64)
+    }
+
+    @Test
+    fun `can pick graalvm package`() {
+        assertDownloadUri(21, matching("GraalVM"), false, true, OperatingSystem.MAC_OS, Architecture.AARCH64)
     }
 
     @Suppress("LongParameterList")
@@ -161,14 +171,23 @@ class FoojayApiTest {
             javaVersion: Int,
             vendor: JvmVendorSpec,
             isJ9: Boolean,
+            nativeImageCapable: Boolean,
             os: OperatingSystem,
             arch: Architecture
     ): Package {
-        val actual = api.toPackage(of(javaVersion), vendor, if (isJ9) J9 else VENDOR_SPECIFIC, os, arch)
+        val actual = api.toPackage(
+            of(javaVersion),
+            vendor,
+            if (isJ9) J9 else VENDOR_SPECIFIC,
+            nativeImageCapable,
+            os,
+            arch
+        )
         assertNotNull(actual)
         assertNotNull(actual.links.pkg_download_redirect)
         assertJavaVersion(javaVersion, actual)
         assertDistribution(vendor, actual)
+        assertNativeImageCapable(nativeImageCapable, vendor, actual)
         assertOperatingSystem(os, actual)
         assertArchitecture(os, arch, actual)
         return actual
@@ -194,6 +213,18 @@ class FoojayApiTest {
         assertTrue(vendor.matches(actualValue) || actualValue.startsWith(expectedValue),
             "Expected vendor spec ($expectedValue) doesn't match actual distribution (${actualValue}), ${moreDetailsAt(actual)}"
         )
+    }
+
+    private fun assertNativeImageCapable(nativeImageCapable: Boolean, vendor: JvmVendorSpec, actual: Package) {
+        if (nativeImageCapable) {
+            // TODO this is not a great test, but the package does not carry the native-image / Graal capability information anymore
+            if (vendor == any()) {
+                assertTrue(actual.distribution.contains("mandrel"),
+                    "Expected vendor to contain 'mandrel' when native image capable, got ${actual.distribution}")
+            } else {
+                assertDistribution(vendor, actual)
+            }
+        }
     }
 
     private fun assertOperatingSystem(os: OperatingSystem, actual: Package) {
