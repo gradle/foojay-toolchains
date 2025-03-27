@@ -30,3 +30,6 @@ build
 
 # Ignore IntelliJ IDEA folder
 .idea
+
+# Ignore local publishing repo for testing plugin
+foojay-resolver/repo/
