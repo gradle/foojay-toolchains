@@ -98,7 +98,11 @@ For further information about using Toolchain Download Repositories consult the 
 
 # Matching Toolchain Specifications
 
-The main thing the plugin does is to match [Gradle's toolchain specifications](https://docs.gradle.org/current/javadoc/org/gradle/jvm/toolchain/JavaToolchainSpec.html) to foojay DiscoAPI distributions and packages. 
+The main thing the plugin does is to match [Gradle's toolchain specifications](https://docs.gradle.org/current/javadoc/org/gradle/jvm/toolchain/JavaToolchainSpec.html) to foojay DiscoAPI distributions and packages.
+
+## `nativeImageCapable` criteria
+
+When set, it is used to filter out distributions that are not capable of creating native images with GraalVM.
 
 ## Vendors
 

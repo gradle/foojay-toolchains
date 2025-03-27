@@ -4,6 +4,8 @@
 
 ### Added
 
+- Support the nativeImageCapable criteria from JavaToolchainSpec in Gradle 8.14+
+
 ### Changed
 
 ### Deprecated

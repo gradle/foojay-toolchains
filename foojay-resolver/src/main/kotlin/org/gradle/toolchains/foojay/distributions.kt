@@ -40,16 +40,22 @@ fun match(
     distributions: List<Distribution>,
     vendor: JvmVendorSpec,
     implementation: JvmImplementation,
-    version: JavaLanguageVersion
+    version: JavaLanguageVersion,
+    nativeImageCapable: Boolean
 ): List<Distribution> {
-    if (implementation == JvmImplementation.J9) return matchForJ9(distributions, vendor)
+    // Start by filtering based on the native image criteria.
+    // If it is defined, we only keep the distributions that have `build_of_graalvm` set to true.
+    val filteredDistributions = distributions.filter { !nativeImageCapable || it.build_of_graalvm }
+
+    // Specific filter when J9 is requested
+    if (implementation == JvmImplementation.J9) return matchForJ9(filteredDistributions, vendor)
 
     // Return early if an explicit non-GraalVM distribution is requested.
-    if (vendor != JvmVendorSpec.GRAAL_VM && vendor != any()) return match(distributions, vendor)
+    if (vendor != JvmVendorSpec.GRAAL_VM && vendor != any()) return match(filteredDistributions, vendor)
 
     // Remove GraalVM distributions that target the wrong Java language version.
     val graalVmCeVendor = JvmVendorSpec.matching("GraalVM CE $version")
-    val distributionsWithoutWrongGraalVm = distributions.filter { (name) ->
+    val distributionsWithoutWrongGraalVm = filteredDistributions.filter { (name) ->
         when {
             // Naming scheme for old GraalVM community releases: The Java language version is part of the name.
             name.startsWith("GraalVM CE") -> graalVmCeVendor.matches(name)

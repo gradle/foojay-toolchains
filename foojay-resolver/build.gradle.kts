@@ -66,6 +66,10 @@ signing {
             project.providers.environmentVariable("PGP_SIGNING_KEY").orNull,
             project.providers.environmentVariable("PGP_SIGNING_KEY_PASSPHRASE").orNull
     )
+
+    setRequired({
+        providers.environmentVariable("CI").isPresent
+    })
 }
 
 testing {

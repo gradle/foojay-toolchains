@@ -34,22 +34,24 @@ class FoojayApi {
 
     fun toUri(links: Links?): URI? = links?.pkg_download_redirect
 
+    @Suppress("LongParameterList")
     fun toPackage(
-            version: JavaLanguageVersion,
-            vendor: JvmVendorSpec,
-            implementation: JvmImplementation,
-            operatingSystem: OperatingSystem,
-            architecture: Architecture
+        version: JavaLanguageVersion,
+        vendor: JvmVendorSpec,
+        implementation: JvmImplementation,
+        nativeImageCapable: Boolean,
+        operatingSystem: OperatingSystem,
+        architecture: Architecture
     ): Package? {
-        val distributions = match(vendor, implementation, version)
+        val distributions = match(vendor, implementation, version, nativeImageCapable)
         return distributions.asSequence().mapNotNull { distribution ->
             match(distribution.api_parameter, version, operatingSystem, architecture)
         }.firstOrNull()
     }
 
-    internal fun match(vendor: JvmVendorSpec, implementation: JvmImplementation, version: JavaLanguageVersion): List<Distribution> {
+    internal fun match(vendor: JvmVendorSpec, implementation: JvmImplementation, version: JavaLanguageVersion, nativeImageCapable: Boolean): List<Distribution> {
         fetchDistributionsIfMissing()
-        return match(distributions, vendor, implementation, version)
+        return match(distributions, vendor, implementation, version, nativeImageCapable)
     }
 
     private fun fetchDistributionsIfMissing() {
@@ -68,6 +70,7 @@ class FoojayApi {
     internal fun match(distributionName: String, version: JavaLanguageVersion, operatingSystem: OperatingSystem, architecture: Architecture): Package? {
         val versionApiKey = when {
             distributionName.startsWith("graalvm_community") -> "version"
+            distributionName.equals("graalvm") -> "version"
             else -> "jdk_version"
         }
 
