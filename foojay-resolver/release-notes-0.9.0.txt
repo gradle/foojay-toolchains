@@ -1,1 +1,0 @@
-- Provide an x86-64 based Java version when ARM64 is requested from macOS and none is available

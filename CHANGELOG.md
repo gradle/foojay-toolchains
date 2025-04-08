@@ -4,8 +4,6 @@
 
 ### Added
 
-- Support the nativeImageCapable criteria from JavaToolchainSpec in Gradle 8.14+
-
 ### Changed
 
 ### Deprecated
@@ -15,6 +13,12 @@
 ### Fixed
 
 ### Security
+
+## [0.10.0] - 2025-04-08
+
+### Added
+
+- Support the nativeImageCapable criteria from JavaToolchainSpec in Gradle 8.14+
 
 ## [0.9.0] - 2024-11-26
 
@@ -75,6 +79,7 @@ Toolchains resolver using the Foojay Disco API for resolving Java runtimes. Auto
 
 
 [Unreleased]: https://github.com/gradle/foojay-toolchains/compare/foojay-toolchains-plugin-0.9.0...HEAD
+[0.10.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.10.0
 [0.9.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.9.0
 [0.8.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.8.0
 [0.7.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.7.0
