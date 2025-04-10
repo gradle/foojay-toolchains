@@ -30,7 +30,7 @@ class FoojayApi {
         const val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
     }
 
-    val distributions = mutableListOf<Distribution>()
+    private val distributions = mutableListOf<Distribution>()
 
     fun toUri(links: Links?): URI? = links?.pkg_download_redirect
 
@@ -70,7 +70,7 @@ class FoojayApi {
     internal fun match(distributionName: String, version: JavaLanguageVersion, operatingSystem: OperatingSystem, architecture: Architecture): Package? {
         val versionApiKey = when {
             distributionName.startsWith("graalvm_community") -> "version"
-            distributionName.equals("graalvm") -> "version"
+            distributionName == "graalvm" -> "version"
             else -> "jdk_version"
         }
 
