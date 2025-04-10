@@ -114,5 +114,5 @@ tasks.publishPlugins {
 }
 
 tasks.check {
-    dependsOn(tasks.named("detektTest"), tasks.named("detektFunctionalTest"))
+    dependsOn(tasks.named("detektMain"), tasks.named("detektTest"), tasks.named("detektFunctionalTest"))
 }
