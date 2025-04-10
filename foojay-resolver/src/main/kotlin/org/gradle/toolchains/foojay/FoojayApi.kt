@@ -70,7 +70,7 @@ class FoojayApi {
     internal fun match(distributionName: String, version: JavaLanguageVersion, operatingSystem: OperatingSystem, architecture: Architecture): Package? {
         val versionApiKey = when {
             distributionName.startsWith("graalvm_community") -> "version"
-            distributionName.equals("graalvm") -> "version"
+            distributionName == "graalvm" -> "version"
             else -> "jdk_version"
         }
 
