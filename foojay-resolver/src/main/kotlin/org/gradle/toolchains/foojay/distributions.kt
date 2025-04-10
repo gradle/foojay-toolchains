@@ -103,7 +103,7 @@ private fun findByMatchingAliases(distributions: List<Distribution>, vendor: Jvm
 
 private fun findByMatchingNamesAndSynonyms(distributions: List<Distribution>, vendor: JvmVendorSpec) =
     distributions.filter { distribution ->
-        vendor.matches(distribution.name) || distribution.synonyms.find { vendor.matches(it) } != null
+        vendor.matches(distribution.name) || distribution.synonyms.any { vendor.matches(it) }
     }
 
 fun parseDistributions(json: String): List<Distribution> {
