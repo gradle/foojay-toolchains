@@ -30,7 +30,7 @@ class FoojayApi {
         const val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
     }
 
-    val distributions = mutableListOf<Distribution>()
+    private val distributions = mutableListOf<Distribution>()
 
     fun toUri(links: Links?): URI? = links?.pkg_download_redirect
 
