@@ -26,7 +26,6 @@ val distributionOrderOfPreference = listOf("Temurin", "AOJ")
 @Suppress("DEPRECATION")
 val j9Aliases = mapOf(
     JvmVendorSpec.IBM to "Semeru",
-    JvmVendorSpec.IBM_SEMERU to "Semeru",
     JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9"
 )
 

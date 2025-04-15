@@ -120,7 +120,6 @@ The plugin works with the following mapping:
 | GRAAL_VM                | Graal VM CE 8/11/16/17/19 |
 | HEWLETT_PACKARD         | -                         |
 | IBM                     | Semeru                    |
-| IBM_SEMERU              | Semeru                    |
 | JETBRAINS               | JetBrains                 |
 | MICROSOFT               | Microsoft                 |
 | ORACLE                  | Oracle OpenJDK            |
@@ -149,7 +148,6 @@ What this criteria does in the plugin is to influence the Vendor-to-Distribution
 | GRAAL_VM                | -                   |
 | HEWLETT_PACKARD         | -                   |
 | IBM                     | Semeru              |
-| IBM_SEMERU              | Semeru              |
 | JETBRAINS               | -                   |
 | MICROSOFT               | -                   |
 | ORACLE                  | -                   |

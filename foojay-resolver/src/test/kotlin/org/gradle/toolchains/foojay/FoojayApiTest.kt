@@ -45,7 +45,6 @@ class FoojayApiTest {
           Arguments.of(17, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
           Arguments.of(21, any(), true, OperatingSystem.MAC_OS, Architecture.X86_64),
           Arguments.of(21, IBM, true, OperatingSystem.MAC_OS, Architecture.X86_64),
-          Arguments.of(21, IBM_SEMERU, true, OperatingSystem.MAC_OS, Architecture.X86_64),
 
           Arguments.of(17, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
           Arguments.of(17, any(), false, OperatingSystem.LINUX, Architecture.X86_64),
@@ -66,8 +65,6 @@ class FoojayApiTest {
 
         assertMatchedDistributions(ADOPTOPENJDK, J9, version, "AOJ OpenJ9")
         assertMatchedDistributions(IBM, J9, version, "Semeru")
-        @Suppress("DEPRECATION")
-        assertMatchedDistributions(IBM_SEMERU, J9, version, "Semeru")
 
         assertMatchedDistributions(ADOPTIUM, J9, version)
         assertMatchedDistributions(AZUL, J9, version)
@@ -94,8 +91,6 @@ class FoojayApiTest {
 
         assertMatchedDistributions(ADOPTOPENJDK, VENDOR_SPECIFIC, version, "AOJ")
         assertMatchedDistributions(IBM, VENDOR_SPECIFIC, version, "Semeru")
-        @Suppress("DEPRECATION")
-        assertMatchedDistributions(IBM_SEMERU, VENDOR_SPECIFIC, version, "Semeru")
 
         assertMatchedDistributions(ADOPTIUM, VENDOR_SPECIFIC, version, "Temurin")
         assertMatchedDistributions(AZUL, VENDOR_SPECIFIC, version, "Zulu")
