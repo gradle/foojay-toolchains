@@ -7,6 +7,7 @@
 ### Changed
 
 - Plugin now compiled with Java 17, meaning it requires that version or higher to run
+- Removed direct references to deprecated JvmVendorSpec.IBM_SEMERU, to prepare for Gradle 9 compatibility.
 
 ### Deprecated
 

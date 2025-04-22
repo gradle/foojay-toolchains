@@ -9,27 +9,45 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 import java.net.URI
 
-@Suppress("DEPRECATION")
-val vendorAliases = mapOf(
-    JvmVendorSpec.ADOPTIUM to "Temurin",
-    JvmVendorSpec.ADOPTOPENJDK to "AOJ",
-    JvmVendorSpec.AMAZON to "Corretto",
-    JvmVendorSpec.AZUL to "Zulu",
-    JvmVendorSpec.BELLSOFT to "Liberica",
-    JvmVendorSpec.IBM to "Semeru",
-    JvmVendorSpec.IBM_SEMERU to "Semeru",
-    JvmVendorSpec.ORACLE to "Oracle OpenJDK",
-    JvmVendorSpec.SAP to "SAP Machine"
-)
+val vendorAliases = createVendorAliases()
 
 val distributionOrderOfPreference = listOf("Temurin", "AOJ")
 
-@Suppress("DEPRECATION")
-val j9Aliases = mapOf(
-    JvmVendorSpec.IBM to "Semeru",
-    JvmVendorSpec.IBM_SEMERU to "Semeru",
-    JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9"
-)
+val j9Aliases = createJ9AliasesMap()
+
+private fun createVendorAliases(): Map<JvmVendorSpec?, String> {
+    val tmpMap = mutableMapOf(
+        JvmVendorSpec.ADOPTIUM to "Temurin",
+        JvmVendorSpec.ADOPTOPENJDK to "AOJ",
+        JvmVendorSpec.AMAZON to "Corretto",
+        JvmVendorSpec.AZUL to "Zulu",
+        JvmVendorSpec.BELLSOFT to "Liberica",
+        JvmVendorSpec.IBM to "Semeru",
+        JvmVendorSpec.ORACLE to "Oracle OpenJDK",
+        JvmVendorSpec.SAP to "SAP Machine"
+    )
+    try {
+        val ibmSemeru = JvmVendorSpec::class.java.getDeclaredField("IBM_SEMERU")
+        tmpMap.put(ibmSemeru.get(null) as JvmVendorSpec?, "Semeru")
+    } catch (_: NoSuchFieldException) {
+        // Ignore - removed in Gradle 9
+    }
+    return tmpMap.toMap()
+}
+
+private fun createJ9AliasesMap(): Map<JvmVendorSpec?, String> {
+    val tmpMap = mutableMapOf(
+        JvmVendorSpec.IBM to "Semeru",
+        JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9"
+    )
+    try {
+        val ibmSemeru = JvmVendorSpec::class.java.getDeclaredField("IBM_SEMERU")
+        tmpMap.put(ibmSemeru.get(null) as JvmVendorSpec?, "Semeru")
+    } catch (_: NoSuchFieldException) {
+        // Ignore - removed in Gradle 9
+    }
+    return tmpMap.toMap()
+}
 
 /**
  * Given a list of [distributions], return those that match the provided [vendor] and JVM [implementation]. The Java
