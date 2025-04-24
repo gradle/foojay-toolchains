@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Removed direct references to deprecated JvmVendorSpec.IBM_SEMERU, to prepare for Gradle 9 compatibility.
+
 ### Deprecated
 
 ### Removed

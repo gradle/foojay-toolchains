@@ -34,29 +34,40 @@ class FoojayApiTest {
     ) = assertDownloadUri(javaVersion, vendor, isJ9, false, os, arch)
 
     companion object {
+
+        private
+        val IBM_SEMERU_VENDOR = try {
+            JvmVendorSpec::class.java.getDeclaredField("IBM_SEMERU").get(null) as JvmVendorSpec
+        } catch (_: Exception) {
+            null
+        }
+
         @Suppress("DEPRECATION")
         @JvmStatic
-        fun getData(): List<Arguments> = listOf(
-          Arguments.of(8, any(), false, OperatingSystem.MAC_OS, Architecture.X86_64),
-          Arguments.of(8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64),
-          Arguments.of(17, any(), false, OperatingSystem.MAC_OS, Architecture.X86_64),
-          Arguments.of(17, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64),
-          Arguments.of(17, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
-          Arguments.of(17, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
-          Arguments.of(21, any(), true, OperatingSystem.MAC_OS, Architecture.X86_64),
-          Arguments.of(21, IBM, true, OperatingSystem.MAC_OS, Architecture.X86_64),
-          Arguments.of(21, IBM_SEMERU, true, OperatingSystem.MAC_OS, Architecture.X86_64),
+        fun getData(): List<Arguments> {
+            val tmpList = mutableListOf(
+                Arguments.of(8, any(), false, OperatingSystem.MAC_OS, Architecture.X86_64),
+                Arguments.of(8, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+                Arguments.of(17, any(), false, OperatingSystem.MAC_OS, Architecture.X86_64),
+                Arguments.of(17, any(), false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+                Arguments.of(17, ADOPTIUM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+                Arguments.of(17, GRAAL_VM, false, OperatingSystem.MAC_OS, Architecture.AARCH64),
+                Arguments.of(21, any(), true, OperatingSystem.MAC_OS, Architecture.X86_64),
+                Arguments.of(21, IBM, true, OperatingSystem.MAC_OS, Architecture.X86_64),
 
-          Arguments.of(17, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
-          Arguments.of(17, any(), false, OperatingSystem.LINUX, Architecture.X86_64),
-          Arguments.of(17, any(), true, OperatingSystem.LINUX, Architecture.X86_64),
-          Arguments.of(21, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
+                Arguments.of(17, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
+                Arguments.of(17, any(), false, OperatingSystem.LINUX, Architecture.X86_64),
+                Arguments.of(17, any(), true, OperatingSystem.LINUX, Architecture.X86_64),
+                Arguments.of(21, GRAAL_VM, false, OperatingSystem.LINUX, Architecture.X86_64),
 
-          Arguments.of(8, any(), false, OperatingSystem.WINDOWS, Architecture.X86_64),
-          Arguments.of(8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64),
-          Arguments.of(17, any(), false, OperatingSystem.WINDOWS, Architecture.X86_64),
-          Arguments.of(17, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64),
-        )
+                Arguments.of(8, any(), false, OperatingSystem.WINDOWS, Architecture.X86_64),
+                Arguments.of(8, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64),
+                Arguments.of(17, any(), false, OperatingSystem.WINDOWS, Architecture.X86_64),
+                Arguments.of(17, GRAAL_VM, false, OperatingSystem.WINDOWS, Architecture.X86_64),
+            )
+            IBM_SEMERU_VENDOR?.let { tmpList.add(Arguments.of(21, it, true, OperatingSystem.MAC_OS, Architecture.X86_64)) }
+            return tmpList.toList()
+        }
     }
 
     @ParameterizedTest(name = "J9 implementation influences vendor resolution (Java {0})")
@@ -66,8 +77,7 @@ class FoojayApiTest {
 
         assertMatchedDistributions(ADOPTOPENJDK, J9, version, "AOJ OpenJ9")
         assertMatchedDistributions(IBM, J9, version, "Semeru")
-        @Suppress("DEPRECATION")
-        assertMatchedDistributions(IBM_SEMERU, J9, version, "Semeru")
+        IBM_SEMERU_VENDOR?.let { assertMatchedDistributions(it, J9, version, "Semeru") }
 
         assertMatchedDistributions(ADOPTIUM, J9, version)
         assertMatchedDistributions(AZUL, J9, version)
@@ -94,8 +104,7 @@ class FoojayApiTest {
 
         assertMatchedDistributions(ADOPTOPENJDK, VENDOR_SPECIFIC, version, "AOJ")
         assertMatchedDistributions(IBM, VENDOR_SPECIFIC, version, "Semeru")
-        @Suppress("DEPRECATION")
-        assertMatchedDistributions(IBM_SEMERU, VENDOR_SPECIFIC, version, "Semeru")
+        IBM_SEMERU_VENDOR?.let { assertMatchedDistributions(it, VENDOR_SPECIFIC, version, "Semeru") }
 
         assertMatchedDistributions(ADOPTIUM, VENDOR_SPECIFIC, version, "Temurin")
         assertMatchedDistributions(AZUL, VENDOR_SPECIFIC, version, "Zulu")
@@ -254,3 +263,4 @@ class FoojayApiTest {
     private fun vendorSpec(vendorName: String): JvmVendorSpec = matching(vendorName)
 
 }
+
