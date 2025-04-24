@@ -15,40 +15,6 @@ val distributionOrderOfPreference = listOf("Temurin", "AOJ")
 
 val j9Aliases = createJ9AliasesMap()
 
-private fun createVendorAliases(): Map<JvmVendorSpec?, String> {
-    val tmpMap = mutableMapOf(
-        JvmVendorSpec.ADOPTIUM to "Temurin",
-        JvmVendorSpec.ADOPTOPENJDK to "AOJ",
-        JvmVendorSpec.AMAZON to "Corretto",
-        JvmVendorSpec.AZUL to "Zulu",
-        JvmVendorSpec.BELLSOFT to "Liberica",
-        JvmVendorSpec.IBM to "Semeru",
-        JvmVendorSpec.ORACLE to "Oracle OpenJDK",
-        JvmVendorSpec.SAP to "SAP Machine"
-    )
-    try {
-        val ibmSemeru = JvmVendorSpec::class.java.getDeclaredField("IBM_SEMERU")
-        tmpMap.put(ibmSemeru.get(null) as JvmVendorSpec?, "Semeru")
-    } catch (_: NoSuchFieldException) {
-        // Ignore - removed in Gradle 9
-    }
-    return tmpMap.toMap()
-}
-
-private fun createJ9AliasesMap(): Map<JvmVendorSpec?, String> {
-    val tmpMap = mutableMapOf(
-        JvmVendorSpec.IBM to "Semeru",
-        JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9"
-    )
-    try {
-        val ibmSemeru = JvmVendorSpec::class.java.getDeclaredField("IBM_SEMERU")
-        tmpMap.put(ibmSemeru.get(null) as JvmVendorSpec?, "Semeru")
-    } catch (_: NoSuchFieldException) {
-        // Ignore - removed in Gradle 9
-    }
-    return tmpMap.toMap()
-}
-
 /**
  * Given a list of [distributions], return those that match the provided [vendor] and JVM [implementation]. The Java
  * language [version] is only used to remove wrong GraalVM distributions; no general version filtering is done here.
@@ -126,6 +92,44 @@ private fun findByMatchingNamesAndSynonyms(distributions: List<Distribution>, ve
 
 fun parseDistributions(json: String): List<Distribution> {
     return Gson().fromJson(json, DistributionsResult::class.java).result
+}
+
+
+private fun createVendorAliases(): Map<JvmVendorSpec, String> {
+    val tmpMap = mutableMapOf(
+        JvmVendorSpec.ADOPTIUM to "Temurin",
+        JvmVendorSpec.ADOPTOPENJDK to "AOJ",
+        JvmVendorSpec.AMAZON to "Corretto",
+        JvmVendorSpec.AZUL to "Zulu",
+        JvmVendorSpec.BELLSOFT to "Liberica",
+        JvmVendorSpec.IBM to "Semeru",
+        JvmVendorSpec.ORACLE to "Oracle OpenJDK",
+        JvmVendorSpec.SAP to "SAP Machine"
+    )
+    addPossiblyUndefinedVendor("IBM_SEMERU", "Semeru", tmpMap)
+    return tmpMap.toMap()
+}
+
+private fun createJ9AliasesMap(): Map<JvmVendorSpec, String> {
+    val tmpMap = mutableMapOf(
+        JvmVendorSpec.IBM to "Semeru",
+        JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9"
+    )
+    addPossiblyUndefinedVendor("IBM_SEMERU", "Semeru", tmpMap)
+    return tmpMap.toMap()
+}
+
+private fun addPossiblyUndefinedVendor(
+    vendorFieldName: String,
+    vendorAlias: String,
+    map: MutableMap<JvmVendorSpec, String>
+) {
+    try {
+        val vendorField = JvmVendorSpec::class.java.getDeclaredField(vendorFieldName)
+        map.put(vendorField.get(null) as JvmVendorSpec, vendorAlias)
+    } catch (_: Exception) {
+        // Ignore - removed in the current Gradle version
+    }
 }
 
 /**
