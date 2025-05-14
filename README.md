@@ -120,7 +120,7 @@ The plugin works with the following mapping:
 | GRAAL_VM          | Graal VM CE 8/11/16/17/19 |
 | HEWLETT_PACKARD   | -                         |
 | IBM               | Semeru                    |
-| (IBM_SEMERU)      | Semeru                    |
+| IBM_SEMERU*       | Semeru                    |
 | JETBRAINS         | JetBrains                 |
 | MICROSOFT         | Microsoft                 |
 | ORACLE            | Oracle OpenJDK            |
@@ -131,7 +131,7 @@ Not all Gradle vendors have an equivalent DiscoAPI distribution, empty cells ind
 If no vendor is specified, distributions are iterated in the order they are provided by the DiscoAPI, and the first one that has a compatible installation package available is selected.
 The exception to the Foojay ordering of distributions is that "Temurin" (ADOPTIUM) and then "AOJ" (ADOPTOPENJDK) come first, due to the history of the auto-provisioning feature in Gradle, specifically that AdoptOpenJDK/Adoptium have been the default sources for downloading JVMs.
 
-> [!NOTE]
+> [!WARNING]
 > `IBM_SEMERU` is deprecated in Gradle for a while and removed in Gradle 9+.
 
 ## Implementations
@@ -152,7 +152,7 @@ What this criteria does in the plugin is to influence the Vendor-to-Distribution
 | GRAAL_VM                | -                   |
 | HEWLETT_PACKARD         | -                   |
 | IBM                     | Semeru              |
-| (IBM_SEMERU)            | Semeru              |
+| IBM_SEMERU*             | Semeru              |
 | JETBRAINS               | -                   |
 | MICROSOFT               | -                   |
 | ORACLE                  | -                   |
@@ -160,7 +160,7 @@ What this criteria does in the plugin is to influence the Vendor-to-Distribution
 
 Empty cells indicate that no toolchain will be provisioned
 
-> [!NOTE]
+> [!WARNING]
 > `IBM_SEMERU` is deprecated in Gradle for a while and removed in Gradle 9+.
 
 ## Versions
