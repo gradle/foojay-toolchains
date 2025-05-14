@@ -7,6 +7,7 @@ plugins {
     signing
     id("com.gradle.plugin-publish") version "1.2.1"
     id("io.gitlab.arturbosch.detekt") version "1.23.6"
+    id("com.gradleup.shadow") version "8.3.6"
 }
 
 group = "org.gradle.toolchains"
@@ -17,6 +18,17 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+tasks.shadowJar {
+    isEnableRelocation = true
+    archiveClassifier = ""
+    minimize()
+
+    // Clean up some of the unwanted files from gson shading
+    includeEmptyDirs = false
+    exclude("**/module-info.class")
+    exclude("META-INF/maven/**")
 }
 
 detekt {
