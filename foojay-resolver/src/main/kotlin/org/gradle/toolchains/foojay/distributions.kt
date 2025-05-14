@@ -6,30 +6,44 @@ import com.google.gson.Gson
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
+import org.gradle.jvm.toolchain.JvmVendorSpec.ADOPTIUM
+import org.gradle.jvm.toolchain.JvmVendorSpec.ADOPTOPENJDK
+import org.gradle.jvm.toolchain.JvmVendorSpec.AMAZON
+import org.gradle.jvm.toolchain.JvmVendorSpec.AZUL
+import org.gradle.jvm.toolchain.JvmVendorSpec.BELLSOFT
+import org.gradle.jvm.toolchain.JvmVendorSpec.IBM
+import org.gradle.jvm.toolchain.JvmVendorSpec.ORACLE
+import org.gradle.jvm.toolchain.JvmVendorSpec.SAP
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 import java.net.URI
 
-@Suppress("DEPRECATION")
-val vendorAliases = mapOf(
-    JvmVendorSpec.ADOPTIUM to "Temurin",
-    JvmVendorSpec.ADOPTOPENJDK to "AOJ",
-    JvmVendorSpec.AMAZON to "Corretto",
-    JvmVendorSpec.AZUL to "Zulu",
-    JvmVendorSpec.BELLSOFT to "Liberica",
-    JvmVendorSpec.IBM to "Semeru",
-    JvmVendorSpec.IBM_SEMERU to "Semeru",
-    JvmVendorSpec.ORACLE to "Oracle OpenJDK",
-    JvmVendorSpec.SAP to "SAP Machine"
-)
+val vendorAliases: Map<JvmVendorSpec, String>
+    get() {
+        val tmpMap = mutableMapOf(
+            ADOPTIUM to "Temurin",
+            ADOPTOPENJDK to "AOJ",
+            AMAZON to "Corretto",
+            AZUL to "Zulu",
+            BELLSOFT to "Liberica",
+            IBM to "Semeru",
+            ORACLE to "Oracle OpenJDK",
+            SAP to "SAP Machine"
+        )
+        addPossiblyUndefinedVendor("IBM_SEMERU", "Semeru", tmpMap)
+        return tmpMap.toMap()
+    }
 
 val distributionOrderOfPreference = listOf("Temurin", "AOJ")
 
-@Suppress("DEPRECATION")
-val j9Aliases = mapOf(
-    JvmVendorSpec.IBM to "Semeru",
-    JvmVendorSpec.IBM_SEMERU to "Semeru",
-    JvmVendorSpec.ADOPTOPENJDK to "AOJ OpenJ9"
-)
+val j9Aliases: Map<JvmVendorSpec, String>
+    get() {
+        val tmpMap = mutableMapOf(
+            IBM to "Semeru",
+            ADOPTOPENJDK to "AOJ OpenJ9"
+        )
+        addPossiblyUndefinedVendor("IBM_SEMERU", "Semeru", tmpMap)
+        return tmpMap.toMap()
+    }
 
 /**
  * Given a list of [distributions], return those that match the provided [vendor] and JVM [implementation]. The Java
@@ -108,6 +122,20 @@ private fun findByMatchingNamesAndSynonyms(distributions: List<Distribution>, ve
 
 fun parseDistributions(json: String): List<Distribution> {
     return Gson().fromJson(json, DistributionsResult::class.java).result
+}
+
+
+private fun addPossiblyUndefinedVendor(
+    vendorFieldName: String,
+    vendorAlias: String,
+    map: MutableMap<JvmVendorSpec, String>
+) {
+    try {
+        val vendorField = JvmVendorSpec::class.java.getDeclaredField(vendorFieldName)
+        map.put(vendorField.get(null) as JvmVendorSpec, vendorAlias)
+    } catch (_: Exception) {
+        // Ignore - removed in the Gradle version currently running the build where the plugin is applied.
+    }
 }
 
 /**

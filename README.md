@@ -109,27 +109,30 @@ When set, it is used to filter out distributions that are not capable of creatin
 There is mostly a 1-to-1 relationship between the DiscoAPI's distributions and [Gradle vendors](https://docs.gradle.org/current/userguide/toolchains.html#sec:vendors).
 The plugin works with the following mapping:
 
-| Gradle JVM Vendor       | Foojay Distribution       |
-|-------------------------|---------------------------|
-| ADOPTIUM                | Temurin                   |
-| ADOPTOPENJDK            | AOJ                       |
-| AMAZON                  | Corretto                  |
-| APPLE                   | -                         |
-| AZUL                    | Zulu                      |
-| BELLSOFT                | Liberica                  |
-| GRAAL_VM                | Graal VM CE 8/11/16/17/19 |
-| HEWLETT_PACKARD         | -                         |
-| IBM                     | Semeru                    |
-| IBM_SEMERU              | Semeru                    |
-| JETBRAINS               | JetBrains                 |
-| MICROSOFT               | Microsoft                 |
-| ORACLE                  | Oracle OpenJDK            |
-| SAP                     | SAP Machine               |
+| Gradle JVM Vendor | Foojay Distribution       |
+|-------------------|---------------------------|
+| ADOPTIUM          | Temurin                   |
+| ADOPTOPENJDK      | AOJ                       |
+| AMAZON            | Corretto                  |
+| APPLE             | -                         |
+| AZUL              | Zulu                      |
+| BELLSOFT          | Liberica                  |
+| GRAAL_VM          | Graal VM CE 8/11/16/17/19 |
+| HEWLETT_PACKARD   | -                         |
+| IBM               | Semeru                    |
+| IBM_SEMERU*       | Semeru                    |
+| JETBRAINS         | JetBrains                 |
+| MICROSOFT         | Microsoft                 |
+| ORACLE            | Oracle OpenJDK            |
+| SAP               | SAP Machine               |
 
 **To note:**
 Not all Gradle vendors have an equivalent DiscoAPI distribution, empty cells indicate that no toolchain will be provisioned.
 If no vendor is specified, distributions are iterated in the order they are provided by the DiscoAPI, and the first one that has a compatible installation package available is selected.
 The exception to the Foojay ordering of distributions is that "Temurin" (ADOPTIUM) and then "AOJ" (ADOPTOPENJDK) come first, due to the history of the auto-provisioning feature in Gradle, specifically that AdoptOpenJDK/Adoptium have been the default sources for downloading JVMs.
+
+> [!WARNING]
+> `IBM_SEMERU` is deprecated in Gradle for a while and removed in Gradle 9+.
 
 ## Implementations
 
@@ -149,13 +152,16 @@ What this criteria does in the plugin is to influence the Vendor-to-Distribution
 | GRAAL_VM                | -                   |
 | HEWLETT_PACKARD         | -                   |
 | IBM                     | Semeru              |
-| IBM_SEMERU              | Semeru              |
+| IBM_SEMERU*             | Semeru              |
 | JETBRAINS               | -                   |
 | MICROSOFT               | -                   |
 | ORACLE                  | -                   |
 | SAP                     | -                   |
 
 Empty cells indicate that no toolchain will be provisioned
+
+> [!WARNING]
+> `IBM_SEMERU` is deprecated in Gradle for a while and removed in Gradle 9+.
 
 ## Versions
 
