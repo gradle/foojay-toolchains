@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Plugin now compiled with Java 17, meaning it requires that version or higher to run
+
 ### Deprecated
 
 ### Removed
