@@ -6,10 +6,6 @@
 
 ### Changed
 
-- Plugin now compiled with Java 17, meaning it requires that version or higher to run
-- Removed direct references to deprecated JvmVendorSpec.IBM_SEMERU, to prepare for Gradle 9 compatibility.
-- Implementation dependencies are now shaded to reduce potential conflicts with other plugins
-
 ### Deprecated
 
 ### Removed
@@ -17,6 +13,14 @@
 ### Fixed
 
 ### Security
+
+## [1.0.0-rc-1] - 2025-01-15
+
+### Changed
+
+- Plugin now compiled with Java 17, meaning it requires that version or higher to run
+- Removed direct references to deprecated JvmVendorSpec.IBM_SEMERU, to prepare for Gradle 9 compatibility.
+- Implementation dependencies are now shaded to reduce potential conflicts with other plugins
 
 ## [0.10.0] - 2025-04-08
 
@@ -82,7 +86,8 @@ Toolchains resolver using the Foojay Disco API for resolving Java runtimes. Auto
 
 
 
-[Unreleased]: https://github.com/gradle/foojay-toolchains/compare/foojay-toolchains-plugin-0.9.0...HEAD
+[Unreleased]: https://github.com/gradle/foojay-toolchains/compare/foojay-toolchains-plugin-1.0.0-rc-1...HEAD
+[1.0.0-rc-1]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-1.0.0-rc-1
 [0.10.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.10.0
 [0.9.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.9.0
 [0.8.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.8.0
