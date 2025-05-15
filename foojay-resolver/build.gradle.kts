@@ -108,6 +108,7 @@ tasks.check {
 }
 
 val readReleaseNotes by tasks.registering {
+    notCompatibleWithConfigurationCache("This task modifies other tasks")
     description = "Ensure we've got some release notes handy"
     doLast {
         val releaseNotesFile = file("release-notes-$version.txt")
@@ -122,6 +123,7 @@ val readReleaseNotes by tasks.registering {
 }
 
 tasks.publishPlugins {
+    notCompatibleWithConfigurationCache("This task still has a project reference")
     dependsOn(readReleaseNotes)
 }
 
