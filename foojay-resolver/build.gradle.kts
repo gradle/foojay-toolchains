@@ -14,9 +14,12 @@ group = "org.gradle.toolchains"
 val pluginVersion = property("pluginVersion") ?: throw GradleException("`pluginVersion` missing in gradle.properties!")
 version = pluginVersion
 
+// This value is used both for toolchain and for configuration attributes
+val jvmVersion = 17
+
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(jvmVersion)
     }
 }
 
@@ -129,4 +132,12 @@ tasks.publishPlugins {
 
 tasks.check {
     dependsOn(tasks.named("detektMain"), tasks.named("detektTest"), tasks.named("detektFunctionalTest"))
+}
+
+configurations.named("shadowRuntimeElements") {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, jvmVersion)
+        attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))
+        attribute(GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE, objects.named("7.6"))
+    }
 }
