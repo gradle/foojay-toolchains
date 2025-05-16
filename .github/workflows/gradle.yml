@@ -18,11 +18,31 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::992382829881:role/GHASecrets_foojay-toolchains_all
+        aws-region: "eu-central-1"
+    - name: Get secrets
+      uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      with:
+        secret-ids: |
+          DEVELOCITY_ACCESS_KEY, gha/foojay-toolchains/_all/DEVELOCITY_ACCESS_KEY
+    - id: determine-sys-prop-args
+      uses: actions/github-script@v7
+      with:
+        script: |
+          if (context.payload.pull_request && context.payload.pull_request.head.repo.fork) {
+              core.setOutput('sys-prop-args', '-DagreePublicBuildScanTermOfService=yes -DcacheNode=us --scan')
+          } else {
+              core.setOutput('sys-prop-args', '-DcacheNode=us')
+          }
     - uses: actions/checkout@v4
     - name: Setup Java
       uses: actions/setup-java@v4
@@ -31,4 +51,4 @@ jobs:
         distribution: 'temurin'
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
-    - run: ./gradlew build
+    - run: ./gradlew build ${{ steps.determine-sys-prop-args.outputs.sys-prop-args }}
