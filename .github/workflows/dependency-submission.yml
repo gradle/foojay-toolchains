@@ -9,11 +9,22 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   dependency-submission:
     runs-on: ubuntu-latest
     steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::992382829881:role/GHASecrets_foojay-toolchains_all
+        aws-region: "eu-central-1"
+    - name: Get secrets
+      uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      with:
+        secret-ids: |
+          DEVELOCITY_ACCESS_KEY, gha/foojay-toolchains/_all/DEVELOCITY_ACCESS_KEY
     - name: Checkout sources
       uses: actions/checkout@v4
     - name: Setup Java
