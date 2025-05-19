@@ -14,7 +14,7 @@
 
 ### Security
 
-## [1.0.0-rc-1] - 2025-01-15
+## [1.0.0] - 2025-05-19
 
 ### Changed
 
@@ -86,8 +86,8 @@ Toolchains resolver using the Foojay Disco API for resolving Java runtimes. Auto
 
 
 
-[Unreleased]: https://github.com/gradle/foojay-toolchains/compare/foojay-toolchains-plugin-1.0.0-rc-1...HEAD
-[1.0.0-rc-1]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-1.0.0-rc-1
+[Unreleased]: https://github.com/gradle/foojay-toolchains/compare/foojay-toolchains-plugin-1.0.0...HEAD
+[1.0.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-1.0.0
 [0.10.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.10.0
 [0.9.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.9.0
 [0.8.0]: https://github.com/gradle/foojay-toolchains/releases/tag/foojay-toolchains-plugin-0.8.0
