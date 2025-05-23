@@ -13,6 +13,10 @@ See the [Matching Toolchain Specifications](#matching-toolchain-specifications) 
 > and must be applied in `build.gradle[.kts]` files, this is a **SETTINGS PLUGIN** and 
 > must be applied in `settings.gradle[.kts]` files.
 
+> [!NOTE]
+> Versions prior to 1.0.0 require Java 8 or later and Gradle 7.6 or later.
+> Versions 1.0.0 and after require Java 17 or later and Gradle 7.6 or later.
+
 # Usage
 
 To make use of the plugin add following to your `settings.gradle[.kts]` file.
@@ -24,7 +28,7 @@ To make use of the plugin add following to your `settings.gradle[.kts]` file.
 ```kotlin
 // settings.gradle.kts
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 ```
 
@@ -37,7 +41,7 @@ plugins {
 ```groovy
 // settings.gradle
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 ```
 
@@ -53,7 +57,7 @@ What it does is equivalent to applying the base plugin and some extra configurat
 ```kotlin
 // settings.gradle.kts
 plugins {
-    id("org.gradle.toolchains.foojay-resolver") version "0.10.0"
+    id("org.gradle.toolchains.foojay-resolver") version "1.0.0"
 }
 
 toolchainManagement {
@@ -76,7 +80,7 @@ toolchainManagement {
 ```groovy
 // settings.gradle
 plugins {
-    id("org.gradle.toolchains.foojay-resolver") version "0.10.0"
+    id("org.gradle.toolchains.foojay-resolver") version "1.0.0"
 }
 
 toolchainManagement {
