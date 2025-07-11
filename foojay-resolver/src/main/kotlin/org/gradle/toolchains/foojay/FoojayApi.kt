@@ -9,7 +9,6 @@ import org.gradle.platform.OperatingSystem
 import java.io.BufferedReader
 import java.io.InputStream
 import java.net.HttpURLConnection
-import java.net.URI
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets.UTF_8
@@ -31,8 +30,6 @@ class FoojayApi {
     }
 
     private val distributions = mutableListOf<Distribution>()
-
-    fun toUri(links: Links?): URI? = links?.pkg_download_redirect
 
     @Suppress("LongParameterList")
     fun toPackage(

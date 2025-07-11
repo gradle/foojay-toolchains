@@ -28,8 +28,7 @@ abstract class FoojayToolchainResolver : JavaToolchainResolver {
             platform.operatingSystem,
             platform.architecture
         )?.links
-        val uri = api.toUri(links)
-        return Optional.ofNullable(uri).map(JavaToolchainDownload::fromUri)
+        return Optional.ofNullable(links?.pkg_download_redirect).map(JavaToolchainDownload::fromUri)
     }
 
     @Suppress("UNCHECKED_CAST")
