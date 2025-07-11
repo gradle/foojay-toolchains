@@ -48,15 +48,15 @@ private fun hasHandledArchiveType(p: Package): Boolean {
 }
 
 data class Package(
-        val archive_type: String,
-        val distribution: String,
-        val jdk_version: Int,
-        val distribution_version: String,
-        val operating_system: String,
-        val architecture: String,
-        val package_type: String,
-        val lib_c_type: String,
-        val links: Links
+    val archive_type: String,
+    val distribution: String,
+    val jdk_version: Int,
+    val distribution_version: String,
+    val operating_system: String,
+    val architecture: String,
+    val package_type: String,
+    val lib_c_type: String,
+    val links: Links
 )
 
 data class Links(
