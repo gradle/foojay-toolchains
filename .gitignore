@@ -26,6 +26,7 @@ hs_err_pid*
 .gradle
 
 # Ignore Gradle build output directory
+.kotlin
 build
 
 # Ignore IntelliJ IDEA folder
