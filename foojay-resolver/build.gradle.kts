@@ -7,7 +7,7 @@ plugins {
     signing
     id("com.gradle.plugin-publish") version "1.3.1"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("com.gradleup.shadow") version "8.3.6"
+    id("com.gradleup.shadow") version "9.0.2"
 }
 
 group = "org.gradle.toolchains"
@@ -24,8 +24,9 @@ java {
 }
 
 tasks.shadowJar {
-    isEnableRelocation = true
+    enableAutoRelocation = true
     archiveClassifier = ""
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     minimize()
 
     // Clean up some of the unwanted files from gson shading
