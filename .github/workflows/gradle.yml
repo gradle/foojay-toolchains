@@ -43,7 +43,7 @@ jobs:
           } else {
               core.setOutput('sys-prop-args', '-DcacheNode=us')
           }
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
