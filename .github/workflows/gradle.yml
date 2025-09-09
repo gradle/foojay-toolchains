@@ -35,7 +35,7 @@ jobs:
         secret-ids: |
           DEVELOCITY_ACCESS_KEY, gha/foojay-toolchains/_all/DEVELOCITY_ACCESS_KEY
     - id: determine-sys-prop-args
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       with:
         script: |
           if (context.payload.pull_request && context.payload.pull_request.head.repo.fork) {
