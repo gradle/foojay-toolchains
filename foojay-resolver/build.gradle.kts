@@ -5,7 +5,7 @@ import java.io.FileNotFoundException
 plugins {
     `kotlin-dsl`
     signing
-    id("com.gradle.plugin-publish") version "1.3.1"
+    id("com.gradle.plugin-publish") version "2.0.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("com.gradleup.shadow") version "8.3.6"
 }
