@@ -7,7 +7,7 @@ plugins {
     signing
     id("com.gradle.plugin-publish") version "2.0.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("com.gradleup.shadow") version "8.3.6"
+    id("com.gradleup.shadow") version "9.1.0"
 }
 
 group = "org.gradle.toolchains"
