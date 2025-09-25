@@ -19,7 +19,10 @@ jobs:
     steps:
       - name: Get Secrets
         uses: gradle/actions-internal/get-aws-secrets@v1
-        if: github.repository_owner == 'gradle' # don't attempt this in forks
+        # don't attempt this in forks
+        if: github.repository_owner == 'gradle'
+        # skip errors in PRs from forks
+        continue-on-error: true
         with:
           role-to-assume: arn:aws:iam::992382829881:role/GHASecrets_foojay-toolchains_all
           secret-ids: |
