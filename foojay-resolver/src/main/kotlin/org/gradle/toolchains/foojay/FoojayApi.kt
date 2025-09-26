@@ -9,30 +9,27 @@ import org.gradle.platform.OperatingSystem
 import java.io.BufferedReader
 import java.io.InputStream
 import java.net.HttpURLConnection
-import java.net.URI
 import java.net.URL
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets.UTF_8
 import java.util.concurrent.TimeUnit.SECONDS
 
+@Suppress("MagicNumber")
+private val CONNECT_TIMEOUT = SECONDS.toMillis(10).toInt()
+
+@Suppress("MagicNumber")
+private val READ_TIMEOUT = SECONDS.toMillis(20).toInt()
+
+private const val SCHEMA = "https"
+
+private const val ENDPOINT_ROOT = "api.foojay.io/disco/v3.0"
+private const val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
+private const val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
 
 @Suppress("UnstableApiUsage")
 class FoojayApi {
 
-    companion object {
-        val CONNECT_TIMEOUT = SECONDS.toMillis(10).toInt()
-        val READ_TIMEOUT = SECONDS.toMillis(20).toInt()
-
-        const val SCHEMA = "https"
-
-        private const val ENDPOINT_ROOT = "api.foojay.io/disco/v3.0"
-        const val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
-        const val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
-    }
-
     private val distributions = mutableListOf<Distribution>()
-
-    fun toUri(links: Links?): URI? = links?.pkg_download_redirect
 
     @Suppress("LongParameterList")
     fun toPackage(
