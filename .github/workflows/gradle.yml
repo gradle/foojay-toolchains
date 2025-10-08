@@ -44,5 +44,5 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew build ${{ steps.determine-sys-prop-args.outputs.sys-prop-args }}
