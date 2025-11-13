@@ -14,8 +14,8 @@ See the [Matching Toolchain Specifications](#matching-toolchain-specifications) 
 > must be applied in `settings.gradle[.kts]` files.
 
 > [!NOTE]
-> Versions prior to 1.0.0 require Java 8 or later and Gradle 7.6 or later.
 > Versions 1.0.0 and after require Java 17 or later and Gradle 7.6 or later.
+> Versions prior to 1.0.0 require Java 8 or later and Gradle from 7.6 to 8.14.x.
 
 # Usage
 
