@@ -96,10 +96,10 @@ class FoojayApiTest {
     fun `vendor specific implementation does not influence vendor resolution`(version: Int) {
         assertMatchedDistributions(any(), VENDOR_SPECIFIC, version,
                 "Temurin", "AOJ",
-                "ZuluPrime", "Zulu", "Trava", "Semeru certified", "Semeru", "SAP Machine", "Red Hat", "Oracle OpenJDK",
+                "Zulu", "Trava", "Semeru certified", "Semeru", "SAP Machine", "Red Hat", "Oracle OpenJDK",
                 "Oracle", "OpenLogic", "OJDKBuild", "Microsoft", "Mandrel", "Liberica Native", "Liberica", "Kona",
                 "JetBrains", "GraalVM Community", "GraalVM CE $version", "GraalVM", "Gluon GraalVM", "Dragonwell",
-                "Debian", "Corretto", "Bi Sheng", "AOJ OpenJ9"
+                "Corretto", "Bi Sheng", "AOJ OpenJ9"
         )
 
         assertMatchedDistributions(ADOPTOPENJDK, VENDOR_SPECIFIC, version, "AOJ")
@@ -136,8 +136,8 @@ class FoojayApiTest {
     @ParameterizedTest(name = "can resolve arbitrary vendors (Java {0})")
     @ValueSource(ints = [8, 11, 16])
     fun `can resolve arbitrary vendors`(version: Int) {
-        assertEquals("ZuluPrime", api.match(vendorSpec("zuluprime"), VENDOR_SPECIFIC, of(version), false).firstOrNull()?.name)
-        assertEquals("ZuluPrime", api.match(vendorSpec("zUluprIme"), VENDOR_SPECIFIC, of(version), false).firstOrNull()?.name)
+        assertEquals("Liberica Native", api.match(vendorSpec("liberica native"), VENDOR_SPECIFIC, of(version), false).firstOrNull()?.name)
+        assertEquals("Liberica Native", api.match(vendorSpec("lIbeRica nAtive"), VENDOR_SPECIFIC, of(version), false).firstOrNull()?.name)
         assertEquals("JetBrains", api.match(vendorSpec("JetBrains"), VENDOR_SPECIFIC, of(version), false).firstOrNull()?.name)
     }
 
