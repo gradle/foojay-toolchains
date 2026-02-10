@@ -1,5 +1,7 @@
 @file:Suppress("UnusedPrivateProperty", "UnstableApiUsage")
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.io.FileNotFoundException
 
 plugins {
@@ -20,6 +22,14 @@ val jvmVersion = 17
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(jvmVersion)
+    }
+}
+
+// This is a workaround for https://github.com/gradle/gradle/issues/34505
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_1_8
+        apiVersion = KotlinVersion.KOTLIN_1_8
     }
 }
 
