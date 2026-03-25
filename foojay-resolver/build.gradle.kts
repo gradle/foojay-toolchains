@@ -7,9 +7,9 @@ import java.io.FileNotFoundException
 plugins {
     `kotlin-dsl`
     signing
-    id("com.gradle.plugin-publish") version "2.1.1"
-    id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("com.gradleup.shadow") version "9.4.0"
+    alias(libs.plugins.plugin.publish)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.shadow)
 }
 
 group = "org.gradle.toolchains"
@@ -55,7 +55,7 @@ detekt {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.13.2")
+    implementation(libs.gson)
 }
 
 gradlePlugin {

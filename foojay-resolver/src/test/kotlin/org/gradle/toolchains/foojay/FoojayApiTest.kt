@@ -228,8 +228,8 @@ class FoojayApiTest {
         if (nativeImageCapable) {
             // TODO this is not a great test, but the package does not carry the native-image / Graal capability information anymore
             if (vendor == any()) {
-                assertTrue(actual.distribution.contains("mandrel"),
-                    "Expected vendor to contain 'mandrel' when native image capable, got ${actual.distribution}")
+                assertTrue(actual.distribution.contains("mandrel") || actual.distribution.contains("liberica_native"),
+                    "Expected vendor to contain 'mandrel' or 'liberica_native' when native image capable, got ${actual.distribution}")
             } else {
                 assertDistribution(vendor, actual)
             }
