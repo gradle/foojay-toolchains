@@ -6,4 +6,4 @@ gson = { module = "com.google.code.gson:gson", version = "2.13.2" }
 [plugins]
 plugin-publish = { id = "com.gradle.plugin-publish", version = "2.1.1" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.8" }
-shadow = { id = "com.gradleup.shadow", version = "9.4.0" }
+shadow = { id = "com.gradleup.shadow", version = "9.4.1" }
