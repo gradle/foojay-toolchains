@@ -1,7 +1,7 @@
 [versions]
 
 [libraries]
-gson = { module = "com.google.code.gson:gson", version = "2.13.2" }
+gson = { module = "com.google.code.gson:gson", version = "2.14.0" }
 
 [plugins]
 plugin-publish = { id = "com.gradle.plugin-publish", version = "2.1.1" }
