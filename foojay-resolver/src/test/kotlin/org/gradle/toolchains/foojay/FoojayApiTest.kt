@@ -98,7 +98,7 @@ class FoojayApiTest {
                 "Temurin", "AOJ",
                 "Zulu", "Trava", "Semeru certified", "Semeru", "SAP Machine", "Red Hat", "Oracle OpenJDK",
                 "Oracle", "OpenLogic", "OJDKBuild", "Microsoft", "Mandrel", "Liberica Native", "Liberica", "Kona",
-                "JetBrains", "GraalVM Community", "GraalVM CE $version", "GraalVM", "Gluon GraalVM", "Dragonwell",
+                "JetBrains", "GraalVM Community", "GraalVM CE $version", "GraalVM", "Gluon GraalVM", "Eliya JDK", "Dragonwell",
                 "Corretto", "Bi Sheng", "AOJ OpenJ9"
         )
 
