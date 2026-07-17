@@ -90,7 +90,6 @@ class FoojayApi {
         params: Map<String, String>
     ): String {
         val uri = URI.create("$SCHEMA://$endpoint?${toParameterString(params)}")
-        System.err.println("👉 Making http request to: $uri")
         val request = HttpRequest.newBuilder()
             .uri(uri)
             .header("Content-Type", "application/json")
