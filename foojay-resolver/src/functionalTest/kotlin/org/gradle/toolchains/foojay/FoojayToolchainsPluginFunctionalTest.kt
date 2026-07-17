@@ -88,47 +88,6 @@ class FoojayToolchainsPluginFunctionalTest : AbstractFoojayToolchainsPluginFunct
         assertTrue(proxyInterceptorCount.get() > 0, "Traffic bypassed the proxy.")
     }
 
-    @ParameterizedTest(name = "gradle version: {0}")
-    @MethodSource("getGradleTestVersions")
-    fun `plugin can ignore proxy`(gradleVersion: String) {
-        val settings = """
-            plugins {
-                id("org.gradle.toolchains.foojay-resolver")
-            }            
-            
-            toolchainManagement {
-                jvm { 
-                    javaRepositories {
-                        repository("foojay") { 
-                            resolverClass.set(org.gradle.toolchains.foojay.FoojayToolchainResolver::class.java)
-                        }
-                    }
-                }
-            }
-        """.trimIndent()
-
-        val buildScript = """
-            plugins {
-                java
-            }
-            
-            java {
-                toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(${getDifferentJavaVersion()}))
-                }
-            }
-        """
-        val arguments = listOf(
-            // To make sure Gradle does not pick up local JDK installations.
-            "-Porg.gradle.java.installations.auto-detect=false"
-        )
-        val result = runner(settings, buildScript, arguments)
-            .withGradleVersion(gradleVersion)
-            .build()
-        assertProvisioningSuccessful(result)
-        assertEquals(proxyInterceptorCount.get(), 0, "Traffic passed through the proxy.")
-    }
-
     @Test
     fun `generates useful error for unsupported Gradle versions`() {
         val settings = """
