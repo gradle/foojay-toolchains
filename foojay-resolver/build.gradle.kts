@@ -104,6 +104,7 @@ testing {
         val functionalTest by registering(JvmTestSuite::class) {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-test-junit5")
+                implementation(libs.littleproxy)
             }
         }
         val test by getting(JvmTestSuite::class) {

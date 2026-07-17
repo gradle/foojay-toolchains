@@ -1,11 +1,21 @@
 package org.gradle.toolchains.foojay
 
+import io.netty.handler.codec.http.HttpObject
+import io.netty.handler.codec.http.HttpRequest
+import io.netty.handler.codec.http.HttpResponse
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.io.TempDir
+import org.littleshoot.proxy.HttpFilters
+import org.littleshoot.proxy.HttpFiltersAdapter
+import org.littleshoot.proxy.HttpFiltersSourceAdapter
+import org.littleshoot.proxy.HttpProxyServer
+import org.littleshoot.proxy.impl.DefaultHttpProxyServer
 import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.assertTrue
 
 abstract class AbstractFoojayToolchainsPluginFunctionalTest {
@@ -15,6 +25,10 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
 
     @field:TempDir
     protected lateinit var homeDir: File
+
+    protected lateinit var proxyServer: HttpProxyServer
+    protected var proxyPort: Int = 0
+    protected val proxyInterceptorCount = AtomicInteger(0)
 
     private val settingsFile by lazy { projectDir.resolve("settings.gradle.kts") }
     private val propertiesFile by lazy { projectDir.resolve("gradle.properties") }
@@ -27,9 +41,38 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
             org.gradle.java.installations.auto-detect=false
             org.gradle.java.installations.auto-download=true
         """.trimIndent())
+        // Start proxy on a random available port
+        proxyInterceptorCount.set(0)
+        proxyServer = DefaultHttpProxyServer.bootstrap()
+            .withPort(0)
+            .withFiltersSource(object : HttpFiltersSourceAdapter() {
+                override fun filterRequest(originalRequest: HttpRequest): HttpFilters {
+                    return object : HttpFiltersAdapter(originalRequest) {
+                        override fun clientToProxyRequest(httpObject: HttpObject): HttpResponse? {
+                            // Increment whenever the proxy intercepts a request
+                            if (httpObject is HttpRequest) {
+                                proxyInterceptorCount.incrementAndGet()
+                            }
+                            return null // Continue normal routing
+                        }
+                    }
+                }
+            })
+            .start()
+        proxyPort = proxyServer.listenAddress.port
     }
 
-    protected fun runner(settings: String, buildScript: String): GradleRunner {
+    @AfterEach
+    internal fun tearDownProxy() {
+        proxyServer.stop()
+    }
+
+    protected fun runner(
+        settings: String,
+        buildScript: String,
+        extraArguments: List<String> = emptyList()
+    ): GradleRunner {
+
         settingsFile.writeText(settings)
         buildFile.writeText(buildScript.trimIndent())
 
@@ -46,7 +89,7 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
         return GradleRunner.create()
             .forwardOutput()
             .withPluginClasspath()
-            .withArguments(listOf("--info", "-g", homeDir.absolutePath, "compileJava"))
+            .withArguments(listOf("--info", "-g", homeDir.absolutePath, "compileJava") + extraArguments)
             .withProjectDir(projectDir)
     }
 
