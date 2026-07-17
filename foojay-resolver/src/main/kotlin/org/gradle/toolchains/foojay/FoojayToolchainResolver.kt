@@ -8,9 +8,11 @@ import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.gradle.util.GradleVersion
 import java.util.*
 
+@Suppress("UnstableApiUsage")
 abstract class FoojayToolchainResolver : JavaToolchainResolver {
 
-    private val api: FoojayApi = FoojayApi()
+    private val apiService = FoojayApiServiceBridge.getService()
+        ?: throw RuntimeException("failed to retrieve FoojayApiService instance")
 
     override fun resolve(request: JavaToolchainRequest): Optional<JavaToolchainDownload> {
         val spec = request.javaToolchainSpec
@@ -20,7 +22,7 @@ abstract class FoojayToolchainResolver : JavaToolchainResolver {
             false
         }
         val platform = request.buildPlatform
-        val links = api.toPackage(
+        val links = apiService.api.toPackage(
             spec.languageVersion.get(),
             spec.vendor.get(),
             spec.implementation.get(),
