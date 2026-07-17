@@ -1,16 +1,11 @@
 package org.gradle.toolchains.foojay
 
 import org.gradle.api.GradleException
-import org.gradle.api.logging.Logger
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.platform.Architecture
 import org.gradle.platform.OperatingSystem
-import org.slf4j.LoggerFactory
-import java.net.InetSocketAddress
-import java.net.Proxy
-import java.net.ProxySelector
 import java.net.URI
 import java.net.URLEncoder
 import java.net.http.HttpClient
@@ -18,7 +13,6 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.nio.charset.StandardCharsets.UTF_8
 import java.time.Duration
-import kotlin.jvm.java
 
 @Suppress("MagicNumber")
 private val CONNECT_TIMEOUT = Duration.ofSeconds(10)
