@@ -8,6 +8,8 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 import org.gradle.platform.Architecture
 import org.gradle.platform.OperatingSystem
 import org.slf4j.LoggerFactory
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.net.ProxySelector
 import java.net.URI
 import java.net.URLEncoder
@@ -29,36 +31,13 @@ private const val ENDPOINT_ROOT = "api.foojay.io/disco/v3.0"
 private const val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
 private const val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
 
-class FoojayApiConfig {
-    val proxy = ProxyConfig()
-    class ProxyConfig {
-        var autoDetect: Boolean = false
-    }
-}
-
 @Suppress("UnstableApiUsage")
-class FoojayApi(
-    private val configs: FoojayApiConfig
-) {
-    private val logger = LoggerFactory.getLogger(FoojayApi::class.java)
+class FoojayApi {
+
     private val distributions = mutableListOf<Distribution>()
 
     private val httpClient = HttpClient.newBuilder()
-        .also { builder ->
-            // Only active the default ProxySelector when plugin configuration `detectProxy` is true
-            // to keep default plugin behavior.
-            // The default behavior is to ignore proxy configuration so that it won't introduce side effects if
-            // this plugin is run in an environment where proxy configurations are defined and that it is not
-            // expected that the project using this plugin uses the proxy.
-            if (configs.proxy.autoDetect) {
-                // Configures the system-wide proxy selector.
-                builder.proxy(ProxySelector.getDefault())
-            } else {
-                //builder.proxy(HttpClient.Builder.NO_PROXY)
-                builder.proxy(ProxySelector.getDefault())
-            }
-            builder.connectTimeout(CONNECT_TIMEOUT)
-        }
+        .connectTimeout(CONNECT_TIMEOUT)
         .build()
 
     @Suppress("LongParameterList")

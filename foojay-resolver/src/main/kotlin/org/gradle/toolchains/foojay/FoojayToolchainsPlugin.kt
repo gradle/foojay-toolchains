@@ -4,13 +4,9 @@
 package org.gradle.toolchains.foojay
 
 import org.gradle.api.initialization.Settings
-import org.gradle.api.internal.SettingsInternal
 import org.gradle.jvm.toolchain.JavaToolchainResolverRegistry
 import org.gradle.kotlin.dsl.support.serviceOf
 import org.gradle.util.GradleVersion
-
-private const val FOOJAY_EXTENSION_NAME   = "foojay"
-private const val FOOJAY_API_SERVICE_NAME = "foojayApi"
 
 @Suppress("unused", "UnstableApiUsage")
 abstract class FoojayToolchainsPlugin: AbstractFoojayToolchainPlugin() {
@@ -20,14 +16,6 @@ abstract class FoojayToolchainsPlugin: AbstractFoojayToolchainPlugin() {
         if (GradleVersion.current().baseVersion < GradleVersion.version("7.6")) {
             throw RuntimeException("${FoojayToolchainsPlugin::class.simpleName} needs Gradle version 7.6 or higher")
         }
-        val extension = settings.extensions.create(FOOJAY_EXTENSION_NAME, FoojayExtension::class.java)
-        val service = settings.gradle.sharedServices.registerIfAbsent(
-            FOOJAY_API_SERVICE_NAME,
-            FoojayApiService::class.java
-        ) {
-            this.parameters.detectProxy.set(extension.proxy.autoDetect)
-        }
-        FoojayApiServiceBridge.init(service)
         settings.plugins.apply("jvm-toolchain-management")
         settings.serviceOf<JavaToolchainResolverRegistry>()
             .apply { register(FoojayToolchainResolver::class.java) }

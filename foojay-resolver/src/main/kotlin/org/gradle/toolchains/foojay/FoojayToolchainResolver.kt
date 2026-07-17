@@ -11,8 +11,7 @@ import java.util.*
 @Suppress("UnstableApiUsage")
 abstract class FoojayToolchainResolver : JavaToolchainResolver {
 
-    private val apiService = FoojayApiServiceBridge.getService()
-        ?: throw RuntimeException("failed to retrieve FoojayApiService instance")
+    private val api = FoojayApi()
 
     override fun resolve(request: JavaToolchainRequest): Optional<JavaToolchainDownload> {
         val spec = request.javaToolchainSpec
@@ -22,7 +21,7 @@ abstract class FoojayToolchainResolver : JavaToolchainResolver {
             false
         }
         val platform = request.buildPlatform
-        val links = apiService.api.toPackage(
+        val links = api.toPackage(
             spec.languageVersion.get(),
             spec.vendor.get(),
             spec.implementation.get(),

@@ -49,9 +49,8 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
                 override fun filterRequest(originalRequest: HttpRequest): HttpFilters {
                     return object : HttpFiltersAdapter(originalRequest) {
                         override fun clientToProxyRequest(httpObject: HttpObject): HttpResponse? {
-                            // Increment whenever the proxy intercepts a request frame
+                            // Increment whenever the proxy intercepts a request
                             if (httpObject is HttpRequest) {
-                                System.err.println("Captured traffic in proxy!")
                                 proxyInterceptorCount.incrementAndGet()
                             }
                             return null // Continue normal routing
