@@ -21,7 +21,7 @@ import kotlin.test.assertTrue
 @Suppress("UnstableApiUsage")
 class FoojayApiTest {
 
-    private val api = FoojayApi(FoojayApiConfig())
+    private val api = FoojayApi()
 
     @ParameterizedTest(name = "javaVersion: {0}, vendor: {1}, isJ9: {2}, os: {3}, arch: {4}")
     @MethodSource("getData")

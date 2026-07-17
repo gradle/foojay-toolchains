@@ -102,11 +102,6 @@ signing {
 testing {
     suites {
         val functionalTest by registering(JvmTestSuite::class) {
-            targets.all {
-                testTask.configure {
-                    testLogging.showStandardStreams = true
-                }
-            }
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-test-junit5")
                 implementation(libs.littleproxy)
