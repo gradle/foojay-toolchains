@@ -90,6 +90,8 @@ publishing {
 
 signing {
     useInMemoryPgpKeys(
+            // Key ID required when signing with a subkey
+            project.providers.environmentVariable("PGP_SIGNING_KEY_ID").orNull,
             project.providers.environmentVariable("PGP_SIGNING_KEY").orNull,
             project.providers.environmentVariable("PGP_SIGNING_KEY_PASSPHRASE").orNull
     )
