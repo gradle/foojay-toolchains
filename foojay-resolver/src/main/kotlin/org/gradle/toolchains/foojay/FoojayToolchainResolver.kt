@@ -8,9 +8,10 @@ import org.gradle.jvm.toolchain.JavaToolchainSpec
 import org.gradle.util.GradleVersion
 import java.util.*
 
+@Suppress("UnstableApiUsage")
 abstract class FoojayToolchainResolver : JavaToolchainResolver {
 
-    private val api: FoojayApi = FoojayApi()
+    private val api = FoojayApi()
 
     override fun resolve(request: JavaToolchainRequest): Optional<JavaToolchainDownload> {
         val spec = request.javaToolchainSpec
