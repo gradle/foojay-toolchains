@@ -96,7 +96,7 @@ class FoojayApiTest {
     fun `vendor specific implementation does not influence vendor resolution`(version: Int) {
         assertMatchedDistributions(any(), VENDOR_SPECIFIC, version,
                 "Temurin", "AOJ",
-                "Zulu", "Trava", "Semeru certified", "Semeru", "SAP Machine", "Red Hat", "Oracle OpenJDK",
+                "Zulu", "Trava", "Semeru certified", "Semeru", "SapMachine", "Red Hat", "Oracle OpenJDK",
                 "Oracle", "OpenLogic", "OJDKBuild", "Microsoft", "Mandrel", "Liberica Native", "Liberica", "Kona",
                 "JetBrains", "GraalVM Community", "GraalVM CE $version", "GraalVM", "Gluon GraalVM", "Eliya JDK", "Dragonwell",
                 "Corretto", "Bi Sheng", "AOJ OpenJ9"
@@ -112,7 +112,7 @@ class FoojayApiTest {
         assertMatchedDistributions(BELLSOFT, VENDOR_SPECIFIC, version, "Liberica")
         assertMatchedDistributions(MICROSOFT, VENDOR_SPECIFIC, version, "Microsoft")
         assertMatchedDistributions(ORACLE, VENDOR_SPECIFIC, version, "Oracle OpenJDK")
-        assertMatchedDistributions(SAP, VENDOR_SPECIFIC, version, "SAP Machine")
+        assertMatchedDistributions(SAP, VENDOR_SPECIFIC, version, "SapMachine")
 
         assertMatchedDistributions(GRAAL_VM, VENDOR_SPECIFIC, version, "GraalVM Community", "GraalVM CE $version")
 
@@ -148,7 +148,7 @@ class FoojayApiTest {
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)
         assertEquals(11, p.jdk_version)
-        assertTrue(Regex("11.\\d+.\\d+").matches(p.distribution_version))
+        assertTrue(Regex("11(\\.\\d+){2,3}").matches(p.distribution_version))
         assertEquals("linux", p.operating_system)
         assertEquals("x64", p.architecture)
         assertEquals("jdk", p.package_type)
