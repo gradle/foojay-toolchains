@@ -27,7 +27,10 @@ private const val DISTRIBUTIONS_ENDPOINT = "$ENDPOINT_ROOT/distributions"
 private const val PACKAGES_ENDPOINT = "$ENDPOINT_ROOT/packages"
 
 @Suppress("UnstableApiUsage")
-class FoojayApi {
+class FoojayApi(
+        val distributionEndPoint: String = DISTRIBUTIONS_ENDPOINT,
+        val packagesEndPoint:String = PACKAGES_ENDPOINT,
+        val schema: String = SCHEMA) {
 
     private val distributions = mutableListOf<Distribution>()
 
@@ -54,7 +57,7 @@ class FoojayApi {
     private fun fetchDistributionsIfMissing() {
         if (distributions.isEmpty()) {
             val con = createConnection(
-                DISTRIBUTIONS_ENDPOINT,
+                distributionEndPoint,
                 mapOf("include_versions" to "true", "include_synonyms" to "true")
             )
             val json = readResponse(con)
@@ -72,7 +75,7 @@ class FoojayApi {
         }
 
         val con = createConnection(
-            PACKAGES_ENDPOINT,
+            packagesEndPoint,
             mapOf(
                 versionApiKey to "$version",
                 "distro" to distributionName,
@@ -89,7 +92,7 @@ class FoojayApi {
     }
 
     private fun createConnection(endpoint: String, parameters: Map<String, String>): HttpURLConnection {
-        val url = URL("$SCHEMA://$endpoint?${toParameterString(parameters)}")
+        val url = URL("$schema://$endpoint?${toParameterString(parameters)}")
         val con = url.openConnection() as HttpURLConnection
         con.setRequestProperty("Content-Type", "application/json")
         con.requestMethod = "GET"

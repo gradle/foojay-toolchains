@@ -1,5 +1,12 @@
 package org.gradle.toolchains.foojay
 
+import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.okJson
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
+
 import org.gradle.jvm.toolchain.JavaLanguageVersion.of
 import org.gradle.jvm.toolchain.JvmImplementation
 import org.gradle.jvm.toolchain.JvmImplementation.J9
@@ -9,19 +16,22 @@ import org.gradle.jvm.toolchain.JvmVendorSpec.*
 import org.gradle.jvm.toolchain.internal.DefaultJvmVendorSpec.any
 import org.gradle.platform.Architecture
 import org.gradle.platform.OperatingSystem
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
+import java.nio.charset.Charset
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import com.google.common.io.Resources.toString as loadResource
+import com.google.common.io.Resources.getResource as resourcePath
 
 @Suppress("UnstableApiUsage")
 class FoojayApiTest {
 
-    private val api = FoojayApi()
 
     @ParameterizedTest(name = "javaVersion: {0}, vendor: {1}, isJ9: {2}, os: {3}, arch: {4}")
     @MethodSource("getData")
@@ -34,6 +44,32 @@ class FoojayApiTest {
     ) = assertDownloadUri(javaVersion, vendor, isJ9, false, os, arch)
 
     companion object {
+        private lateinit var api: FoojayApi
+        private val mockServer = WireMockServer(options()
+            .dynamicPort()
+        )
+
+        @JvmStatic
+        @BeforeAll
+        fun setup() {
+            mockServer.start()
+            val port = mockServer.port()
+            WireMock.configureFor(port)
+
+            stubFor(get("/disco/v3.0/distributions?include_versions=true&include_synonyms=true").willReturn(
+                okJson(
+                    loadResource(
+                        resourcePath("org/gradle/toolchains/foojay/distributions.json"),
+                        Charset.defaultCharset())
+            )))
+
+            api = FoojayApi(
+                "127.0.0.1:$port/disco/v3.0/distributions",
+                "127.0.0.1:$port/disco/v3.0/packages",
+                "http"
+            )
+
+        }
 
         private
         val IBM_SEMERU_VENDOR = try {
@@ -96,7 +132,7 @@ class FoojayApiTest {
     fun `vendor specific implementation does not influence vendor resolution`(version: Int) {
         assertMatchedDistributions(any(), VENDOR_SPECIFIC, version,
                 "Temurin", "AOJ",
-                "Zulu", "Trava", "Semeru certified", "Semeru", "SAP Machine", "Red Hat", "Oracle OpenJDK",
+                "Zulu", "Trava", "Semeru certified", "Semeru", "SapMachine", "Red Hat", "Oracle OpenJDK",
                 "Oracle", "OpenLogic", "OJDKBuild", "Microsoft", "Mandrel", "Liberica Native", "Liberica", "Kona",
                 "JetBrains", "GraalVM Community", "GraalVM CE $version", "GraalVM", "Gluon GraalVM", "Eliya JDK", "Dragonwell",
                 "Corretto", "Bi Sheng", "AOJ OpenJ9"
@@ -112,7 +148,7 @@ class FoojayApiTest {
         assertMatchedDistributions(BELLSOFT, VENDOR_SPECIFIC, version, "Liberica")
         assertMatchedDistributions(MICROSOFT, VENDOR_SPECIFIC, version, "Microsoft")
         assertMatchedDistributions(ORACLE, VENDOR_SPECIFIC, version, "Oracle OpenJDK")
-        assertMatchedDistributions(SAP, VENDOR_SPECIFIC, version, "SAP Machine")
+        assertMatchedDistributions(SAP, VENDOR_SPECIFIC, version, "SapMachine")
 
         assertMatchedDistributions(GRAAL_VM, VENDOR_SPECIFIC, version, "GraalVM Community", "GraalVM CE $version")
 
@@ -143,12 +179,19 @@ class FoojayApiTest {
 
     @Test
     fun `can pick the right package`() {
+        stubFor(get("/disco/v3.0/packages?jdk_version=11&distro=temurin&operating_system=linux&latest=available&directly_downloadable=true")
+            .willReturn(okJson(
+                loadResource(
+                    resourcePath("org/gradle/toolchains/foojay/packages_jdk11_temurin_linux.json"),
+                    Charset.defaultCharset())
+            )))
+
         val p = api.match("temurin", of(11), OperatingSystem.LINUX, Architecture.X86_64)
         assertNotNull(p)
         assertEquals("tar.gz", p.archive_type)
         assertEquals("temurin", p.distribution)
         assertEquals(11, p.jdk_version)
-        assertTrue(Regex("11.\\d+.\\d+").matches(p.distribution_version))
+        assertTrue(Regex("11(\\.\\d+){2,3}").matches(p.distribution_version))
         assertEquals("linux", p.operating_system)
         assertEquals("x64", p.architecture)
         assertEquals("jdk", p.package_type)
@@ -156,6 +199,21 @@ class FoojayApiTest {
 
     @Test
     fun `macos arm is mapped to x64 when arm isn't available`() {
+
+        stubFor(get("/disco/v3.0/packages?jdk_version=17&distro=zulu&operating_system=macos&latest=available&directly_downloadable=true")
+            .willReturn(okJson(
+                loadResource(
+                    resourcePath("org/gradle/toolchains/foojay/packages_jdk17_zulu_macos.json"),
+                    Charset.defaultCharset())
+        )))
+
+        stubFor(get("/disco/v3.0/packages?jdk_version=7&distro=zulu&operating_system=macos&latest=available&directly_downloadable=true")
+            .willReturn(okJson(
+                loadResource(
+                    resourcePath("org/gradle/toolchains/foojay/packages_jdk7_zulu_macos.json"),
+                    Charset.defaultCharset())
+        )))
+
         // RISC architecture is preferred when available
         val p1 = assertDownloadUri(17, AZUL, false, false,OperatingSystem.MAC_OS, Architecture.AARCH64)
         assertEquals("aarch64", p1.architecture)
@@ -167,11 +225,26 @@ class FoojayApiTest {
 
     @Test
     fun `can pick a native image capable package`() {
+        stubFor(get("/disco/v3.0/packages?jdk_version=21&distro=mandrel&operating_system=macos&latest=available&directly_downloadable=true")
+            .willReturn(okJson(
+                loadResource(
+                    resourcePath("org/gradle/toolchains/foojay/packages_jdk21_mandrel_linux.json"),
+                    Charset.defaultCharset())
+            )))
+
+
         assertDownloadUri(21, any(), false, true, OperatingSystem.MAC_OS, Architecture.AARCH64)
     }
 
     @Test
     fun `can pick graalvm package`() {
+        stubFor(get("/disco/v3.0/packages?version=21&distro=graalvm_community&operating_system=macos&latest=available&directly_downloadable=true")
+            .willReturn(okJson(
+                loadResource(
+                    resourcePath("org/gradle/toolchains/foojay/packages_jdk21_graalvm_community_macos.json"),
+                    Charset.defaultCharset())
+            )))
+
         assertDownloadUri(21, matching("GraalVM"), false, true, OperatingSystem.MAC_OS, Architecture.AARCH64)
     }
 
