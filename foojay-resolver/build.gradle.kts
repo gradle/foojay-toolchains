@@ -112,6 +112,7 @@ testing {
             useJUnitJupiter()
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-test-junit5")
+                implementation("org.wiremock:wiremock:3.13.2")
             }
         }
     }

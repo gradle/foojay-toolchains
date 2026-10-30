@@ -1,0 +1,36 @@
+{
+  "result": [
+    {
+      "id": "748c7cbfde8c642463c86ab8d1ece634",
+      "archive_type": "tar.gz",
+      "distribution": "mandrel",
+      "major_version": 21,
+      "java_version": "21",
+      "distribution_version": "23.1.8",
+      "jdk_version": 21,
+      "latest_build_available": false,
+      "release_status": "ga",
+      "term_of_support": "lts",
+      "operating_system": "macos",
+      "lib_c_type": "libc",
+      "architecture": "aarch64",
+      "fpu": "unknown",
+      "package_type": "jdk",
+      "javafx_bundled": false,
+      "directly_downloadable": true,
+      "filename": "mandrel-java21-macos-aarch64-23.1.8.0-Final.tar.gz",
+      "links": {
+        "pkg_info_uri": "https://api.foojay.io/disco/v3.0/ids/748c7cbfde8c642463c86ab8d1ece634",
+        "pkg_download_redirect": "https://api.foojay.io/disco/v3.0/ids/748c7cbfde8c642463c86ab8d1ece634/redirect"
+      },
+      "free_use_in_production": true,
+      "tck_tested": "unknown",
+      "tck_cert_uri": "",
+      "aqavit_certified": "unknown",
+      "aqavit_cert_uri": "",
+      "size": 238701210,
+      "feature": []
+    }
+  ],
+  "message": "1 package(s) found"
+}
