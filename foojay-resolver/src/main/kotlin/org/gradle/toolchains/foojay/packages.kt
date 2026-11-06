@@ -41,6 +41,7 @@ private fun matches(p: Package, architecture: Architecture): Boolean =
         Architecture.X86_64 -> p.architecture in architectures64Bit
         Architecture.AARCH64 -> p.architecture in architecturesArm64Bit
                 || (p.operating_system == OperatingSystem.MAC_OS.toApiValue() && p.architecture in architectures64Bit)
+        else -> false
     }
 
 private fun hasHandledArchiveType(p: Package): Boolean {
