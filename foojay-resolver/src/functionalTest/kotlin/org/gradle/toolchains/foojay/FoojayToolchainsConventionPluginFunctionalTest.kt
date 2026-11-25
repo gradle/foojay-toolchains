@@ -1,5 +1,6 @@
 package org.gradle.toolchains.foojay
 
+import org.gradle.util.GradleVersion
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import kotlin.test.Test
@@ -27,10 +28,18 @@ class FoojayToolchainsConventionPluginFunctionalTest: AbstractFoojayToolchainsPl
                 }
             }
         """
-        val result = runner(settings, buildScript)
-            .withGradleVersion(gradleVersion)
-            .build()
+        val runner = runner(settings, buildScript).withGradleVersion(gradleVersion)
+        // Exercise cache reuse on the oldest supported Gradle line.
+        val checkCache = GradleVersion.version(gradleVersion).baseVersion.version.startsWith("7.")
+        if (checkCache) {
+            runner.withArguments(runner.arguments + listOf("--configuration-cache", "--configuration-cache-problems=fail"))
+        }
+        val result = runner.build()
         assertProvisioningSuccessful(result)
+        if (checkCache) {
+            assertTrue("Configuration cache entry stored." in result.output)
+            assertTrue("Configuration cache entry reused." in runner.build().output)
+        }
     }
 
     @Test
