@@ -38,15 +38,14 @@ class ConfigurationCacheFunctionalTest : AbstractFoojayToolchainsPluginFunctiona
 
             java {
                 toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(JavaVersion.current().majorVersion))
+                    languageVersion.set(JavaLanguageVersion.of(${getDifferentJavaVersion()}))
                 }
             }
         """
         val runner = runner(settings, buildScript)
         runner.withArguments(runner.arguments + listOf(
             "--configuration-cache",
-            "--configuration-cache-problems=fail",
-            "-Dorg.gradle.java.installations.paths=" + System.getProperty("java.home")
+            "--configuration-cache-problems=fail"
         ))
         val first = runner.build()
         assertProvisioningSuccessful(first)
