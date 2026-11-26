@@ -2,6 +2,7 @@
 
 [libraries]
 gson = { module = "com.google.code.gson:gson", version = "2.14.0" }
+littleproxy = { module = "io.github.littleproxy:littleproxy", version = "2.7.0" }
 
 [plugins]
 plugin-publish = { id = "com.gradle.plugin-publish", version = "2.1.1" }
