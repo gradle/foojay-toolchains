@@ -1,5 +1,6 @@
 @file:Suppress("UnusedPrivateProperty", "UnstableApiUsage")
 
+import org.gradle.plugin.compatibility.compatibility
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.io.FileNotFoundException
@@ -68,6 +69,11 @@ gradlePlugin {
         displayName = "Foojay Disco API Toolchains Resolver"
         description = "Toolchains resolver using the Foojay Disco API for resolving Java runtimes."
         tags = listOf("gradle", "toolchains")
+        compatibility {
+            features {
+                configurationCache = true
+            }
+        }
     }
 
     val discoToolchainsConvenience by plugins.creating {
@@ -76,6 +82,11 @@ gradlePlugin {
         displayName = "Foojay Disco API Toolchains Resolver Convention"
         description = "Toolchains resolver using the Foojay Disco API for resolving Java runtimes. Automatically configures toolchain management."
         tags = listOf("gradle", "toolchains")
+        compatibility {
+            features {
+                configurationCache = true
+            }
+        }
     }
 
 }
