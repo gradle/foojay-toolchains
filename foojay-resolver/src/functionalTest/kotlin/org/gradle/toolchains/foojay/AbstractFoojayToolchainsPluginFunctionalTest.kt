@@ -30,7 +30,6 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
     }
 
     protected fun runner(settings: String, buildScript: String): GradleRunner {
-        settingsFile.writeText(settings)
         buildFile.writeText(buildScript.trimIndent())
 
         sourceFolder.mkdirs()
@@ -43,10 +42,15 @@ abstract class AbstractFoojayToolchainsPluginFunctionalTest {
             }
         """.trimIndent())
 
+        return runnerForTask(settings, "compileJava")
+    }
+
+    protected fun runnerForTask(settings: String, task: String): GradleRunner {
+        settingsFile.writeText(settings)
         return GradleRunner.create()
             .forwardOutput()
             .withPluginClasspath()
-            .withArguments(listOf("--info", "-g", homeDir.absolutePath, "compileJava"))
+            .withArguments(listOf("--info", "-g", homeDir.absolutePath, task))
             .withProjectDir(projectDir)
     }
 
